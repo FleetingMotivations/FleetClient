@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Model.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services.cs" />
   </ItemGroup>

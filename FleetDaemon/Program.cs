@@ -31,7 +31,7 @@ namespace FleetDaemon
 
         private void DaemonService_OnRequest(IPCMessage message)
         {
-            throw new NotImplementedException();
+            Console.WriteLine(String.Format("Received message from: {0}, to: {1}", message.ApplicaitonSenderID, message.ApplicationRecipientID));
         }
 
         public void Run()
@@ -42,6 +42,7 @@ namespace FleetDaemon
             this.service = new ServiceHost(typeof(DaemonService));
             this.service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
             this.service.Open();
+            
             Console.WriteLine("Daemon running. Press the any key to exit.");
             Console.WriteLine(Directory.GetCurrentDirectory());
 
