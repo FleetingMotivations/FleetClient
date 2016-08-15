@@ -1,6 +1,8 @@
-﻿using System;
+﻿using FleetIPC;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +25,33 @@ namespace FileShare
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void StackPanel_Drop(object sender, DragEventArgs e)
+        {
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Note that you can have more than one file.
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                // Assuming you have one file that you care about, pass it off to whatever
+                // handling code you have defined.
+                //HandleFileOpen(files[0]);
+                Console.WriteLine("Got mah bois");
+
+                var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
+                var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+                var client = new FleetIPC.FleetDaemonClient(cBinding, cAddress);
+
+                var message = new IPCMessage();
+                message.ApplicaitonSenderID = "fileshare";
+                message.ApplicationRecipientID = "friendface";
+                message.Content["file"] = "Yo bud I got chu a file aight!?";
+                message.Content["filelocation"] = files[0];
+
+                client.Request(message);
+            }
         }
     }
 }

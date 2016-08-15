@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <StackPanel Margin="9,10,11,10" AllowDrop="True" Drop="StackPanel_Drop">
+        </StackPanel>
     </Grid>
 </Window>

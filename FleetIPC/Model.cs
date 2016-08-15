@@ -8,6 +8,12 @@ namespace FleetIPC
     [DataContract]
     public class IPCMessage
     {
+        public IPCMessage()
+        {
+            this.Content = new Dictionary<String, String>();
+            this.IsRemoteMessage = false;
+        }
+
         [DataMember]
         public String ApplicaitonSenderID { get; set; }
 
@@ -15,10 +21,10 @@ namespace FleetIPC
         public String ApplicationRecipientID { get; set; }
 
         [DataMember]
-        public String Content { get; set; }
-        // Having content as a JSON string is a very javascript concept.
-        // It would probably be better to have a Dictionary<String, String>
-        // Easier to use, will not have to parse ever message.
-        // More inline with C#, and same concept. 
+        public Dictionary<String,String> Content { get; set; }
+        
+        [DataMember]
+        public bool IsRemoteMessage { get; internal set; }
+
     }
 }
