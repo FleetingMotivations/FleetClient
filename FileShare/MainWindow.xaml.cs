@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Interop;
+using System.Reflection;
 
 namespace FileShare
 {
@@ -27,67 +29,29 @@ namespace FileShare
             InitializeComponent();
         }
 
-
-        private void StackPanel_Drop(object sender, DragEventArgs e)
+        private void Window_Drop(object sender, DragEventArgs e)
         {
-
+            string[] droppedFiles = null;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                // Note that you can have more than one file.
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-                // Assuming you have one file that you care about, pass it off to whatever
-                // handling code you have defined.
-                //HandleFileOpen(files[0]);
-                Console.WriteLine("Got mah bois");
-
-                var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
-                var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-                var client = new FleetIPC.FleetDaemonClient(cBinding, cAddress);
-
-                var message = new IPCMessage();
-                message.ApplicaitonSenderID = "fileshare";
-                message.ApplicationRecipientID = "friendface";
-                message.Content["file"] = "Yo bud I got chu a file aight!?";
-                message.Content["filelocation"] = files[0];
-
-                client.Request(message);
+                droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as string[];
             }
-        }
 
-        private void Button_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
+            if ((null == droppedFiles) || (!droppedFiles.Any())) { return; }
 
-        }
+            var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
+            var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+            var client = new FleetDaemonClient(cBinding, cAddress);
 
-        private void Button_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
+            
+            var message = new IPCMessage();
+            message.ApplicaitonSenderID = "fileshare";
+            message.ApplicationRecipientID = "friendface";
+            message.Content["type"] = "sendFile";
+            message.Content["fileurl"] = droppedFiles[0];
 
-        }
-
-        private void textBox_PreviewDragEnter(object sender, DragEventArgs e)
-        {
-
-        }
-
-        private void textBox_DragEnter(object sender, DragEventArgs e)
-        {
-
-        }
-
-        private void textBox_PreviewDragOver(object sender, DragEventArgs e)
-        {
-
-        }
-
-        private void textBox_DragOver(object sender, DragEventArgs e)
-        {
-
-        }
-
-        private void textBox_Drop(object sender, DragEventArgs e)
-        {
-
+            client.Request(message);
+            
         }
     }
 }

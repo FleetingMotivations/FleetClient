@@ -1,28 +1,13 @@
-﻿<Window x:Class="FileShare.MainWindow"
+﻿<Window x:Name="FlileShare" x:Class="FileShare.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileShare"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="321.269" Width="519.776" AllowDrop="True" Drop="Window_Drop">
+
     <Grid>
-        <StackPanel Margin="10">
-            <Button 
-                Name="Button" 
-                Content="OK" 
-                PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown"
-                PreviewMouseMove="Button_PreviewMouseMove" />
-            <TextBox Name="textBox"
-                     AllowDrop="True"
-                     PreviewDragEnter="textBox_PreviewDragEnter"
-                     DragEnter="textBox_DragEnter"
-                     PreviewDragOver="textBox_PreviewDragOver"
-                     DragOver="textBox_DragOver"
-                     Drop="textBox_Drop"
-                     />
-            <TextBlock Name="status"
-                       Text="No dragging" />
-        </StackPanel>
+        <ListBox x:Name="listFiles"></ListBox>
     </Grid>
 </Window>
