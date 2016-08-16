@@ -32,6 +32,8 @@ namespace FleetDaemon
         private void DaemonService_OnRequest(IPCMessage message)
         {
             Console.WriteLine(String.Format("Received message from: {0}, to: {1}", message.ApplicaitonSenderID, message.ApplicationRecipientID));
+
+            //Accept-reject goes here... Receiving a message from a process and handling it
         }
 
         public void Run()
