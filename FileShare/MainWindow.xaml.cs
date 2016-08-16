@@ -31,17 +31,17 @@ namespace FileShare
 
         private void Window_Drop(object sender, DragEventArgs e)
         {
-            string[] droppedFiles = null;
+            String[] droppedFiles = null;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as string[];
+                droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as String[];
             }
 
             if ((null == droppedFiles) || (!droppedFiles.Any())) { return; }
 
             var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
             var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            var client = new FleetDaemonClient(cBinding, cAddress);
+            var daemon = new FleetDaemonClient(cBinding, cAddress);
 
             
             var message = new IPCMessage();
@@ -50,7 +50,7 @@ namespace FileShare
             message.Content["type"] = "sendFile";
             message.Content["fileurl"] = droppedFiles[0];
 
-            client.Request(message);
+            daemon.Request(message);
             
         }
     }

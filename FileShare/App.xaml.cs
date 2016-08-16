@@ -44,15 +44,16 @@ namespace FileShare
             //    Then create the client
             var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
             var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            var client = new FleetDaemonClient(cBinding, cAddress);
+            var daemon = new FleetDaemonClient(cBinding, cAddress);
 
             // Create a dummy message
             var message = new IPCMessage();
             message.ApplicaitonSenderID = "fileshare";
             message.ApplicationRecipientID = "friendface";
+            message.Content["type"] = "Register Application";
             message.Content["register"] = "Yo bud I exist aight!?";
 
-            client.Request(message);
+            daemon.Request(message);
         }
 
         private void ApplicationService_OnDeliver(IPCMessage message)

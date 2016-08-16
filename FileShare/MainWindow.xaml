@@ -8,6 +8,7 @@
         Title="MainWindow" Height="321.269" Width="519.776" AllowDrop="True" Drop="Window_Drop">
 
     <Grid>
+        <Label>Kill me</Label>
         <ListBox x:Name="listFiles"></ListBox>
     </Grid>
 </Window>
