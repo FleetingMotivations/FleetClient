@@ -1,0 +1,3 @@
+[submodule "FleetDaemon/lib/FleetServerClient"]
+	path = FleetDaemon/lib/FleetServerClient
+	url = https://github.com/FleetingMotivations/FleetServerClient
