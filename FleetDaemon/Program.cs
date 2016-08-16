@@ -7,6 +7,7 @@ using FleetIPC;
 using System.ServiceModel;
 using System.Diagnostics;
 using System.IO;
+using FleetServer;
 
 namespace FleetDaemon
 {
@@ -23,6 +24,8 @@ namespace FleetDaemon
     class Daemon
     {
         private ServiceHost service;
+        private IFleetService FleetServer; // This will need to be populated with the
+                                            // actual client or whatever
 
         public Daemon()
         {
@@ -55,6 +58,8 @@ namespace FleetDaemon
             Console.WriteLine(Directory.GetCurrentDirectory());
 
             Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
+
+            
             
         }
     }
