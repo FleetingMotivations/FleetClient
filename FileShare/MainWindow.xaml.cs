@@ -27,6 +27,7 @@ namespace FileShare
             InitializeComponent();
         }
 
+
         private void StackPanel_Drop(object sender, DragEventArgs e)
         {
 
@@ -52,6 +53,41 @@ namespace FileShare
 
                 client.Request(message);
             }
+        }
+
+        private void Button_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Button_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void textBox_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void textBox_DragEnter(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void textBox_PreviewDragOver(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void textBox_DragOver(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void textBox_Drop(object sender, DragEventArgs e)
+        {
+
         }
     }
 }

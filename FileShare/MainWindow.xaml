@@ -7,7 +7,22 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <StackPanel Margin="9,10,11,10" AllowDrop="True" Drop="StackPanel_Drop">
+        <StackPanel Margin="10">
+            <Button 
+                Name="Button" 
+                Content="OK" 
+                PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown"
+                PreviewMouseMove="Button_PreviewMouseMove" />
+            <TextBox Name="textBox"
+                     AllowDrop="True"
+                     PreviewDragEnter="textBox_PreviewDragEnter"
+                     DragEnter="textBox_DragEnter"
+                     PreviewDragOver="textBox_PreviewDragOver"
+                     DragOver="textBox_DragOver"
+                     Drop="textBox_Drop"
+                     />
+            <TextBlock Name="status"
+                       Text="No dragging" />
         </StackPanel>
     </Grid>
 </Window>
