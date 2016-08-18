@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileShare", "FileShare\File
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileAccept", "FileAccept\FileAccept.csproj", "{00B79463-9330-45FA-9752-DE7C7D3EF17A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkstationSelector", "WorkstationSelector\WorkstationSelector.csproj", "{47EA1AD4-E128-4961-9C7F-CA26A73E822B}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		FleetIPC\FleetIPC.projitems*{2c6ba6f9-67fc-44ee-8978-ebbf1db1e6a4}*SharedItemsImports = 13
@@ -35,6 +37,10 @@ Global
 		{00B79463-9330-45FA-9752-DE7C7D3EF17A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00B79463-9330-45FA-9752-DE7C7D3EF17A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00B79463-9330-45FA-9752-DE7C7D3EF17A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47EA1AD4-E128-4961-9C7F-CA26A73E822B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47EA1AD4-E128-4961-9C7F-CA26A73E822B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47EA1AD4-E128-4961-9C7F-CA26A73E822B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47EA1AD4-E128-4961-9C7F-CA26A73E822B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
