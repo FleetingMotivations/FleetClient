@@ -57,7 +57,7 @@ namespace FleetDaemon
             Console.WriteLine("Daemon running. Press the any key to exit.");
             Console.WriteLine(Directory.GetCurrentDirectory());
 
-            Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
+            Process.Start(@"..\..\..\WorkstationSelector\bin\Debug\WorkstationSelector.exe");
 
             
             

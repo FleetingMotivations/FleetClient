@@ -5,8 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WorkstationSelector"
         mc:Ignorable="d"
-        Title="Workstation Selector" Height="350" Width="525">
-    <Grid>
-        
+        Title="Workstation Selector" Height="871.661" Width="1033.299">
+    <Window.Resources>
+        <DataTemplate 
+          DataType="{x:Type local:ChecksModel}">
+            <StackPanel>
+                <CheckBox 
+                    IsChecked="{Binding IsChecked, Mode=TwoWay}" 
+                    Content="{Binding Label, Mode=OneWay}"
+                    Checked="WorkstationSelected"
+                    Unchecked="WorkstationUnselected"/>
+                <ItemsControl Margin="10,0,0,0" 
+                     ItemsSource="{Binding Children}"/>
+            </StackPanel>
+        </DataTemplate>
+
+    </Window.Resources>
+    <Grid Name="checkGrid">
+        <ContentControl Content="{Binding}" Margin="10"/>
+        <Button Click="SendToDaemon" Margin="341,342,590,456" RenderTransformOrigin="1.055,0.891">Send</Button>
     </Grid>
 </Window>
