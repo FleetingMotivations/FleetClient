@@ -20,6 +20,9 @@ using FleetIPC;
 
 namespace WorkstationSelector
 {
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : Window
     {
         //private List<Workstation> selectedWorkstations = new List<Workstation>();
