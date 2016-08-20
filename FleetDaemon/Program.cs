@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using FleetServer;
 using System.Net.NetworkInformation;
+using Newtonsoft.Json;
 
 namespace FleetDaemon
 {
@@ -68,8 +69,9 @@ namespace FleetDaemon
                                     select nic.GetPhysicalAddress().ToString()
                                     ).FirstOrDefault(); ;
 
-            var clientToken = this.FleetServer.RegisterClient(clientReg);
-            this.Storage.store("token", clientToken);
+            //var clientToken = this.FleetServer.RegisterClient(clientReg);
+            //this.Storage.store("token", clientToken);
+            this.Storage.store("token", "test_token_cool");
             Console.WriteLine("Client registered to Server.");
 
             Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
@@ -134,6 +136,68 @@ namespace FleetDaemon
 
     class SimpleStorage
     {
-        public SimpleStorage()
+        public String filePath;
+        public Dictionary<String, Object> storage;
+        public SimpleStorage(String filePath)
+        {
+            this.filePath = filePath;
+
+            if(File.Exists(filePath))
+            {
+                try
+                {
+                    using (StreamReader file = File.OpenText(filePath))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        this.storage = (Dictionary<String, Object>)serializer.Deserialize(file, typeof(Dictionary<String, Object>));
+                    }
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                    this.storage = new Dictionary<String, Object>();
+                }
+            }
+            else
+            {
+                this.storage = new Dictionary<String, Object>();
+            }
+        }
+
+        public Object get(String key)
+        {
+            return storage[key];
+        }
+
+        public bool store(Dictionary<String, Object> dict)
+        {
+            this.storage = new Dictionary<String, Object>(dict);
+            return writeToFile();
+        }
+
+        public bool store(String key, Object value)
+        {
+            this.storage[key] = value;
+            return writeToFile();
+        }
+
+        private bool writeToFile()
+        {
+            try
+            {
+               using (StreamWriter file = File.CreateText(this.filePath))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.Serialize(file, storage);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            return true;
+        }
     }
 }
