@@ -120,7 +120,7 @@ namespace WorkstationSelector
                 message.ApplicaitonSenderID = "sendId";
                 message.ApplicationRecipientID = "recipId";
                 message.Content["type"] = "sometype";
-                message.Content["Sender"] = "this";
+                message.Content["Sender"] = "JordanTest";
                 message.Content["Receiver"] = recipient;
                 daemon.Request(message);
 
