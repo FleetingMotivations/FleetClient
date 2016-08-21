@@ -156,11 +156,8 @@ namespace FleetDaemon
                     else if(message.Type.Equals("fileAccepted"))
                     {
                         // message.Content["accepted"] = true | false;
-                        // message.Content["some other such stuff"]
-                        //TODO(AL+JORDAN): Download the file and store it somewhere
-                        //                 Tell the server we downloaded it 
-                        //                 and whatever else needs doing
-                        //                 finally open the file in the default thing
+                        // message.Content["filePath"]
+                        //TODO(AL+JORDAN):  open the file in the default thing
                     }
 
                 break;
