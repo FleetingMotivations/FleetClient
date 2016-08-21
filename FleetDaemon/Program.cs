@@ -27,6 +27,8 @@ namespace FleetDaemon
     {
         private ServiceHost service;
         private SimpleStorage Storage;
+        private Dictionary<String, Object> MessageStore;
+
         private IFleetService FleetServer; // This will need to be populated with the
                                            // actual client or whatever
         public Daemon()
@@ -34,22 +36,77 @@ namespace FleetDaemon
             DaemonService.OnRequest += DaemonService_OnRequest;
             this.FleetServer = new FleetServerStub();
             this.Storage = new SimpleStorage("./filestore.json");
+
+            var processes = new Dictionary<String, String>();
+            processes.Add("drag_drop", @"..\..\..\FileShare\bin\Debug\FileShare.exe");
+            this.Storage.Store("process_list", processes);
+
         }
 
         private void DaemonService_OnRequest(IPCMessage message)
         {
             Console.WriteLine(String.Format("Received message from: {0}, to: {1}", message.ApplicaitonSenderID, message.ApplicationRecipientID));
-
-            //Accept-reject goes here... Receiving a message from a process and handling it
-
             Console.WriteLine(String.Format("Message Type: {0}", message.Content["type"]));
 
-            if(message.Content["type"] == "sendFile")
+            switch (message.LocationHandle)
             {
-                Console.WriteLine("We got a file.");
-                Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
-            }
+                case IPCMessage.MessageLocationHandle.REMOTE:
+                    //TODO(AL+JORDAN): Check if communication is granted access
+                    // Que process send request so that only one workstation_selector runs at a time
 
+                    var workstationSelector = RunProcess("workstation_selector");
+
+                    //Selection process is running, setup wait for send
+                    // Okay so now that's showin lets setup to wait for a reply
+
+
+                    if (message.Type.Equals("sendFile"))
+                    {
+                        Console.WriteLine("We got a file.");
+                        Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
+                    }
+                    /* Example: 
+                    else if (message.Type.Equals("quiz"))
+                    {
+
+                    }
+                    */
+                    break;
+
+                case IPCMessage.MessageLocationHandle.LOCAL:
+                    //TODO(AL+JORDAN): Check if the process name given exists
+                    //                 Check if communication is granted access
+                    //                 Check if it is running
+                    //                 
+                    break;
+
+                case IPCMessage.MessageLocationHandle.DAEMON:
+                    //NOTE(AL+JORDAN): These are all the messages directed for the daemon to handle
+                    
+                    //TODO(AL+JORDAN): Worstations selected
+                    //                 Accept or rejection of file
+                    //                 
+                    // workstationShareList, fileAccepted, 
+
+                    if(message.Type.Equals("workstationShareList"))
+                    {
+                        //TODO(AL+JORDAN): 
+                    }
+                    else if(message.Type.Equals("fileAccepted"))
+                    {
+                        // message.Content["accepted"] = true | false;
+                        // message.Content["some other such stuff"]
+                        //TODO(AL+JORDAN): Download the file and store it somewhere
+                        //                 Tell the server we downloaded it 
+                        //                 and whatever else needs doing
+                        //                 finally open the file in the default thing
+                    }
+
+                break;
+                default:
+                    Console.WriteLine("SADFACE please figure out what to do here");
+                break;
+            }
         }
 
         public void Run()
@@ -74,12 +131,26 @@ namespace FleetDaemon
 
             //var clientToken = this.FleetServer.RegisterClient(clientReg);
             //this.Storage.store("token", clientToken);
-            this.Storage.store("token", "test_token_cool");
+            this.Storage.Store("token", "test_token_cool");
             Console.WriteLine("Client registered to Server.");
 
-            Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
+            var dragDrop = RunProcess("drag_drop");
+            Console.WriteLine(dragDrop.Id);
+            //Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
             
         }
+
+        private Process RunProcess(String processName)
+        {
+            var processes = Storage.Get<Dictionary<String, String>>("process_list");
+            Console.WriteLine(processes);
+            if(processes.ContainsKey(processName))
+            {
+                var p = Process.Start(processes[processName]);
+                return p;
+            }
+            return null;            
+        } 
         
     }
 
@@ -167,24 +238,24 @@ namespace FleetDaemon
             }
         }
 
-        public Object get(String key)
+        public T Get<T>(String key)
         {
-            return storage[key];
+            return (T)storage[key];
         }
 
-        public bool store(Dictionary<String, Object> dict)
+        public bool Store(Dictionary<String, Object> dict)
         {
             this.storage = new Dictionary<String, Object>(dict);
-            return writeToFile();
+            return WriteToFile();
         }
 
-        public bool store(String key, Object value)
+        public bool Store(String key, Object value)
         {
             this.storage[key] = value;
-            return writeToFile();
+            return WriteToFile();
         }
 
-        private bool writeToFile()
+        private bool WriteToFile()
         {
             try
             {
