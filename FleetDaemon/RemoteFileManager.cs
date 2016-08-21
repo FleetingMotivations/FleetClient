@@ -41,6 +41,7 @@ namespace FleetDaemon
 
                 foreach (var ids in fileIds)
                 {
+
                     // Request download
                     // If so, do in background
                 }
@@ -54,6 +55,11 @@ namespace FleetDaemon
 
             var ids = client.QueryFiles(token);
             return new List<FleetFileIdentifier>(ids);
+        }
+
+        private void RetreiveFile(FleetFileIdentifier id)
+        {
+
         }
     }
 }
