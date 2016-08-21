@@ -27,22 +27,26 @@ namespace FleetDaemon
 
         public void HandleFileAvailable(FleetClientToken token)
         {
-            Task.Run(() => this.HandleFileAvailable(token));
+            Task.Run(() => this.DoFileAvailable(token));
         }
 
         private void DoFileAvailable(FleetClientToken token)
         {
+            Console.Write("DoFileAvailable");
             lock (@lock)
             {
                 var fileIds = GetFileIds(token);
+                Console.WriteLine("Received " + fileIds.Count() + " file ids");
 
                 foreach (var id in fileIds)
                 {
+                    Console.WriteLine("Requesting file: " + id.FileName);
                     var address = new EndpointAddress("net.pipe://localhost/fileaccept");
                     var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
                     var client = new FileAcceptIPCClient(binding, address);
 
                     var accepted = client.RequestAcceptFile(id);
+                    Console.WriteLine("Client accepted: " + accepted);
                     if (accepted)
                     {
                         Task.Run(() => this.RetreiveFile(token, id));

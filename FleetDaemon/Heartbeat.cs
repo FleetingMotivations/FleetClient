@@ -79,6 +79,7 @@ namespace FleetDaemon
 
             while (true)
             {
+                Console.WriteLine("Heartbeat");
                 var flags = client.Heartbeat(token);
 
                 if (flags.HasFlag(FleetHearbeatEnum.ClientUpdate))
@@ -98,6 +99,7 @@ namespace FleetDaemon
 
                 if (flags.HasFlag(FleetHearbeatEnum.FileAvailable))
                 {
+                    Console.WriteLine("FileAvailable");
                     RemoteFileManager.Instance.HandleFileAvailable(this.token);
                 }
 
