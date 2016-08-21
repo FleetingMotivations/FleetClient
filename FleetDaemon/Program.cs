@@ -18,6 +18,7 @@ namespace FleetDaemon
         static void Main(string[] args)
         {
             var daemon = Daemon.Instance;
+            daemon.Run();
             Console.ReadLine();
         }
     }
@@ -60,7 +61,6 @@ namespace FleetDaemon
                 Console.WriteLine("We got a file.");
                 Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
             }
-
         }
 
         public void Run()
@@ -102,15 +102,6 @@ namespace FleetDaemon
             // Daemon is running
             Console.WriteLine("Daemon running. Press the any key to exit.");
             Console.ReadLine();
-
-
-            //Console.WriteLine(Directory.GetCurrentDirectory());
-            //var clientToken = this.FleetServer.RegisterClient(clientReg);
-            //this.Storage.store("token", clientToken);
-            //this.Storage.store("token", "test_token_cool");
-            //Console.WriteLine("Client registered to Server.");
- 
-            //Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
         }
         
         public void HandleFileReceive(String filename)
@@ -132,6 +123,11 @@ namespace FleetDaemon
         }
 
         public FleetHearbeatEnum Heartbeat(FleetClientToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FleetHearbeatEnum Heartbeat(FleetClientToken token, FleetClientIdentifier[] knownClients)
         {
             throw new NotImplementedException();
         }
