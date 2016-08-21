@@ -54,31 +54,52 @@ namespace FleetDaemon
 
         public void Run()
         {
+            // Service initialisation
             var address = new Uri("net.pipe://localhost/fleetdaemon");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-
             this.service = new ServiceHost(typeof(DaemonService));
             this.service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
             this.service.Open();
-            
-            Console.WriteLine("Daemon running. Press the any key to exit.");
-            Console.WriteLine(Directory.GetCurrentDirectory());
 
+            Console.WriteLine("Daemon IPC service listening");
+
+            // Create registration token
             var clientReg = new FleetClientRegistration();
             clientReg.FriendlyName = System.Environment.MachineName;
             clientReg.IpAddress = "boop boop we gotta implement";
             clientReg.MacAddress = (from nic in NetworkInterface.GetAllNetworkInterfaces()
                                     where nic.OperationalStatus == OperationalStatus.Up
                                     select nic.GetPhysicalAddress().ToString()
-                                    ).FirstOrDefault(); ;
+                                    ).FirstOrDefault();
 
+            // Register with server
+            var client = new FleetServiceClient("BasicHttpBinding_IFleetService");
+            client.Open();
+            var token = client.RegisterClient(clientReg);
+
+            Console.WriteLine("Received registration token");
+
+            // Start heartbeat
+            HearbeatManager.WaitLength = 2000;
+            HearbeatManager.Instance.StartHeartbeat(token);
+
+            Console.WriteLine("Heartbeat is running");
+
+            // Other loading
+            // ????
+
+            // Daemon is running
+            Console.WriteLine("Daemon running. Press the any key to exit.");
+            Console.ReadLine();
+
+
+            //Console.WriteLine(Directory.GetCurrentDirectory());
             //var clientToken = this.FleetServer.RegisterClient(clientReg);
             //this.Storage.store("token", clientToken);
-            this.Storage.store("token", "test_token_cool");
-            Console.WriteLine("Client registered to Server.");
-
-            Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
-            
+            //this.Storage.store("token", "test_token_cool");
+            //Console.WriteLine("Client registered to Server.");
+ 
+            //Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
         }
         
     }
@@ -95,7 +116,7 @@ namespace FleetDaemon
             throw new NotImplementedException();
         }
 
-        public FleetHearbeatEnum Heartbeat(FleetClientToken token, FleetClientIdentifier[] knownClients)
+        public FleetHearbeatEnum Heartbeat(FleetClientToken token)
         {
             throw new NotImplementedException();
         }
