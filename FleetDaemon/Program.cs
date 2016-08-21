@@ -30,13 +30,34 @@ namespace FleetDaemon
         private SimpleStorage Storage;
         private IPCMessage FileShareMessage;
         private FleetClientToken ClientToken;
+        private IFleetService FleetServer
+        {
+            get
+            {
+                var client = this.FleetServer;
+                if (client == null)
+                {
+                    string address = null; // TODO: Get address from config or whatever
+                    var remoteAddress = new System.ServiceModel.EndpointAddress(address);
+                    var binding = new System.ServiceModel.BasicHttpBinding();
+                    binding.MaxReceivedMessageSize = int.MaxValue;
+                    binding.MaxBufferSize = int.MaxValue;
+                    client = new FleetServiceClient(binding, remoteAddress);
+                    ((FleetServiceClient)client).Endpoint.Binding.SendTimeout = new TimeSpan(0, 0, 20, 0);
+                    FleetServer = client;
+                }
+                return FleetServer;
+            }
+            set
+            {
+                FleetServer = value;
+            }
+        }
 
-        private IFleetService FleetServer; // This will need to be populated with the
-                                           // actual client or whatever
         public Daemon()
         {
             DaemonService.OnRequest += DaemonService_OnRequest;
-            this.FleetServer = new FleetServerStub();
+            this.FleetServer = null;
             this.Storage = new SimpleStorage("./filestore.json");
 
             var processes = new Dictionary<String, String>();
@@ -151,34 +172,54 @@ namespace FleetDaemon
 
         public void Run()
         {
+            // Service initialisation
             var address = new Uri("net.pipe://localhost/fleetdaemon");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-
             this.service = new ServiceHost(typeof(DaemonService));
             this.service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
             this.service.Open();
-            
-            Console.WriteLine("Daemon running. Press the any key to exit.");
-            Console.WriteLine(Directory.GetCurrentDirectory());
 
+            Console.WriteLine("Daemon IPC service listening");
+
+            // Create registration token
             var clientReg = new FleetClientRegistration();
             clientReg.FriendlyName = System.Environment.MachineName;
             clientReg.IpAddress = "boop boop we gotta implement";
             clientReg.MacAddress = (from nic in NetworkInterface.GetAllNetworkInterfaces()
                                     where nic.OperationalStatus == OperationalStatus.Up
                                     select nic.GetPhysicalAddress().ToString()
-                                    ).FirstOrDefault(); ;
+                                    ).FirstOrDefault();
 
+            // Register with server
+            var client = FleetServer;
+            ClientToken = client.RegisterClient(clientReg);
+
+            Console.WriteLine("Received registration token");
+
+            // Start heartbeat
+            HearbeatManager.WaitLength = 2000;
+            HearbeatManager.Instance.StartHeartbeat(ClientToken);
+
+            Console.WriteLine("Heartbeat is running");
+
+            // Other loading
+            // ????
+
+            // Daemon is running
+            Console.WriteLine("Daemon running. Press the any key to exit.");
+            Console.ReadLine();
+
+
+            //Console.WriteLine(Directory.GetCurrentDirectory());
             //var clientToken = this.FleetServer.RegisterClient(clientReg);
             //this.Storage.store("token", clientToken);
-            this.Storage.Store("token", "test_token_cool");
-            Console.WriteLine("Client registered to Server.");
-
-            var dragDrop = RunProcess("drag_drop");
-            Console.WriteLine(dragDrop.Id);
+            //this.Storage.store("token", "test_token_cool");
+            //Console.WriteLine("Client registered to Server.");
+ 
             //Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
-            
         }
+
+
 
         private Process RunProcess(String processName)
         {
@@ -193,60 +234,6 @@ namespace FleetDaemon
         } 
         
     }
-
-    public class FleetServerStub : IFleetService
-    {
-        public FleetFile GetFile(FleetClientToken token, FleetFileIdentifier fileId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetMessage GetMessage(FleetClientToken token, FleetMessageIdentifier fileId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetHearbeatEnum Heartbeat(FleetClientToken token, FleetClientIdentifier[] knownClients)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetFileIdentifier[] QueryFiles(FleetClientToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetMessageIdentifier[] QueryMessages(FleetClientToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetClientToken RegisterClient(FleetClientRegistration registrationModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendFileMultipleRecipient(FleetClientToken token, FleetClientIdentifier[] recipients, FleetFile file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendFileSingleRecipient(FleetClientToken token, FleetClientIdentifier recipient, FleetFile file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendMessageMultipleRecipient(FleetClientToken token, FleetClientIdentifier[] recipients, FleetMessage msg)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendMessageSingleRecipient(FleetClientToken token, FleetClientIdentifier recipient, FleetMessage msg)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 
     class SimpleStorage
     {
