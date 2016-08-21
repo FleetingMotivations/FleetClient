@@ -37,8 +37,9 @@ namespace FileAccept
     {
         public Boolean RequestAcceptFile(FleetFileIdentifier ident)
         {
-            // Create new client wait for close and return
-            return true;
+            var window = new MainWindow();
+            window.ShowRequestDialog(ident);
+            return window.DidAccept;
         }
     }
 }

@@ -17,19 +17,30 @@ namespace FleetDaemon
     {
         static void Main(string[] args)
         {
-            var daemon = new Daemon();
-            daemon.Run();
+            var daemon = Daemon.Instance;
             Console.ReadLine();
         }
     }
 
     class Daemon
     {
+        // Static instance handling
+        private static Daemon instance;
+        public static Daemon Instance { get
+            {
+                if (instance == null)
+                {
+                    instance = new Daemon();
+                }
+                return instance;
+            }
+        }
+
         private ServiceHost service;
         private SimpleStorage Storage;
         private IFleetService FleetServer; // This will need to be populated with the
                                            // actual client or whatever
-        public Daemon()
+        private Daemon()
         {
             DaemonService.OnRequest += DaemonService_OnRequest;
             this.FleetServer = new FleetServerStub();
@@ -102,6 +113,10 @@ namespace FleetDaemon
             //Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
         }
         
+        public void HandleFileReceive(String filename)
+        {
+
+        }
     }
 
     public class FleetServerStub : IFleetService
