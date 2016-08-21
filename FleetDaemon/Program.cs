@@ -10,6 +10,7 @@ using System.IO;
 using FleetServer;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
+using FleetServer;
 
 namespace FleetDaemon
 {
@@ -27,7 +28,8 @@ namespace FleetDaemon
     {
         private ServiceHost service;
         private SimpleStorage Storage;
-        private Dictionary<String, Object> MessageStore;
+        private IPCMessage FileShareMessage;
+        private FleetClientToken ClientToken;
 
         private IFleetService FleetServer; // This will need to be populated with the
                                            // actual client or whatever
@@ -40,7 +42,7 @@ namespace FleetDaemon
             var processes = new Dictionary<String, String>();
             processes.Add("drag_drop", @"..\..\..\FileShare\bin\Debug\FileShare.exe");
             this.Storage.Store("process_list", processes);
-            this.MessageStore = new Dictionary<String, Object>();
+            
         }
 
         private void DaemonService_OnRequest(IPCMessage message)
@@ -58,7 +60,7 @@ namespace FleetDaemon
 
                     //Selection process is running, setup wait for send
                     // Okay so now that's showin lets setup to wait for a reply
-
+                    this.FileShareMessage = message;
 
                     if (message.Type.Equals("sendFile"))
                     {
@@ -90,7 +92,45 @@ namespace FleetDaemon
 
                     if(message.Type.Equals("workstationShareList"))
                     {
-                        //TODO(AL+JORDAN): 
+                        //NOTE(AL): Workstation process is sending us the list of 
+                        //          workstations we want to send a file to
+
+                        /*NOTE(AL): For client to send it needs to do the following
+                        
+                            JsonSerializer serializer = new JsonSerializer();
+                            var fcid = new FleetClientIdentifier();
+                            fcid.Identifier = "test";
+                            fcid.WorkstationName = "test";
+                            
+                            FleetClientIdentifier[] new_array = { fcid, fcid1 };
+                            String message_content = JsonConvert.SerializeObject(new_array);
+                            
+                            And then send it in a message 
+                            message.Content["workstations"] = message_content;
+                        */
+
+                        var workstations = JsonConvert
+                            .DeserializeObject<string[]>(message.Content["workstations"]);
+
+                        var filePath = (string)this.FileShareMessage.Content["filePath"];
+
+                        var fileContent = File.ReadAllBytes(filePath);
+                        string fileName = filePath.Split(Path.DirectorySeparatorChar)
+                            .Last();
+
+                        var file = new FleetFile{
+                            FileContents = fileContent,
+                            FileName = fileName
+                        };
+
+                        var selectedClients = workstations.Select(s => new FleetClientIdentifier
+                        {
+                            Identifier = s,
+                            WorkstationName = ""
+                        });
+
+                        var server = new FleetServiceClient();
+                        server.SendFileMultipleRecipient(this.ClientToken, selectedClients.ToArray(), file);
                     }
                     else if(message.Type.Equals("fileAccepted"))
                     {
@@ -240,7 +280,10 @@ namespace FleetDaemon
 
         public T Get<T>(String key)
         {
-            return (T)storage[key];
+            Object val;
+            storage.TryGetValue(key, out val);
+            if (val == null) return default(T);
+            return (T)val;
         }
 
         public bool Store(Dictionary<String, Object> dict)
