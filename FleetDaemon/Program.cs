@@ -40,7 +40,7 @@ namespace FleetDaemon
             var processes = new Dictionary<String, String>();
             processes.Add("drag_drop", @"..\..\..\FileShare\bin\Debug\FileShare.exe");
             this.Storage.Store("process_list", processes);
-
+            this.MessageStore = new Dictionary<String, Object>();
         }
 
         private void DaemonService_OnRequest(IPCMessage message)
