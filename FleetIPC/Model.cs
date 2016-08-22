@@ -8,10 +8,16 @@ namespace FleetIPC
     [DataContract]
     public class IPCMessage
     {
+        public enum MessageLocationHandle
+        {
+            LOCAL,
+            REMOTE,
+            DAEMON
+        };
+
         public IPCMessage()
         {
             this.Content = new Dictionary<String, String>();
-            this.IsRemoteMessage = false;
         }
 
         [DataMember]
@@ -22,9 +28,12 @@ namespace FleetIPC
 
         [DataMember]
         public Dictionary<String,String> Content { get; set; }
-        
+
         [DataMember]
-        public bool IsRemoteMessage { get; internal set; }
+        public MessageLocationHandle LocationHandle { get; set; }
+
+        [DataMember]
+        public String Type { get; set; }
 
     }
 }

@@ -1,0 +1,14 @@
+﻿<Window x:Class="FileAccept.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FileAccept"
+        mc:Ignorable="d"
+        Title="Incoming File" Height="350" Width="525">
+    <Grid>
+        <TextBlock FontSize="15" Margin="35,90,35,204">Incoming file from Bob. Would you like to accept or reject this file?</TextBlock>
+        <Button Content="Accept" Name="AcceptButton" Margin="130,200,304,76" Background="LightGreen" Click="AcceptButton_Click"/>
+        <Button Content ="Reject" Name="RejectButton" Margin="303,200,130,76" Background="Salmon" Click="RejectButton_Click"/>
+    </Grid>
+</Window>

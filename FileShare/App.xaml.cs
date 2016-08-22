@@ -35,9 +35,6 @@ namespace FileShare
             this.service.AddServiceEndpoint(typeof(IApplicationIPC), binding, address);
             this.service.Open();
 
-
-
-
             // Communicate with the daemon. Obviously will not have to do this here (maybe registration though?)
             // 1. Create binding and address.
             //    Note that the address for a client is a different type

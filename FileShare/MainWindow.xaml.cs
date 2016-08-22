@@ -45,10 +45,11 @@ namespace FileShare
 
             
             var message = new IPCMessage();
-            message.ApplicaitonSenderID = "fileshare";
+            message.ApplicaitonSenderID = "FileShare";
             message.ApplicationRecipientID = "friendface";
-            message.Content["type"] = "sendFile";
-            message.Content["fileurl"] = droppedFiles[0];
+            message.LocationHandle = IPCMessage.MessageLocationHandle.REMOTE;
+            message.Type = "sendFile";
+            message.Content["filePath"] = droppedFiles[0];
 
             daemon.Request(message);
             
