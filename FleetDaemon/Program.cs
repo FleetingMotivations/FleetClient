@@ -18,7 +18,7 @@ namespace FleetDaemon
     {
         static void Main(string[] args)
         {
-            var daemon = new Daemon();
+            var daemon = Daemon.Instance;
             daemon.Run();
             Console.ReadLine();
         }
@@ -26,8 +26,21 @@ namespace FleetDaemon
 
     class Daemon
     {
+        // Static instance handling
+        private static Daemon instance;
+        public static Daemon Instance { get
+            {
+                if (instance == null)
+                {
+                    instance = new Daemon();
+                }
+                return instance;
+            }
+        }
+
         private ServiceHost service;
         private SimpleStorage Storage;
+
         private IPCMessage FileShareMessage;
         private FleetClientToken ClientToken;
         private IFleetService FleetServer
@@ -54,7 +67,7 @@ namespace FleetDaemon
             }
         }
 
-        public Daemon()
+        private Daemon()
         {
             DaemonService.OnRequest += DaemonService_OnRequest;
             this.FleetServer = null;
@@ -164,6 +177,9 @@ namespace FleetDaemon
                 default:
                     Console.WriteLine("SADFACE please figure out what to do here");
                 break;
+
+                Console.WriteLine("We got a file.");
+                Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
             }
         }
 
@@ -215,6 +231,54 @@ namespace FleetDaemon
             //Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
         }
 
+        
+        public void HandleFileReceive(String filename)
+        {
+
+        }
+    }
+
+    public class FleetServerStub : IFleetService
+    {
+        public FleetFile GetFile(FleetClientToken token, FleetFileIdentifier fileId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FleetMessage GetMessage(FleetClientToken token, FleetMessageIdentifier fileId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FleetHearbeatEnum Heartbeat(FleetClientToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FleetHearbeatEnum Heartbeat(FleetClientToken token, FleetClientIdentifier[] knownClients)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FleetFileIdentifier[] QueryFiles(FleetClientToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FleetMessageIdentifier[] QueryMessages(FleetClientToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FleetClientToken RegisterClient(FleetClientRegistration registrationModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SendFileMultipleRecipient(FleetClientToken token, FleetClientIdentifier[] recipients, FleetFile file)
+        {
+            throw new NotImplementedException();
+        }
 
 
         private Process RunProcess(String processName)
