@@ -10,7 +10,6 @@ using System.IO;
 using FleetServer;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
-using FleetServer;
 
 namespace FleetDaemon
 {
@@ -236,63 +235,18 @@ namespace FleetDaemon
         {
 
         }
-    }
-
-    public class FleetServerStub : IFleetService
-    {
-        public FleetFile GetFile(FleetClientToken token, FleetFileIdentifier fileId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetMessage GetMessage(FleetClientToken token, FleetMessageIdentifier fileId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetHearbeatEnum Heartbeat(FleetClientToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetHearbeatEnum Heartbeat(FleetClientToken token, FleetClientIdentifier[] knownClients)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetFileIdentifier[] QueryFiles(FleetClientToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetMessageIdentifier[] QueryMessages(FleetClientToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetClientToken RegisterClient(FleetClientRegistration registrationModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendFileMultipleRecipient(FleetClientToken token, FleetClientIdentifier[] recipients, FleetFile file)
-        {
-            throw new NotImplementedException();
-        }
-
 
         private Process RunProcess(String processName)
         {
             var processes = Storage.Get<Dictionary<String, String>>("process_list");
             Console.WriteLine(processes);
-            if(processes.ContainsKey(processName))
+            if (processes.ContainsKey(processName))
             {
                 var p = Process.Start(processes[processName]);
                 return p;
             }
-            return null;            
-        } 
-        
+            return null;
+        }
     }
 
     class SimpleStorage
