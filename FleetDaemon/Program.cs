@@ -62,6 +62,7 @@ namespace FleetDaemon
 
             var processes = new Dictionary<String, String>();
             processes.Add("drag_drop", @"..\..\..\FileShare\bin\Debug\FileShare.exe");
+            processes.Add("workstation_selector", @"..\..\..\FileShare\bin\Debug\FileShare.exe");
             this.Storage.Store("process_list", processes);
             
         }
