@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetDaemon", "FleetDaemon\FleetDaemon.csproj", "{5682FDB7-8AC3-4C06-87AF-309AEB5B987D}"
 EndProject
@@ -13,15 +13,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileAccept", "FileAccept\Fi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkstationSelector", "WorkstationSelector\WorkstationSelector.csproj", "{47EA1AD4-E128-4961-9C7F-CA26A73E822B}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FileAcceptIPC", "FileAcceptIPC\FileAcceptIPC.shproj", "{63C0FC04-CB56-4E03-A82B-73E5885E86C9}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WorkstationSelectorIPC", "WorkstationSelectorIPC\WorkstationSelectorIPC.shproj", "{AF7A3E41-3D62-43E6-8D99-CEF420387E5A}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		FleetIPC\FleetIPC.projitems*{2c6ba6f9-67fc-44ee-8978-ebbf1db1e6a4}*SharedItemsImports = 13
-		FleetIPC\FleetIPC.projitems*{e5abec53-d8b6-4c9d-baad-ea3ffd4a68c9}*SharedItemsImports = 4
-		FileAcceptIPC\FileAcceptIPC.projitems*{5682fdb7-8ac3-4c06-87af-309aeb5b987d}*SharedItemsImports = 4
-		FleetIPC\FleetIPC.projitems*{5682fdb7-8ac3-4c06-87af-309aeb5b987d}*SharedItemsImports = 4
-		FleetDaemon\lib\FleetServerClient\FleetServerClient.projitems*{5682fdb7-8ac3-4c06-87af-309aeb5b987d}*SharedItemsImports = 4
 		FileAcceptIPC\FileAcceptIPC.projitems*{00b79463-9330-45fa-9752-de7c7d3ef17a}*SharedItemsImports = 4
 		FleetIPC\FleetIPC.projitems*{00b79463-9330-45fa-9752-de7c7d3ef17a}*SharedItemsImports = 4
+		FleetIPC\FleetIPC.projitems*{2c6ba6f9-67fc-44ee-8978-ebbf1db1e6a4}*SharedItemsImports = 13
+		WorkstationSelectorIPC\WorkstationSelectorIPC.projitems*{47ea1ad4-e128-4961-9c7f-ca26a73e822b}*SharedItemsImports = 4
+		FileAcceptIPC\FileAcceptIPC.projitems*{5682fdb7-8ac3-4c06-87af-309aeb5b987d}*SharedItemsImports = 4
+		FleetDaemon\lib\FleetServerClient\FleetServerClient.projitems*{5682fdb7-8ac3-4c06-87af-309aeb5b987d}*SharedItemsImports = 4
+		FleetIPC\FleetIPC.projitems*{5682fdb7-8ac3-4c06-87af-309aeb5b987d}*SharedItemsImports = 4
+		WorkstationSelectorIPC\WorkstationSelectorIPC.projitems*{5682fdb7-8ac3-4c06-87af-309aeb5b987d}*SharedItemsImports = 4
+		FileAcceptIPC\FileAcceptIPC.projitems*{63c0fc04-cb56-4e03-a82b-73e5885e86c9}*SharedItemsImports = 13
+		WorkstationSelectorIPC\WorkstationSelectorIPC.projitems*{af7a3e41-3d62-43e6-8d99-cef420387e5a}*SharedItemsImports = 13
+		FleetIPC\FleetIPC.projitems*{e5abec53-d8b6-4c9d-baad-ea3ffd4a68c9}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

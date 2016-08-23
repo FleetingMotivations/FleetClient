@@ -111,11 +111,11 @@ namespace WorkstationSelector
 
             // Might want to do this as a background task?
             // Define address & binding for this applications service
-            var address = new Uri("net.pipe://localhost/WorkstationSelector");
-            var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+            //var address = new Uri("net.pipe://localhost/WorkstationSelector");
+            //var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
 
             // Create and open the service
-            this.service = new ServiceHost(typeof(ApplicationService));
+            /*this.service = new ServiceHost(typeof(ApplicationService));
             this.service.AddServiceEndpoint(typeof(IApplicationIPC), binding, address);
             this.service.Open();
             
@@ -129,7 +129,7 @@ namespace WorkstationSelector
             message.LocationHandle = IPCMessage.MessageLocationHandle.DAEMON;
             message.Type = "registration";
             
-            this.FleetDaemon.Request(message);
+            this.FleetDaemon.Request(message);*/
         }
 
         private void ApplicationService_OnDeliver(IPCMessage message)

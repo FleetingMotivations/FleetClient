@@ -10,6 +10,7 @@ using System.IO;
 using FleetServer;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
+using WorkstationSelectorIPC;
 
 namespace FleetDaemon
 {
@@ -43,7 +44,7 @@ namespace FleetDaemon
 
         private FleetClientToken ClientToken;
         private IFleetService _ServerInstance { get; set; }
-        private IFleetService FleetServer
+        public IFleetService FleetServer
         {
             get
             {
@@ -80,7 +81,7 @@ namespace FleetDaemon
         private void DaemonService_OnRequest(IPCMessage message)
         {
             Console.WriteLine(String.Format("Received message from: {0}, to: {1}", message.ApplicaitonSenderID, message.ApplicationRecipientID));
-            Console.WriteLine(String.Format("Message Type: {0}", message.Content["type"]));
+            //Console.WriteLine(String.Format("Message Type: {0}", message.Content["type"]));
 
             this.Router.HandleMessage(message);
         }
@@ -183,20 +184,41 @@ namespace FleetDaemon
             switch (message.LocationHandle)
             {
                 case IPCMessage.MessageLocationHandle.REMOTE:
+
+                    // Get clients
+                    var serviceClient = Daemon.Instance.FleetServer;
+                    var clients = serviceClient.QueryClients(this.ClientToken);
+                    
+                    // Make selector client
+                    var address = new EndpointAddress("net.pipe://localhost/workstationselector");
+                    var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+                    var selectorClient = new WorkstationSelectIPCClient(binding, address);
+
+                    // Get selection
+                    var targets = selectorClient.SelectWorkstations(clients.ToList());
+
+                    // Serialise file
+                    var fPath = message.Content["filePath"];
+                    var fFile = new FleetFile();
+                    fFile.FileContents = File.ReadAllBytes(fPath);
+                    fFile.FileName = Path.GetFileName(fPath);
+
+                    serviceClient.SendFileMultipleRecipient(this.ClientToken, targets.ToArray(), fFile);
+
                     //TODO(AL+JORDAN): Check if communication is granted access
                     // Que process send request so that only one workstation_selector runs at a time
 
-                    var workstationSelector = RunProcess("workstation_selector");
+                    //var workstationSelector = RunProcess("workstation_selector");
 
                     //Selection process is running, setup wait for send
                     // Okay so now that's showin lets setup to wait for a reply
-                    this.FileShareMessage = message;
+                    //this.FileShareMessage = message;
 
-                    if (message.Type.Equals("sendFile"))
+                    /*if (message.Type.Equals("sendFile"))
                     {
                         Console.WriteLine("We got a file.");
                         Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
-                    }
+                    }*/
                     /* Example: 
                     else if (message.Type.Equals("quiz"))
                     {
