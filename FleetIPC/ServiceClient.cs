@@ -20,6 +20,20 @@ namespace FleetIPC
             this.Channel.Request(message);
         }
     }
+    public class ApplicationClient : ClientBase<IApplicationIPC>, IApplicationIPC
+    {
+        // 1. Create constructor (all you have to do is copy this for all clients and rename)
+        public ApplicationClient(Binding binding, EndpointAddress address) : base(binding, address) { }
 
+        public void Deliver(IPCMessage message)
+        {
+            this.Channel.Deliver(message);
+        }
+
+        public void Inform(List<IPCMessage> messages)
+        {
+            this.Channel.Inform(messages);
+        }
+    }
     // Will need one for the ApplicationCient so the daemon can talk to it
 }

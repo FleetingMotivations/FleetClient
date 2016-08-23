@@ -44,13 +44,13 @@ namespace FileShare
             var daemon = new FleetDaemonClient(cBinding, cAddress);
 
             // Create a dummy message
-            var message = new IPCMessage();
+            /*var message = new IPCMessage();
             message.ApplicaitonSenderID = "fileshare";
             message.ApplicationRecipientID = "friendface";
             message.Content["type"] = "Register Application";
             message.Content["register"] = "Yo bud I exist aight!?";
-
-            daemon.Request(message);
+            */
+            //daemon.Request(message);
         }
 
         private void ApplicationService_OnDeliver(IPCMessage message)

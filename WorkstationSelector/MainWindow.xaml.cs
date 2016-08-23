@@ -17,9 +17,17 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.ServiceModel;
 using FleetIPC;
+using Newtonsoft.Json;
 
 namespace WorkstationSelector
 {
+
+    class WorkstationDisplayModel
+    {
+        public string FriendlyName { get; set; }
+        public string Identifier { get; set; }
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -27,11 +35,14 @@ namespace WorkstationSelector
     {
         //private List<Workstation> selectedWorkstations = new List<Workstation>();
         private List<String> selectedWorkstations = new List<String>();
+        private FleetDaemonClient FleetDaemon { get; set; }
+        private ServiceHost service;
+        private IEnumerable<WorkstationDisplayModel> AvailableWorkstations { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-
+            /*
             //Campus:
             ChecksModel campus = new ChecksModel("Callaghan");
 
@@ -89,45 +100,91 @@ namespace WorkstationSelector
             }
             ee124.AddChildren(workstations);
             workstations.Clear();
-
+            
 
             DataContext = campus;
+            */
+
+            // Set the service events
+            ApplicationService.OnInform += ApplicationService_OnInform;
+            ApplicationService.OnDeliver += ApplicationService_OnDeliver;
+
+            // Might want to do this as a background task?
+            // Define address & binding for this applications service
+            var address = new Uri("net.pipe://localhost/WorkstationSelector");
+            var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+
+            // Create and open the service
+            this.service = new ServiceHost(typeof(ApplicationService));
+            this.service.AddServiceEndpoint(typeof(IApplicationIPC), binding, address);
+            this.service.Open();
+            
+            var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
+            var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+            this.FleetDaemon = new FleetDaemonClient(cBinding, cAddress);
+
+            var message = new IPCMessage();
+            message.ApplicaitonSenderID = "WorkstationSelector";
+            message.ApplicationRecipientID = "FleetDaemon";
+            message.LocationHandle = IPCMessage.MessageLocationHandle.DAEMON;
+            message.Type = "registration";
+            
+            this.FleetDaemon.Request(message);
+        }
+
+        private void ApplicationService_OnDeliver(IPCMessage message)
+        {
+            // Do some fun stuff
+            /*
+             [{Identifer:"asdfasdfasdf", FriendlyName: "sadfasdfasdf"}]
+             */
+            if (message.Type == "availableWorkstations")
+            {
+                AvailableWorkstations = JsonConvert.DeserializeObject<List<WorkstationDisplayModel>>(message.Content["workstations"]);
+                var parent = new ChecksModel("Available Workstations");
+                parent.AddChildren(AvailableWorkstations.Select(w => new ChecksModel {
+                    Label = w.FriendlyName
+                }).ToList());
+            }
+        }
+
+        private void ApplicationService_OnInform(List<IPCMessage> message)
+        {
+            // Do some even more fun stuff
         }
 
         private void WorkstationSelected(object sender, RoutedEventArgs e)
         {
             var content = (e.Source as CheckBox).Content.ToString();
-            selectedWorkstations.Add(content);
-            MessageBox.Show(content + " Selected");
+            var workstation = AvailableWorkstations.First(w => w.FriendlyName == content);
+            selectedWorkstations.Add(workstation.Identifier);
+            //MessageBox.Show(content + " Selected");
         }
 
         private void WorkstationUnselected(object sender, RoutedEventArgs e)
         {
             var content = (e.Source as CheckBox).Content.ToString();
-            selectedWorkstations.Remove(content);
-            MessageBox.Show(content + " Removed");
+            var workstation = AvailableWorkstations.First(w => w.FriendlyName == content);
+            selectedWorkstations.Remove(workstation.Identifier);
+            //MessageBox.Show(content + " Removed");
         }
 
         private void SendToDaemon(object sender, RoutedEventArgs e)
         {
-            var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
-            var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            var daemon = new FleetDaemonClient(cBinding, cAddress);
-
+            JsonSerializer serializer = new JsonSerializer();
             var message = new IPCMessage();
-            foreach (String recipient in selectedWorkstations)
-            {
-                message.ApplicaitonSenderID = "sendId";
-                message.ApplicationRecipientID = "recipId";
-                message.Content["type"] = "sometype";
-                message.Content["Sender"] = "JordanTest";
-                message.Content["Receiver"] = recipient;
-                daemon.Request(message);
 
-            }
+            message.ApplicaitonSenderID = "sendId";
+            message.ApplicationRecipientID = "recipId";
+            message.LocationHandle = IPCMessage.MessageLocationHandle.DAEMON;
+            message.Type = "workstationShareList";
+
+            message.Content["workstations"] = JsonConvert.SerializeObject(selectedWorkstations.ToArray());
+
+            this.FleetDaemon.Request(message);
+            
             String recipients = String.Join(", ", selectedWorkstations.ToArray());
             MessageBox.Show("Sent to: " + recipients);
-
         }
     }
 

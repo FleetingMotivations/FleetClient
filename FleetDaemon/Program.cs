@@ -66,7 +66,6 @@ namespace FleetDaemon
         private Daemon()
         {
             DaemonService.OnRequest += DaemonService_OnRequest;
-            this.FleetServer = null;
             this.Router = Router.Instance;
             this.Storage = new SimpleStorage("./filestore.json");
 
