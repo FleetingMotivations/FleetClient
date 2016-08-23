@@ -10,7 +10,6 @@ using System.IO;
 using FleetServer;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
-using FleetServer;
 
 namespace FleetDaemon
 {
@@ -18,7 +17,7 @@ namespace FleetDaemon
     {
         static void Main(string[] args)
         {
-            var daemon = new Daemon();
+            var daemon = Daemon.Instance;
             daemon.Run();
             Console.ReadLine();
         }
@@ -26,15 +25,28 @@ namespace FleetDaemon
 
     class Daemon
     {
+        // Static instance handling
+        private static Daemon instance;
+        public static Daemon Instance { get
+            {
+                if (instance == null)
+                {
+                    instance = new Daemon();
+                }
+                return instance;
+            }
+        }
+
         private ServiceHost service;
         private SimpleStorage Storage;
+
         private IPCMessage FileShareMessage;
         private FleetClientToken ClientToken;
         private IFleetService FleetServer
         {
             get
             {
-                var client = this.FleetServer;
+                IFleetService client = null; //NOTE(AL): this seemed to be making stack overflow errors, this.FleetServer
                 if (client == null)
                 {
                     string address = null; // TODO: Get address from config or whatever
@@ -54,15 +66,16 @@ namespace FleetDaemon
             }
         }
 
-        public Daemon()
+        private Daemon()
         {
             DaemonService.OnRequest += DaemonService_OnRequest;
-            this.FleetServer = null;
+            //this.FleetServer = null;
             this.Storage = new SimpleStorage("./filestore.json");
 
             var processes = new Dictionary<String, String>();
             processes.Add("drag_drop", @"..\..\..\FileShare\bin\Debug\FileShare.exe");
-            processes.Add("workstation_selector", @"..\..\..\FileShare\bin\Debug\FileShare.exe");
+            processes.Add("workstation_selector", @"..\..\..\WorkstationSelector\bin\Debug\WorkstationSelector.exe");
+
             this.Storage.Store("process_list", processes);
             
         }
@@ -165,6 +178,9 @@ namespace FleetDaemon
                 default:
                     Console.WriteLine("SADFACE please figure out what to do here");
                 break;
+
+                Console.WriteLine("We got a file.");
+                Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
             }
         }
 
@@ -207,7 +223,6 @@ namespace FleetDaemon
             Console.WriteLine("Daemon running. Press the any key to exit.");
             Console.ReadLine();
 
-
             //Console.WriteLine(Directory.GetCurrentDirectory());
             //var clientToken = this.FleetServer.RegisterClient(clientReg);
             //this.Storage.store("token", clientToken);
@@ -217,20 +232,23 @@ namespace FleetDaemon
             //Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
         }
 
-
+        
+        public void HandleFileReceive(String filename)
+        {
+            //TODO(AL): Calll Router to handle this and pass it to the appropriate client process
+        }
 
         private Process RunProcess(String processName)
         {
             var processes = Storage.Get<Dictionary<String, String>>("process_list");
             Console.WriteLine(processes);
-            if(processes.ContainsKey(processName))
+            if (processes.ContainsKey(processName))
             {
                 var p = Process.Start(processes[processName]);
                 return p;
             }
-            return null;            
-        } 
-        
+            return null;
+        }
     }
 
     class SimpleStorage
