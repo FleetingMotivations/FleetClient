@@ -46,7 +46,7 @@ namespace FleetDaemon
         {
             get
             {
-                var client = this.FleetServer;
+                IFleetService client = null; //NOTE(AL): this seemed to be making stack overflow errors, this.FleetServer
                 if (client == null)
                 {
                     string address = null; // TODO: Get address from config or whatever
@@ -69,11 +69,13 @@ namespace FleetDaemon
         private Daemon()
         {
             DaemonService.OnRequest += DaemonService_OnRequest;
-            this.FleetServer = null;
+            //this.FleetServer = null;
             this.Storage = new SimpleStorage("./filestore.json");
 
             var processes = new Dictionary<String, String>();
             processes.Add("drag_drop", @"..\..\..\FileShare\bin\Debug\FileShare.exe");
+            processes.Add("workstation_selector", @"..\..\..\WorkstationSelector\bin\Debug\WorkstationSelector.exe");
+
             this.Storage.Store("process_list", processes);
             
         }
@@ -233,7 +235,7 @@ namespace FleetDaemon
         
         public void HandleFileReceive(String filename)
         {
-
+            //TODO(AL): Calll Router to handle this and pass it to the appropriate client process
         }
 
         private Process RunProcess(String processName)
