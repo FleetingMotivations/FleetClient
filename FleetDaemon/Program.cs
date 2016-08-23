@@ -42,27 +42,24 @@ namespace FleetDaemon
         private Router Router;
 
         private FleetClientToken ClientToken;
+        private IFleetService _ServerInstance { get; set; }
         private IFleetService FleetServer
         {
             get
             {
-                IFleetService client = null; //NOTE(AL): this seemed to be making stack overflow errors, this.FleetServer
+                IFleetService client = _ServerInstance;
                 if (client == null)
                 {
-                    string address = null; // TODO: Get address from config or whatever
+                    string address = "http://localhost:8733/Design_Time_Addresses/FleetServer/FleetService/"; // TODO: Get address from config or whatever
                     var remoteAddress = new System.ServiceModel.EndpointAddress(address);
                     var binding = new System.ServiceModel.BasicHttpBinding();
                     binding.MaxReceivedMessageSize = int.MaxValue;
                     binding.MaxBufferSize = int.MaxValue;
                     client = new FleetServiceClient(binding, remoteAddress);
                     ((FleetServiceClient)client).Endpoint.Binding.SendTimeout = new TimeSpan(0, 0, 20, 0);
-                    FleetServer = client;
+                    _ServerInstance = client;
                 }
-                return FleetServer;
-            }
-            set
-            {
-                FleetServer = value;
+                return _ServerInstance;
             }
         }
 
@@ -91,7 +88,7 @@ namespace FleetDaemon
 
         public void HandleFileReceive(String filename)
         {
-            //Console.WriteLine(String.Format("Received new file from: {0}, to {1}, filename: {2}"));
+            // Console.WriteLine(String.Format("Received new file from: {0}, to {1}, filename: {2}"));
             var message = new IPCMessage {
                     
             };
