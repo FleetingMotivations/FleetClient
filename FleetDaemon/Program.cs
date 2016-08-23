@@ -91,7 +91,7 @@ namespace FleetDaemon
 
         public void HandleFileReceive(String filename)
         {
-            Console.WriteLine(String.Format("Received new file from: {0}, to {1}, filename: {2}"), );
+            //Console.WriteLine(String.Format("Received new file from: {0}, to {1}, filename: {2}"));
             var message = new IPCMessage {
                     
             };
