@@ -11,6 +11,8 @@ using FleetServer;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using WorkstationSelectorIPC;
+using FleetDaemon.Storage;
+using FleetDaemon.Storage.Interfaces;
 
 namespace FleetDaemon
 {
@@ -18,7 +20,10 @@ namespace FleetDaemon
     {
         static void Main(string[] args)
         {
-            var daemon = Daemon.Instance;
+            var storage = new SimpleStorage("./filestore.json");
+
+            // Dependancy Injection
+            var daemon = Daemon.CreateInstance(storage);
             daemon.Run();
             Console.ReadLine();
         }
@@ -27,56 +32,49 @@ namespace FleetDaemon
     class Daemon
     {
         // Static instance handling
-        private static Daemon instance;
-        public static Daemon Instance { get
-            {
-                if (instance == null)
-                {
-                    instance = new Daemon();
-                }
-                return instance;
-            }
-        }
+        private static Daemon _instance;
 
         private ServiceHost service;
-        private SimpleStorage Storage;
-        private Router Router;
+        private ISimpleStorage Storage { get; set; }
+        private Router Router { get; set; }
 
-        private FleetClientToken ClientToken;
-        private IFleetService _ServerInstance { get; set; }
+        private FleetClientToken ClientToken { get; set; }
+        private IFleetService _serverInstance { get; set; }
         public IFleetService FleetServer
         {
             get
             {
-                IFleetService client = _ServerInstance;
-                if (client == null)
-                {
-                    string address = "http://localhost:8733/Design_Time_Addresses/FleetServer/FleetService/"; // TODO: Get address from config or whatever
-                    var remoteAddress = new System.ServiceModel.EndpointAddress(address);
-                    var binding = new System.ServiceModel.BasicHttpBinding();
-                    binding.MaxReceivedMessageSize = int.MaxValue;
-                    binding.MaxBufferSize = int.MaxValue;
-                    client = new FleetServiceClient(binding, remoteAddress);
-                    ((FleetServiceClient)client).Endpoint.Binding.SendTimeout = new TimeSpan(0, 0, 20, 0);
-                    _ServerInstance = client;
-                }
-                return _ServerInstance;
+                IFleetService client = _serverInstance;
+                if (client != null) return _serverInstance;
+                var address = "http://localhost:8733/Design_Time_Addresses/FleetServer/FleetService/"; // TODO: Get address from config or whatever
+                var remoteAddress = new System.ServiceModel.EndpointAddress(address);
+                var binding = new System.ServiceModel.BasicHttpBinding();
+                binding.MaxReceivedMessageSize = int.MaxValue;
+                binding.MaxBufferSize = int.MaxValue;
+                client = new FleetServiceClient(binding, remoteAddress);
+                ((FleetServiceClient)client).Endpoint.Binding.SendTimeout = new TimeSpan(0, 0, 20, 0);
+                _serverInstance = client;
+                return _serverInstance;
             }
         }
 
         private Daemon()
         {
             DaemonService.OnRequest += DaemonService_OnRequest;
-            this.Router = Router.Instance;
-            this.Storage = new SimpleStorage("./filestore.json");
 
             var processes = new Dictionary<String, String>();
             processes.Add("drag_drop", @"..\..\..\FileShare\bin\Debug\FileShare.exe");
             processes.Add("workstation_selector", @"..\..\..\WorkstationSelector\bin\Debug\WorkstationSelector.exe");
 
-            this.Storage.Store("process_list", processes);
-            
+            Storage.Store("process_list", processes);
         }
+
+        public static Daemon CreateInstance(ISimpleStorage Store)
+        {
+            return new Daemon {Storage = Store};
+        }
+
+       
 
         private void DaemonService_OnRequest(IPCMessage message)
         {
@@ -315,73 +313,5 @@ namespace FleetDaemon
         }
     }
 
-    class SimpleStorage
-    {
-        public String filePath;
-        public Dictionary<String, Object> storage;
-        public SimpleStorage(String filePath)
-        {
-            this.filePath = filePath;
-
-            if(File.Exists(filePath))
-            {
-                try
-                {
-                    using (StreamReader file = File.OpenText(filePath))
-                    {
-                        JsonSerializer serializer = new JsonSerializer();
-                        this.storage = (Dictionary<String, Object>)serializer.Deserialize(file, typeof(Dictionary<String, Object>));
-                    }
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine(e);
-                    this.storage = new Dictionary<String, Object>();
-                }
-            }
-            else
-            {
-                this.storage = new Dictionary<String, Object>();
-            }
-        }
-
-        public T Get<T>(String key)
-        {
-            Object val;
-            storage.TryGetValue(key, out val);
-            if (val == null) return default(T);
-            return (T)val;
-        }
-
-        public bool Store(Dictionary<String, Object> dict)
-        {
-            this.storage = new Dictionary<String, Object>(dict);
-            return WriteToFile();
-        }
-
-        public bool Store(String key, Object value)
-        {
-            this.storage[key] = value;
-            return WriteToFile();
-        }
-
-        private bool WriteToFile()
-        {
-            try
-            {
-               using (StreamWriter file = File.CreateText(this.filePath))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, storage);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-
-            return true;
-        }
-    }
+    
 }

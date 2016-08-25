@@ -10,30 +10,35 @@ namespace FleetIPC
     {
         public enum MessageLocationHandle
         {
-            LOCAL,
-            REMOTE,
-            DAEMON
+            Local,
+            Remote,
+            Daemon
         };
 
         public IPCMessage()
         {
-            this.Content = new Dictionary<String, String>();
+            this.Content = new Dictionary<string, string>();
         }
 
         [DataMember]
-        public String ApplicaitonSenderID { get; set; }
+        public string ApplicaitonSenderID { get; set; }
 
         [DataMember]
-        public String ApplicationRecipientID { get; set; }
+        public string ApplicationRecipientID { get; set; }
 
         [DataMember]
-        public Dictionary<String,String> Content { get; set; }
+        public Dictionary<string, string> Content { get; set; }
 
         [DataMember]
         public MessageLocationHandle LocationHandle { get; set; }
 
         [DataMember]
-        public String Type { get; set; }
+        public MessageType Type { get; set; }
 
+    }
+
+    public enum MessageType
+    {
+        
     }
 }

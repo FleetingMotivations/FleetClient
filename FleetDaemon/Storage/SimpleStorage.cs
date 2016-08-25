@@ -4,11 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FleetDaemon.Storage.Interfaces;
 using Newtonsoft.Json;
 
-namespace FleetDaemon.Utils
+namespace FleetDaemon.Storage
 {
-    public class SimpleStorage
+    public class SimpleStorage : ISimpleStorage 
     {
         public String filePath;
         public Dictionary<String, Object> storage;
