@@ -11,6 +11,7 @@ using FleetServer;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using WorkstationSelectorIPC;
+using FleetDaemon.MessageDispatcher;
 
 namespace FleetDaemon
 {
@@ -54,7 +55,7 @@ namespace FleetDaemon
                     string address = "http://localhost:8733/Design_Time_Addresses/FleetServer/FleetService/"; // TODO: Get address from config or whatever
                     var remoteAddress = new System.ServiceModel.EndpointAddress(address);
                     var binding = new System.ServiceModel.BasicHttpBinding();
-                    binding.MaxReceivedMessageSize = int.MaxValue;
+                    binding.MaxReceivedMessageSize = int.MaxValue;          /////////////////// This should be done in App.config
                     binding.MaxBufferSize = int.MaxValue;
                     client = new FleetServiceClient(binding, remoteAddress);
                     ((FleetServiceClient)client).Endpoint.Binding.SendTimeout = new TimeSpan(0, 0, 20, 0);
@@ -75,7 +76,6 @@ namespace FleetDaemon
             processes.Add("workstation_selector", @"..\..\..\WorkstationSelector\bin\Debug\WorkstationSelector.exe");
 
             this.Storage.Store("process_list", processes);
-            
         }
 
         private void DaemonService_OnRequest(IPCMessage message)
@@ -86,15 +86,28 @@ namespace FleetDaemon
             this.Router.HandleMessage(message);
         }
 
-        public void HandleFileReceive(String filename)
+        /// <summary>
+        /// File handling interface called from the RemoteFileManager object
+        /// Converts the passed path and attributes to an IPC message before
+        /// dispatching to the recipient application
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="attributes"></param>
+        public void HandleFileReceive(String filepath, Dictionary<String, String> attributes)
         {
-            // Console.WriteLine(String.Format("Received new file from: {0}, to {1}, filename: {2}"));
-            var message = new IPCMessage {
-                    
-            };
-            
+            var message = new IPCMessage();
+            message.ApplicaitonSenderID = "fileshare";  // TODO(hc): Change this to the actual sender
+            message.ApplicationRecipientID = "fileinbox";
+            message.LocationHandle = IPCMessage.MessageLocationHandle.LOCAL;
+            message.Content["filepath"] = filepath;
+            message.Type = "file";
+
+            foreach (var pair in attributes)
+            {
+                message.Content[pair.Key] = pair.Value;
+            }
+
             this.Router.HandleMessage(message);
-            //TODO(AL): Calll Router to handle this and pass it to the appropriate client process
         }
 
         public void Run()
@@ -127,8 +140,8 @@ namespace FleetDaemon
             Router.Instance.SetClientToken(ClientToken);
 
             // Start heartbeat
-            HearbeatManager.WaitLength = 2000;
-            HearbeatManager.Instance.StartHeartbeat(ClientToken);
+            HeartbeatManager.WaitLength = 2000;
+            HeartbeatManager.Instance.StartHeartbeat(ClientToken);
 
             Console.WriteLine("Heartbeat is running");
 
@@ -171,6 +184,9 @@ namespace FleetDaemon
         public Router()
         {
             this.Storage = new SimpleStorage("./filestore.json");
+
+            // TODO(hc): Initialise LocalMessageDispatcher Processes property
+            LocalMessageDispatcher.Processes = new Dictionary<String, Process>(); // This is a stopgap!!!!!!
         }
 
         public void SetClientToken(FleetClientToken tok)
@@ -228,10 +244,9 @@ namespace FleetDaemon
                     break;
 
                 case IPCMessage.MessageLocationHandle.LOCAL:
-                    //TODO(AL+JORDAN): Check if the process name given exists
-                    //                 Check if communication is granted access
-                    //                 Check if it is running
-                    //                 
+                    // Pass message to the local dispatcher object
+                    LocalMessageDispatcher.Instance.Dispatch(message);
+
                     break;
 
                 case IPCMessage.MessageLocationHandle.DAEMON:
