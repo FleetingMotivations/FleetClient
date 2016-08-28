@@ -31,9 +31,9 @@ namespace FileAcceptIPC
         {
             var address = new EndpointAddress("net.pipe://localhost/fileaccept");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            binding.MaxBufferPoolSize = Int64.MaxValue;
+            binding.MaxBufferPoolSize = Int32.MaxValue;
             binding.MaxBufferSize = Int32.MaxValue;
-            binding.MaxReceivedMessageSize = Int64.MaxValue;
+            binding.MaxReceivedMessageSize = Int32.MaxValue;
 
             var client = new FileAcceptIPCClient(binding, address);
             return client;

@@ -11,9 +11,9 @@ namespace FleetIPC
         {
             var address = new EndpointAddress("net.pipe://localhost/fleetdaemon");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            binding.MaxBufferPoolSize = Int64.MaxValue;
+            binding.MaxBufferPoolSize = Int32.MaxValue;
             binding.MaxBufferSize = Int32.MaxValue;
-            binding.MaxReceivedMessageSize = Int64.MaxValue;
+            binding.MaxReceivedMessageSize = Int32.MaxValue;
 
             var client = new FleetDaemonClient(binding, address);
             return client;
@@ -23,9 +23,9 @@ namespace FleetIPC
         {
             var address = new EndpointAddress("net.pipe://localhost/" + pipename);
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            binding.MaxBufferPoolSize = Int64.MaxValue;
+            binding.MaxBufferPoolSize = Int32.MaxValue;
             binding.MaxBufferSize = Int32.MaxValue;
-            binding.MaxReceivedMessageSize = Int64.MaxValue;
+            binding.MaxReceivedMessageSize = Int32.MaxValue;
 
             var client = new ApplicationClient(binding, address);
             return client;
@@ -33,11 +33,11 @@ namespace FleetIPC
         
         public static ServiceHost MakeApplicationService(String pipename)
         {
-            var address = new Uri("net.pipe://localhost/fileinbox");
+            var address = new Uri("net.pipe://localhost/" + pipename);
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            binding.MaxBufferPoolSize = Int64.MaxValue;
+            binding.MaxBufferPoolSize = Int32.MaxValue;
             binding.MaxBufferSize = Int32.MaxValue;
-            binding.MaxReceivedMessageSize = Int64.MaxValue;
+            binding.MaxReceivedMessageSize = Int32.MaxValue;
 
             var service = new ServiceHost(typeof(ApplicationService));
             service.AddServiceEndpoint(typeof(IApplicationIPC), binding, address);
