@@ -100,7 +100,7 @@ namespace FleetDaemon
             message.ApplicationRecipientID = "fileinbox";
             message.LocationHandle = IPCMessage.MessageLocationHandle.LOCAL;
             message.Content["filepath"] = filepath;
-            message.Type = "file";
+            message.Type = "sendFile";
 
             foreach (var pair in attributes)
             {
@@ -140,7 +140,7 @@ namespace FleetDaemon
             Router.Instance.SetClientToken(ClientToken);
 
             // Start heartbeat
-            HeartbeatManager.WaitLength = 2000;
+            HeartbeatManager.WaitLength = 3000;
             HeartbeatManager.Instance.StartHeartbeat(ClientToken);
 
             Console.WriteLine("Heartbeat is running");
@@ -192,6 +192,7 @@ namespace FleetDaemon
         public void SetClientToken(FleetClientToken tok)
         {
             this.ClientToken = tok;
+            RemoteMessageDispatcher.Token = tok;
         }
 
         public void HandleMessage(IPCMessage message)
@@ -200,53 +201,13 @@ namespace FleetDaemon
             switch (message.LocationHandle)
             {
                 case IPCMessage.MessageLocationHandle.REMOTE:
-
-                    // Get clients
-                    var serviceClient = Daemon.Instance.FleetServer;
-                    var clients = serviceClient.QueryClients(this.ClientToken);
-                    
-                    // Make selector client
-                    var address = new EndpointAddress("net.pipe://localhost/workstationselector");
-                    var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-                    var selectorClient = new WorkstationSelectIPCClient(binding, address);
-
-                    // Get selection
-                    var targets = selectorClient.SelectWorkstations(clients.ToList());
-
-                    // Serialise file
-                    var fPath = message.Content["filePath"];
-                    var fFile = new FleetFile();
-                    fFile.FileContents = File.ReadAllBytes(fPath);
-                    fFile.FileName = Path.GetFileName(fPath);
-
-                    serviceClient.SendFileMultipleRecipient(this.ClientToken, targets.ToArray(), fFile);
-
-                    //TODO(AL+JORDAN): Check if communication is granted access
-                    // Que process send request so that only one workstation_selector runs at a time
-
-                    //var workstationSelector = RunProcess("workstation_selector");
-
-                    //Selection process is running, setup wait for send
-                    // Okay so now that's showin lets setup to wait for a reply
-                    //this.FileShareMessage = message;
-
-                    /*if (message.Type.Equals("sendFile"))
-                    {
-                        Console.WriteLine("We got a file.");
-                        Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
-                    }*/
-                    /* Example: 
-                    else if (message.Type.Equals("quiz"))
-                    {
-
-                    }
-                    */
+                    // Pass message to the remote dispatcher object
+                    RemoteMessageDispatcher.Instance.Dispatch(message);
                     break;
 
                 case IPCMessage.MessageLocationHandle.LOCAL:
                     // Pass message to the local dispatcher object
                     LocalMessageDispatcher.Instance.Dispatch(message);
-
                     break;
 
                 case IPCMessage.MessageLocationHandle.DAEMON:
@@ -312,8 +273,8 @@ namespace FleetDaemon
                     Console.WriteLine("SADFACE please figure out what to do here");
                     break;
 
-                    Console.WriteLine("We got a file.");
-                    Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
+                Console.WriteLine("We got a file.");
+                Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
             }
         }
 

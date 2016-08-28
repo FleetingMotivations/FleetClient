@@ -94,7 +94,7 @@ namespace FleetDaemon
             {
                 client.Open();
                 var idents = client.QueryFiles(token);
-                ids = new List<FleetFileIdentifier>(ids);
+                ids = new List<FleetFileIdentifier>(idents);
                 client.Close();
 
             } catch (Exception e)

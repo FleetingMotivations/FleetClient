@@ -31,7 +31,7 @@ namespace FleetDaemon.MessageDispatcher
 
         public void Dispatch(IPCMessage message)
         {
-            if (ValidateMessage(message))
+            if (ValidateMessage(message) || true)       // Override stopgap
             {
                 HandleMessageDispatch(message);
 
@@ -49,11 +49,11 @@ namespace FleetDaemon.MessageDispatcher
             // TODO(hc): Check that sender is a valid process
 
             // Check that recipeint process is running
-            var recipient = Processes[message.ApplicationRecipientID];
+            /*var recipient = Processes[message.ApplicationRecipientID];
             if (recipient != null && !recipient.HasExited)
             {
                 valid = false;
-            }
+            }*/
 
             // TODO(hc): Check for message integrity
 
