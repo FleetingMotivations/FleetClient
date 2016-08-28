@@ -47,7 +47,7 @@ namespace FileShare
 
         private void ApplicationService_OnDeliver(IPCMessage message)
         {
-            // Do some fun stuff
+            // Have received
         }
 
         private void ApplicationService_OnInform(List<IPCMessage> message)

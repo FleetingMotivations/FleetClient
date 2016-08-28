@@ -23,6 +23,45 @@ namespace FileInbox
         public MainWindow()
         {
             InitializeComponent();
+
+            this.storage = new FileStore();
+            this.filesTable.ItemsSource = this.Storage.Files;            
+        }
+
+        public override void BeginInit()
+        {
+            base.BeginInit();
+            
+            this.RefreshFiles();
+        }
+
+        private FileStore storage;
+        public FileStore Storage { get
+            {
+                return storage;
+            }
+        }
+
+        public void RefreshFiles()
+        {
+            this.filesTable?.Items?.Refresh();
+        }
+
+        // Button Events
+
+        private void openButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void copyButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void refreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.RefreshFiles();
         }
     }
 }

@@ -37,7 +37,13 @@ namespace FileInbox
 
         private void ApplicationService_OnDeliver(IPCMessage message)
         {
-            Console.WriteLine("ApplicationService_OnDeliver");
+            var window = App.Current.MainWindow as MainWindow;
+
+            var props = message.Content;
+            var path = props["filepath"];
+
+            window?.Storage.StoreFile(path, props);
+            window?.RefreshFiles();
         }
 
         private void ApplicationService_OnInform(List<IPCMessage> message)

@@ -8,19 +8,19 @@
         Title="File Inbox" 
         Height="240" Width="600">
     <Grid>
-        <Button x:Name="button" Content="Open..." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="button_Copy" Content="Move..." HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
-        <ListView x:Name="listView" Margin="10,35,10,10" >
+        <Button x:Name="openButton" Content="Open..." Click="openButton_Click" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="copyButton" Content="Move..." Click="copyButton_Click"  HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <ListView x:Name="filesTable" Margin="10,35,10,10" >
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Icon" Width="40"/>
-                    <GridViewColumn Header="Filename" Width="330"/>
-                    <GridViewColumn Header="Sender" Width="100"/>
-                    <GridViewColumn Header="Time Received" Width="100"/>
+                    <GridViewColumn Header="Icon" Width="40" DisplayMemberBinding="{Binding IconURL}"/>
+                    <GridViewColumn Header="Filename" Width="310" DisplayMemberBinding="{Binding Filename}"/>
+                    <GridViewColumn Header="Sender" Width="100" DisplayMemberBinding="{Binding Sender}"/>
+                    <GridViewColumn Header="Time Received" Width="100" DisplayMemberBinding="{Binding Received}"/>
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="button_Copy1" Content="Refresh" Margin="507,10,10,0" VerticalAlignment="Top"/>
+        <Button x:Name="refreshButton" Content="Refresh" Click="refreshButton_Click" Margin="0,10,10,0" VerticalAlignment="Top" AutomationProperties.Name="RefreshButton" HorizontalAlignment="Right" Width="75"/>
 
     </Grid>
 </Window>
