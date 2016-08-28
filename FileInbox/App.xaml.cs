@@ -30,19 +30,19 @@ namespace FileInbox
             var daemon = IPCUtil.MakeDaemonClient();
 
             // Register with Daemon
-            // TODO(hd):
+            // TODO(hc):
 
             daemon.Close();
         }
 
         private void ApplicationService_OnDeliver(IPCMessage message)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("ApplicationService_OnDeliver");
         }
 
         private void ApplicationService_OnInform(List<IPCMessage> message)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("ApplicationService_OnInform");
         }
     }
 }
