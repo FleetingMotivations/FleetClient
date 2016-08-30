@@ -8,10 +8,6 @@ using System.Diagnostics;
 
 namespace FleetDaemon
 {
-    public interface IFleetApplication
-    {
-
-    }
 
     public class FleetAppConfig
     {
