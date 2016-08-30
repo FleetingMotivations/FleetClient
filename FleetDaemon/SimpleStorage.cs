@@ -39,11 +39,6 @@ namespace FleetDaemon.Storage
             }
         }
 
-        public T get<T>(string key)
-        {
-            return (T)storage[key];
-        }
-
         public Object Get(String key)
         {
             return storage[key];

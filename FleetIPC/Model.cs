@@ -8,7 +8,8 @@ namespace FleetIPC
     [DataContract]
     public class IPCMessage
     {
-        public enum MessageLocationHandle
+
+        public enum MessageTarget
         {
             Local,
             Remote,
@@ -30,15 +31,14 @@ namespace FleetIPC
         public Dictionary<string, string> Content { get; set; }
 
         [DataMember]
-        public MessageLocationHandle LocationHandle { get; set; }
+        public MessageTarget Target { get; set; }
 
         [DataMember]
-        public MessageType Type { get; set; }
+        public String Type { get; set; }
+
+        [DataMember]
+        public bool SkipSelector { get; set; }
 
     }
 
-    public enum MessageType
-    {
-        
-    }
 }
