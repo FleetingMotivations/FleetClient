@@ -14,6 +14,7 @@ using WorkstationSelectorIPC;
 using FleetDaemon.Storage;
 using FleetDaemon.Storage.Interfaces;
 using System.Threading;
+using FleetDaemon.MessageDispatcher;
 
 namespace FleetDaemon
 {
@@ -80,13 +81,14 @@ namespace FleetDaemon
 
         private FleetClientToken ClientToken { get; set; }
         
-
         public Daemon(ISimpleStorage Store, IRouter router, FleetClientToken token)
         {
             this.Storage = Store;
             this.Router = router;
             this.ClientToken = token;
             DaemonService.OnRequest += DaemonService_OnRequest;
+
+            this.Storage.Store("process_list", processes);
         }
 
         private void DaemonService_OnRequest(IPCMessage message)
@@ -96,12 +98,27 @@ namespace FleetDaemon
             this.Router.HandleMessage(message);
         }
 
-        public void HandleFileReceive(String filename)
+        /// <summary>
+        /// File handling interface called from the RemoteFileManager object
+        /// Converts the passed path and attributes to an IPC message before
+        /// dispatching to the recipient application
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="attributes"></param>
+        public void HandleFileReceive(String filepath, Dictionary<String, String> attributes)
         {
-            var message = new IPCMessage {
-                    
-            };
-            
+            var message = new IPCMessage();
+            message.ApplicaitonSenderID = "fileshare";  // TODO(hc): Change this to the actual sender
+            message.ApplicationRecipientID = "fileinbox";
+            message.LocationHandle = IPCMessage.MessageLocationHandle.LOCAL;
+            message.Content["filepath"] = filepath;
+            message.Type = "sendFile";
+
+            foreach (var pair in attributes)
+            {
+                message.Content[pair.Key] = pair.Value;
+            }
+
             this.Router.HandleMessage(message);
         }
 
@@ -117,8 +134,8 @@ namespace FleetDaemon
             Console.WriteLine("Daemon IPC service listening");
 
             // Start heartbeat
-            HearbeatManager.WaitLength = 2000;
-            HearbeatManager.Instance.StartHeartbeat(this.ClientToken);
+            HeartbeatManager.WaitLength = 3000;
+            HeartbeatManager.Instance.StartHeartbeat(ClientToken);
 
             Console.WriteLine("Heartbeat is running");
 
@@ -132,7 +149,4 @@ namespace FleetDaemon
             this.Service.Close();
         }
     }
-
-
-    
 }
