@@ -24,7 +24,12 @@ namespace FleetDaemon
             var storage = new SimpleStorage("./filestore.json");
             var serverResourceName = "BasicHttpBinding_IFleetService";
 
-            var handshakeWaitTime = storage.Get<int>("ServerHandshakeWaitTime") ?? 5000;
+            var handshakeWaitTime = storage.Get<int>("ServerHandshakeWaitTime");
+
+            if (handshakeWaitTime == 0)
+            {
+                handshakeWaitTime = 5000;
+            }
 
             // Create registration token
             var clientReg = new FleetClientRegistration();
@@ -47,6 +52,7 @@ namespace FleetDaemon
                 catch (Exception e)
                 {
                     client.Abort();
+                    Console.WriteLine(e.Message);
                     Console.WriteLine("Couldn't connect to server. Waiting...");
                 }
 
@@ -59,7 +65,7 @@ namespace FleetDaemon
             var appHauler = new AppHauler(storage);
             var router = new Router(appHauler, storage, clientToken);
 
-            var daemon = Daemon.CreateInstance(storage, router);
+            var daemon = new Daemon(storage, router, clientToken);
             daemon.Run();
             Console.ReadLine();
         }
@@ -68,29 +74,20 @@ namespace FleetDaemon
     class Daemon
     {
         // Static instance handling
-        private static Daemon _instance;
-
-        private ServiceHost service;
+        private ServiceHost Service;
         private ISimpleStorage Storage { get; set; }
         private IRouter Router { get; set; }
 
         private FleetClientToken ClientToken { get; set; }
         
 
-        private Daemon()
+        public Daemon(ISimpleStorage Store, IRouter router, FleetClientToken token)
         {
+            this.Storage = Store;
+            this.Router = router;
+            this.ClientToken = token;
             DaemonService.OnRequest += DaemonService_OnRequest;
         }
-
-        public static Daemon CreateInstance(ISimpleStorage Store, IRouter router)
-        {
-            return new Daemon {
-                Storage = Store,
-                Router = router
-            };
-        }
-
-       
 
         private void DaemonService_OnRequest(IPCMessage message)
         {
@@ -101,13 +98,11 @@ namespace FleetDaemon
 
         public void HandleFileReceive(String filename)
         {
-            // Console.WriteLine(String.Format("Received new file from: {0}, to {1}, filename: {2}"));
             var message = new IPCMessage {
                     
             };
             
             this.Router.HandleMessage(message);
-            //TODO(AL): Calll Router to handle this and pass it to the appropriate client process
         }
 
         public void Run()
@@ -115,15 +110,15 @@ namespace FleetDaemon
             // Service initialisation
             var address = new Uri("net.pipe://localhost/fleetdaemon");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            var service = new ServiceHost(typeof(DaemonService));
-            service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
-            service.Open();
+            this.Service = new ServiceHost(typeof(DaemonService));
+            this.Service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
+            this.Service.Open();
 
             Console.WriteLine("Daemon IPC service listening");
 
             // Start heartbeat
             HearbeatManager.WaitLength = 2000;
-            HearbeatManager.Instance.StartHeartbeat(ClientToken);
+            HearbeatManager.Instance.StartHeartbeat(this.ClientToken);
 
             Console.WriteLine("Heartbeat is running");
 
@@ -133,6 +128,8 @@ namespace FleetDaemon
             // Daemon is running
             Console.WriteLine("Daemon running. Press the any key to exit.");
             Console.ReadLine();
+
+            this.Service.Close();
         }
     }
 

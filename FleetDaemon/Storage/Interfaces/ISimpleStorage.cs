@@ -8,7 +8,6 @@ namespace FleetDaemon.Storage.Interfaces
 {
     public interface ISimpleStorage
     {
-        object Get(string key);
         T Get<T>(string key);
         bool Store(Dictionary<string, object> dict);
         bool Store(string key, object value);

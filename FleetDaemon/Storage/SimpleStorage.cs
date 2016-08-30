@@ -9,53 +9,51 @@ using Newtonsoft.Json;
 
 namespace FleetDaemon.Storage
 {
-    public class SimpleStorage : ISimpleStorage 
+    public class SimpleStorage : ISimpleStorage
     {
-        public String filePath;
-        public Dictionary<String, Object> storage;
-        public SimpleStorage(String filePath)
+        public string filePath;
+        public Dictionary<string, object> storage;
+        public SimpleStorage(string filePath)
         {
             this.filePath = filePath;
 
-            if(File.Exists(filePath))
+            if (File.Exists(filePath))
             {
                 try
                 {
                     using (StreamReader file = File.OpenText(filePath))
                     {
                         JsonSerializer serializer = new JsonSerializer();
-                        this.storage = (Dictionary<String, Object>)serializer.Deserialize(file, typeof(Dictionary<String, Object>));
+                        this.storage = (Dictionary<string, object>)serializer.Deserialize(file, typeof(Dictionary<string, object>));
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    this.storage = new Dictionary<String, Object>();
+                    this.storage = new Dictionary<string, object>();
                 }
             }
             else
             {
-                this.storage = new Dictionary<String, Object>();
+                this.storage = new Dictionary<string, object>();
             }
         }
 
-        public T get<T>(string key)
+        public T Get<T>(string key)
         {
-            return (T)storage[key];
+            object val;
+            storage.TryGetValue(key, out val);
+            if (val == null) return default(T);
+            return (T)val;
         }
 
-        public Object Get(String key)
+        public bool Store(Dictionary<string, object> dict)
         {
-            return storage[key];
-        }
-
-        public bool Store(Dictionary<String, Object> dict)
-        {
-            this.storage = new Dictionary<String, Object>(dict);
+            this.storage = new Dictionary<string, object>(dict);
             return WriteToFile();
         }
 
-        public bool Store(String key, Object value)
+        public bool Store(string key, object value)
         {
             this.storage[key] = value;
             return WriteToFile();
@@ -65,7 +63,7 @@ namespace FleetDaemon.Storage
         {
             try
             {
-               using (StreamWriter file = File.CreateText(this.filePath))
+                using (StreamWriter file = File.CreateText(this.filePath))
                 {
                     JsonSerializer serializer = new JsonSerializer();
                     serializer.Serialize(file, storage);

@@ -37,6 +37,7 @@ namespace FleetDaemon
             this.AppHauler = appHauler;
             this.ClientToken = token;
             this.Storage = storage;
+            this.AppBindings = new List<ApplicationBinding>();
         }
 
         public void HandleMessage(IPCMessage message)
