@@ -48,7 +48,7 @@ namespace FileShare
                 var message = new IPCMessage();
                 message.ApplicaitonSenderID = "FileShare";
                 message.ApplicationRecipientID = "friendface";
-                message.LocationHandle = IPCMessage.MessageLocationHandle.REMOTE;
+                message.Target = IPCMessage.MessageTarget.Remote;
                 message.Type = "sendFile";
                 message.Content["filePath"] = droppedFiles[0];      // TODO: Handle multiple files (seperate by character? or encode as JSON?)
 

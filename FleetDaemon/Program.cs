@@ -72,7 +72,7 @@ namespace FleetDaemon
         }
     }
 
-    class Daemon
+    public class Daemon
     {
         // Static instance handling
         private ServiceHost Service;
@@ -88,7 +88,7 @@ namespace FleetDaemon
             this.ClientToken = token;
             DaemonService.OnRequest += DaemonService_OnRequest;
 
-            this.Storage.Store("process_list", processes);
+            //this.Storage.Store("process_list", processes);
         }
 
         private void DaemonService_OnRequest(IPCMessage message)
@@ -110,7 +110,7 @@ namespace FleetDaemon
             var message = new IPCMessage();
             message.ApplicaitonSenderID = "fileshare";  // TODO(hc): Change this to the actual sender
             message.ApplicationRecipientID = "fileinbox";
-            message.LocationHandle = IPCMessage.MessageLocationHandle.LOCAL;
+            message.Target = IPCMessage.MessageTarget.Local;
             message.Content["filepath"] = filepath;
             message.Type = "sendFile";
 
@@ -134,6 +134,7 @@ namespace FleetDaemon
             Console.WriteLine("Daemon IPC service listening");
 
             // Start heartbeat
+            RemoteFileManager.DaemonInstance = this;
             HeartbeatManager.WaitLength = 3000;
             HeartbeatManager.Instance.StartHeartbeat(ClientToken);
 

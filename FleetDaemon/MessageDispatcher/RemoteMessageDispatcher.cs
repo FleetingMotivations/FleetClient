@@ -47,6 +47,9 @@ namespace FleetDaemon.MessageDispatcher
 
         private Boolean ValidateMessage(IPCMessage message)
         {
+            // Check format
+            // Check sending restrictions
+            // etc
             return true;
         }
 
@@ -64,47 +67,70 @@ namespace FleetDaemon.MessageDispatcher
 
         private void HandleSendFileDispatch(IPCMessage message)
         {
-            // TODO(hc): Break this up
 
-            // Get clients
+            if (message.SkipSelector)
+            {
+                // Use the recipient id
+                var recipient = new FleetClientIdentifier();
+                recipient.Identifier = message.ApplicationRecipientID;
+
+                var recipients = new List<FleetClientIdentifier>();
+                recipients.Add(recipient);
+
+                SendFileMessage(message, recipients);
+
+            } else
+            {
+                // Get clients
+                var serviceClient = new FleetServiceClient("BasicHttpBinding_IFleetService");
+                FleetClientIdentifier[] clients = null;
+
+                try
+                {
+                    serviceClient.Open();
+                    clients = serviceClient.QueryClients(Token);
+                    serviceClient.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine("Aborting HandleSendFileDispatch");
+
+                    serviceClient.Abort();
+                    return;
+                }
+
+                // Make selector client
+                var address = new EndpointAddress("net.pipe://localhost/workstationselector");
+                var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+                var selectorClient = new WorkstationSelectIPCClient(binding, address);
+                List<FleetClientIdentifier> targets = null;
+
+                try
+                {
+                    // Get selection
+                    selectorClient.Open();
+                    targets = selectorClient.SelectWorkstations(new List<FleetClientIdentifier>(clients));
+                    selectorClient.Close();
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine("Aborting HandleSendFileDispatch");
+
+                    selectorClient.Abort();
+                    return;
+                }
+
+                // Send
+                SendFileMessage(message, targets);
+            }
+        }
+
+        private void SendFileMessage(IPCMessage message, List<FleetClientIdentifier> clients)
+        {
             var serviceClient = new FleetServiceClient("BasicHttpBinding_IFleetService");
-            FleetClientIdentifier[] clients = null;
-
-            try
-            {
-                serviceClient.Open();
-                clients = serviceClient.QueryClients(Token);
-
-            } catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Aborting HandleSendFileDispatch");
-
-                serviceClient.Abort();
-                return;
-            }
-
-            // Make selector client
-            var address = new EndpointAddress("net.pipe://localhost/workstationselector");
-            var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            var selectorClient = new WorkstationSelectIPCClient(binding, address);
-            List<FleetClientIdentifier> targets = null;
-
-            try
-            {
-                // Get selection
-                selectorClient.Open();
-                targets = selectorClient.SelectWorkstations(new List<FleetClientIdentifier>(clients));
-                selectorClient.Close();
-
-            } catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Aborting HandleSendFileDispatch");
-
-                selectorClient.Abort();
-                return;
-            }
 
             // Serialise file
             var fPath = message.Content["filePath"];
@@ -114,10 +140,11 @@ namespace FleetDaemon.MessageDispatcher
 
             try
             {
-                serviceClient.SendFileMultipleRecipient(Token, targets.ToArray(), fFile);
+                serviceClient.Open();
+                serviceClient.SendFileMultipleRecipient(Token, clients.ToArray(), fFile);
                 serviceClient.Close();
-
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine("Aborting HandleSendFileDispatch");
@@ -125,7 +152,6 @@ namespace FleetDaemon.MessageDispatcher
                 serviceClient.Abort();
                 return;
             }
-            
         }
     }
 }

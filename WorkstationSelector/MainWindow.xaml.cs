@@ -176,7 +176,7 @@ namespace WorkstationSelector
 
             message.ApplicaitonSenderID = "sendId";
             message.ApplicationRecipientID = "recipId";
-            message.LocationHandle = IPCMessage.MessageLocationHandle.DAEMON;
+            message.Target = IPCMessage.MessageTarget.Daemon;
             message.Type = "workstationShareList";
 
             message.Content["workstations"] = JsonConvert.SerializeObject(selectedWorkstations.ToArray());

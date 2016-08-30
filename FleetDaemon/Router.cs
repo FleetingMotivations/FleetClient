@@ -9,6 +9,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using FleetDaemon.MessageDispatcher;
 
 namespace FleetDaemon
 {
@@ -47,11 +48,13 @@ namespace FleetDaemon
                 switch (message.Target)
                 {
                     case IPCMessage.MessageTarget.Remote:
-                        HandleRemoteMessage(message);
+                        RemoteMessageDispatcher.Instance.Dispatch(message);
                         break;
+
                     case IPCMessage.MessageTarget.Local:
-                        HandleLocalMessage(message);
+                        LocalMessageDispatcher.Instance.Dispatch(message);
                         break;
+
                     case IPCMessage.MessageTarget.Daemon:
                         HandleDaemonMessage(message);
                         break;
@@ -105,7 +108,7 @@ namespace FleetDaemon
         }
 
 
-        private void HandleRemoteMessage(IPCMessage message)
+        /*private void HandleRemoteMessage(IPCMessage message)
         {
             if(message.SkipSelector)
             {
@@ -114,6 +117,7 @@ namespace FleetDaemon
                 
                 //Server.SendMessage(server_message);
                 var Server = new FleetServiceClient("BasicHttpBinding_IFleetService");
+
                 try
                 {
                     Server.Open();
@@ -142,16 +146,17 @@ namespace FleetDaemon
                     //          maybe better to just queue the message and open WorkstationSelector later
                 }
             }
-        }
+        }*/
 
         private void HandleLocalMessage(IPCMessage message)
         {
             var binding = AppBindings.First<ApplicationBinding>(b => b.App.Id == message.ApplicationRecipientID);
-
+            
             // TODO(AL): Allow for messages to launch an application if it's not running
 
             if (binding.App == null || binding.Client == null)
             {
+                
                 // Send message to message.ApplicationSenderID informing it that there exists no running
                 // instance of the target application
             }

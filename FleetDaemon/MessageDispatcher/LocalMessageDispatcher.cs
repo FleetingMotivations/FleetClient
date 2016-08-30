@@ -62,9 +62,10 @@ namespace FleetDaemon.MessageDispatcher
 
         private void HandleMessageDispatch(IPCMessage message)
         {
+
             var pipeIdent = message.ApplicationRecipientID;
             var client = IPCUtil.MakeApplicationClient(pipeIdent);
-
+            
             try
             {
                 client.Open();

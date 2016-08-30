@@ -29,6 +29,8 @@ namespace FleetDaemon
                 return instance;
             }
         }
+
+        public static Daemon DaemonInstance { get; set; }
         
         // Synchronicity lock
         private Object @lock = new Object();
@@ -144,7 +146,7 @@ namespace FleetDaemon
             File.WriteAllBytes(filename, file.FileContents);
             
             // Handle notification as background task
-            Task.Run(() => Daemon.Instance.HandleFileReceive(filename, attributes));
+            Task.Run(() => DaemonInstance.HandleFileReceive(filename, attributes));
         }
     }
 }
