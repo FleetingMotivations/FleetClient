@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,14 @@ namespace FileInbox
 
         private void openButton_Click(object sender, RoutedEventArgs e)
         {
+            var index = this.filesTable.SelectedIndex;
+            var item = this.storage.Files[index];
+            try
+            {
+                Process.Start(item.Filepath);
+            }
+            catch(Exception ex)
+            { }
 
         }
 

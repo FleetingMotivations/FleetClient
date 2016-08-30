@@ -8,8 +8,8 @@
         Title="File Inbox" 
         Height="240" Width="600">
     <Grid>
-        <Button x:Name="openButton" Content="Open..." Click="openButton_Click" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="copyButton" Content="Move..." Click="copyButton_Click"  HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button IsEnabled="True" x:Name="openButton" Content="Open..." Click="openButton_Click" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button IsEnabled="False" x:Name="copyButton" Content="Move..." Click="copyButton_Click"  HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
         <ListView x:Name="filesTable" Margin="10,35,10,10" >
             <ListView.View>
                 <GridView>
