@@ -9,8 +9,9 @@ namespace FleetIPC
     {
         public static FleetDaemonClient MakeDaemonClient()
         {
-            var address = new EndpointAddress("net.pipe://localhost/fleetdaemon");
-            var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+            var address = new EndpointAddress("net.tcp://localhost:30000/fleetdaemon");
+            //var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+            var binding = new NetTcpBinding(SecurityMode.None);
             binding.MaxBufferPoolSize = Int32.MaxValue;
             binding.MaxBufferSize = Int32.MaxValue;
             binding.MaxReceivedMessageSize = Int32.MaxValue;
