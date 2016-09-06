@@ -64,6 +64,7 @@ namespace FleetDaemon
             
             // Dependancy Injection
             var appHauler = new AppHauler(storage);
+            RemoteMessageDispatcher.Token = clientToken;
             var router = new Router(appHauler, storage, clientToken);
 
             var daemon = new Daemon(storage, router, clientToken);
