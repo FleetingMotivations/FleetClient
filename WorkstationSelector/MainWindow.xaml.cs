@@ -1,269 +1,195 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.ServiceModel;
-using FleetIPC;
-using Newtonsoft.Json;
+using MahApps.Metro.Controls;
+using FleetServer;
 
 namespace WorkstationSelector
 {
-
-    class WorkstationDisplayModel
-    {
-        public string FriendlyName { get; set; }
-        public string Identifier { get; set; }
-    }
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
-        //private List<Workstation> selectedWorkstations = new List<Workstation>();
-        private List<String> selectedWorkstations = new List<String>();
-        private FleetDaemonClient FleetDaemon { get; set; }
-        private ServiceHost service;
-        private IEnumerable<WorkstationDisplayModel> AvailableWorkstations { get; set; }
-
         public MainWindow()
         {
             InitializeComponent();
-            /*
-            //Campus:
-            ChecksModel campus = new ChecksModel("Callaghan");
-
-            //Builldings:
-            ChecksModel es = new ChecksModel("ES");
-            ChecksModel ee = new ChecksModel("EE");
-            ChecksModel ef = new ChecksModel("EF");
-            campus.AddChild(es);
-            campus.AddChild(ee);
-
-            //Rooms:
-            List<ChecksModel> rooms = new List<ChecksModel>();
-
-            ChecksModel es123 = new ChecksModel("ES123");
-            ChecksModel es124 = new ChecksModel("ES124");
-            rooms.Add(es123);
-            rooms.Add(es124);
-            es.AddChildren(rooms);
-            
-            rooms.Clear();
-
-            ChecksModel ee123 = new ChecksModel("EE123");
-            ChecksModel ee124 = new ChecksModel("EE124");
-            rooms.Add(ee123);
-            rooms.Add(ee124);
-            ee.AddChildren(rooms);
-            rooms.Clear();
-
-            //Workstations:
-            List<ChecksModel> workstations = new List<ChecksModel>();
-            for (int i = 1; i <= 10; i++)
-            {
-                workstations.Add(new ChecksModel("Workstation " + i));
-            }
-            es123.AddChildren(workstations);
-            workstations.Clear();
-
-            for (int i = 1; i <= 10; i++)
-            {
-                workstations.Add(new ChecksModel("Workstation " + i));
-            }
-            es124.AddChildren(workstations);
-            workstations.Clear();
-
-            for (int i = 1; i <= 10; i++)
-            {
-                workstations.Add(new ChecksModel("Workstation " + i));
-            }
-            ee123.AddChildren(workstations);
-            workstations.Clear();
-
-            for (int i = 1; i <= 10; i++)
-            {
-                workstations.Add(new ChecksModel("Workstation " + i));
-            }
-            ee124.AddChildren(workstations);
-            workstations.Clear();
-            
-
-            DataContext = campus;
-            */
-
-            // Set the service events
-            ApplicationService.OnInform += ApplicationService_OnInform;
-            ApplicationService.OnDeliver += ApplicationService_OnDeliver;
-
-            // Might want to do this as a background task?
-            // Define address & binding for this applications service
-            //var address = new Uri("net.pipe://localhost/WorkstationSelector");
-            //var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-
-            // Create and open the service
-            /*this.service = new ServiceHost(typeof(ApplicationService));
-            this.service.AddServiceEndpoint(typeof(IApplicationIPC), binding, address);
-            this.service.Open();
-            
-            var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
-            var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            this.FleetDaemon = new FleetDaemonClient(cBinding, cAddress);
-
-            var message = new IPCMessage();
-            message.ApplicaitonSenderID = "WorkstationSelector";
-            message.ApplicationRecipientID = "FleetDaemon";
-            message.LocationHandle = IPCMessage.MessageLocationHandle.DAEMON;
-            message.Type = "registration";
-            
-            this.FleetDaemon.Request(message);*/
         }
 
-        private void ApplicationService_OnDeliver(IPCMessage message)
+        private List<FleetClientIdentifier> selectedClients = new List<FleetClientIdentifier>();
+        private List<FleetClientIdentifier> availableClients = null;
+
+        public List<FleetClientIdentifier> ShowSelectorDialog(List<FleetClientIdentifier> clients)
         {
-            // Do some fun stuff
-            /*
-             [{Identifer:"asdfasdfasdf", FriendlyName: "sadfasdfasdf"}]
-             */
-            if (message.Type == "availableWorkstations")
+            this.availableClients = clients;
+            this.RenderWorkstations();
+            this.ShowDialog();
+            return selectedClients;
+        }
+
+        private void RenderWorkstations()
+        {
+
+            foreach (var client in availableClients)
             {
-                AvailableWorkstations = JsonConvert.DeserializeObject<List<WorkstationDisplayModel>>(message.Content["workstations"]);
-                var parent = new ChecksModel("Available Workstations");
-                parent.AddChildren(AvailableWorkstations.Select(w => new ChecksModel {
-                    Label = w.FriendlyName
-                }).ToList());
+                var tile = new FleetWorkstationTile(client);
+                tile.Click += SelectWorkstation_Click;
+                WorkstationSelectorPanel.Children.Add(tile);
+            }
+
+            /*for (int i = 0; i < 9; i++) //TODO: Change for all Workstations in the context
+            {
+                Image img = new Image();
+                img.Source = new BitmapImage(new Uri(@"/WorkstationSelector;component/Assets/workstation.png", UriKind.Relative));
+                img.Stretch = Stretch.Fill;
+                img.Margin = new Thickness(0, 10, 0, 20);
+
+                //TODO:
+                //If unavailable: Change Opacity for usability:
+                //img.Opacity = 0.1;
+
+                Tile tile = new Tile();
+                tile.Content = img;
+                tile.Title = "Workstation " + (i + 1);
+
+                //TODO:
+                //If unavailable: Add ToolTip for why it is unavailable:
+                //tile.ToolTip = tile.Title.ToString() + " unavailable. (Offline)";
+
+                tile.Style = (Style)Resources["SmallTileStyle"];
+                tile.Click += new RoutedEventHandler(SelectWorkstation_Click);
+                tile.Tag = "0"; //Not selected
+
+                WorkstationSelectorPanel.Children.Add(tile);
+            }*/
+        }
+
+        private void SelectWorkstation_Click(object sender, RoutedEventArgs e)
+        {
+            var tile = e.OriginalSource as FleetWorkstationTile;
+
+            if (tile.Tag.Equals("0")) //Not selected
+            {
+                tile.Tag = "1"; //Activate button
+                tile.Background = (SolidColorBrush)Resources["SelectedWorkstation"];
+
+                this.selectedClients.Add(tile.Identifier);
+            }
+            else //The Tile was selected, so deselect it
+            {
+                tile.Tag = "0";
+                tile.Background = (SolidColorBrush)Resources["AvailableWorkstation"];
+                this.AllButton.Content = "\xE8B3"; //Select All
+                this.AllButton.ToolTip = "Select all workstations";
+                this.AllButton.Click += new RoutedEventHandler(SelectAllWorkstations_Click);
+
+                this.selectedClients.Remove(tile.Identifier);
             }
         }
 
-        private void ApplicationService_OnInform(List<IPCMessage> message)
+        private void AllWorkstations_Click(object sender, RoutedEventArgs e)
         {
-            // Do some even more fun stuff
-        }
-
-        private void WorkstationSelected(object sender, RoutedEventArgs e)
-        {
-            var content = (e.Source as CheckBox).Content.ToString();
-            var workstation = AvailableWorkstations.First(w => w.FriendlyName == content);
-            selectedWorkstations.Add(workstation.Identifier);
-            //MessageBox.Show(content + " Selected");
-        }
-
-        private void WorkstationUnselected(object sender, RoutedEventArgs e)
-        {
-            var content = (e.Source as CheckBox).Content.ToString();
-            var workstation = AvailableWorkstations.First(w => w.FriendlyName == content);
-            selectedWorkstations.Remove(workstation.Identifier);
-            //MessageBox.Show(content + " Removed");
-        }
-
-        private void SendToDaemon(object sender, RoutedEventArgs e)
-        {
-            JsonSerializer serializer = new JsonSerializer();
-            var message = new IPCMessage();
-
-            message.ApplicaitonSenderID = "sendId";
-            message.ApplicationRecipientID = "recipId";
-            message.Target = IPCMessage.MessageTarget.Daemon;
-            message.Type = "workstationShareList";
-
-            message.Content["workstations"] = JsonConvert.SerializeObject(selectedWorkstations.ToArray());
-
-            this.FleetDaemon.Request(message);
-            
-            String recipients = String.Join(", ", selectedWorkstations.ToArray());
-            MessageBox.Show("Sent to: " + recipients);
-        }
-    }
-
-    class ChecksModel : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private ObservableCollection<ChecksModel> _Children;
-        private bool _IsChecked;
-        private string _Label;
-
-        public ChecksModel(string label, bool status)
-        {
-            Children = new ObservableCollection<ChecksModel>();
-            Label = label;
-            IsChecked = status;
-        }
-
-        public ChecksModel(string label) : this(label, false) { }
-
-        public ChecksModel()
-        {
-            Children = new ObservableCollection<ChecksModel>();
-        }
-
-        public void AddChild(ChecksModel child)
-        {
-            Children.Add(child);
-        }
-        
-        public void AddChildren(List<ChecksModel> children)
-        {
-            foreach (ChecksModel child in children)
+            if ((e.OriginalSource as Button).Tag.Equals("Select")) //Select All
             {
-                Children.Add(child);
+                SelectAllWorkstations_Click(sender, e);
+                this.AllButton.Content = "\xE1C5"; //Deselect All
+                this.AllButton.Tag = "Deselect";
+                this.AllButton.ToolTip = "Deselect all workstations";
+                this.AllButton.Click += new RoutedEventHandler(DeselectAllWorkstations_Click);
+            }
+            else //"Deselect All"
+            {
+                DeselectAllWorkstations_Click(sender, e);
+                this.AllButton.Content = "\xE8B3"; //Select All
+                this.AllButton.Tag = "Select";
+                this.AllButton.ToolTip = "Select all workstations";
+                this.AllButton.Click += new RoutedEventHandler(SelectAllWorkstations_Click);
             }
         }
-                
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
 
-        public ObservableCollection<ChecksModel> Children
+        private void SelectAllWorkstations_Click(object sender, RoutedEventArgs e)
         {
-            get { return _Children; }
-            set
+            var workstations = FindAllWorkstations(this, new List<Tile>());
+            foreach (Tile t in workstations)
             {
-                _Children = value;
-                OnPropertyChanged("Children");
-            }
-        }
-        
-        public string Label
-        {
-            get { return _Label; }
-            set
-            {
-                _Label = value;
-                OnPropertyChanged("Label");
+                t.Tag = "1"; //Activate button
+                t.Background = (SolidColorBrush)Resources["SelectedWorkstation"];
             }
 
+            this.selectedClients.Clear();
+            this.selectedClients.AddRange(this.availableClients);
         }
 
-        public bool IsChecked
+        private void DeselectAllWorkstations_Click(object sender, RoutedEventArgs e)
         {
-            get {return _IsChecked;}
-            set
+            var workstations = FindAllWorkstations(this, new List<Tile>());
+            foreach (Tile t in workstations)
             {
-                _IsChecked = value;
-                OnPropertyChanged("IsChecked");
-                CheckNodes(value);
+                t.Tag = "0"; //Deactivate button
+                t.Background = (SolidColorBrush)Resources["AvailableWorkstation"];
             }
+
+            this.selectedClients.Clear();
         }
-        private void CheckNodes(bool value)
+
+        private IList<Tile> FindAllWorkstations(object uiElement, IList<Tile> tiles)
         {
-            foreach (ChecksModel m in _Children)
+            if (uiElement is Tile)
             {
-                m.IsChecked = value;
+                var tile = (Tile)uiElement;
+                tiles.Add(tile);
             }
+            else if (uiElement is Grid)
+            {
+                var uiElementAsCollection = (Grid)uiElement;
+                foreach (var element in uiElementAsCollection.Children)
+                {
+                    FindAllWorkstations(element, tiles);
+                }
+            }
+            else if (uiElement is Button)
+            {
+                FindAllWorkstations(this.WorkstationSelectorPanel, tiles);
+            }
+            else if (uiElement is WrapPanel)
+            {
+                var element = (WrapPanel)uiElement;
+                for (int i = 0; i < element.Children.Count; i++)
+                {
+                    FindAllWorkstations(element.Children[i], tiles);
+                }
+            }
+            else if (uiElement is UserControl)
+            {
+                var uiElementAsUserControl = (UserControl)uiElement;
+                FindAllWorkstations(uiElementAsUserControl.Content, tiles);
+            }
+            else if (uiElement is ContentControl)
+            {
+                var uiElementAsContentControl = (ContentControl)uiElement;
+                FindAllWorkstations(uiElementAsContentControl.Content, tiles);
+            }
+
+            return tiles;
+
+        }
+
+        private void Send_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Integrate with system for Sending
+            this.Close();
+        }
+
+        private void WorkstationScope_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (sender as Button);
+            WorkstationFlyout.IsOpen = true;
+        }
+
+        private void CloseButton_Click()
+        {
+            WorkstationFlyout.IsOpen = false;
         }
     }
 }
