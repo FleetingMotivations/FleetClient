@@ -126,9 +126,8 @@ namespace FleetDaemon
         public void Run()
         {
             // Service initialisation
-            var address = new Uri("net.tcp://localhost:30000/fleetdaemon");
-            //var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            var binding = new NetTcpBinding(SecurityMode.None);
+            var address = new Uri("net.pipe://localhost/fleetdaemon");
+            var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
             this.Service = new ServiceHost(typeof(DaemonService));
             this.Service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
             this.Service.Open();
