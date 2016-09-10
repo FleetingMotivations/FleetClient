@@ -1,7 +1,4 @@
-﻿using FileAcceptIPC;
-using FleetIPC;
-using FleetServer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -9,10 +6,16 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows;
+using FleetServer;
+using System.Drawing;
 using System.Windows.Forms;
+using WorkstationSelectorIPC;
 
-namespace FileAccept
+namespace WorkstationSelector
 {
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
     public partial class App : System.Windows.Application
     {
         private ServiceHost service;
@@ -23,23 +26,22 @@ namespace FileAccept
             trayIcon.Visible = true;
             trayIcon.Icon = new System.Drawing.Icon("../../jordan_the_tool.ico");
 
-            var address = new Uri("net.pipe://localhost/fileaccept");
+            var address = new Uri("net.pipe://localhost/workstationselector");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            this.service = new ServiceHost(typeof(FileAcceptService));
-            this.service.AddServiceEndpoint(typeof(IFileAcceptIPC), binding, address);
+            this.service = new ServiceHost(typeof(WorkstationSelectService));
+            this.service.AddServiceEndpoint(typeof(IWorkstationSelectIPC), binding, address);
             this.service.Open();
-
-            Console.WriteLine("Service started");
         }
     }
 
-    public class FileAcceptService : IFileAcceptIPC
+    public class WorkstationSelectService : IWorkstationSelectIPC
     {
-        public Boolean RequestAcceptFile(FleetFileIdentifier ident)
+        public List<FleetClientIdentifier> SelectWorkstations(List<FleetClientIdentifier> clients)
         {
+            // Just return all for now
             var window = new MainWindow();
-            window.ShowRequestDialog(ident);
-            return window.DidAccept;
+            window.ShowDialog();
+            return clients;
         }
     }
 }

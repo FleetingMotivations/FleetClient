@@ -7,8 +7,11 @@
         mc:Ignorable="d"
         Title="Incoming File" Height="350" Width="525">
     <Grid>
-        <TextBlock FontSize="15" Margin="35,90,35,204">Incoming file from Bob. Would you like to accept or reject this file?</TextBlock>
+        <TextBlock Name="Filename" FontSize="15" Margin="35,70,35,224" Text="&lt;file name&gt;" TextAlignment="Center"/>
         <Button Content="Accept" Name="AcceptButton" Margin="130,200,304,76" Background="LightGreen" Click="AcceptButton_Click"/>
         <Button Content ="Reject" Name="RejectButton" Margin="303,200,130,76" Background="Salmon" Click="RejectButton_Click"/>
+        <TextBlock Name="Name" FontSize="15" Margin="35,40,35,254" Text="Incoming file from &lt;unknown&gt;" TextAlignment="Center"/>
+        <TextBlock Name="Size" FontSize="15" Margin="35,100,35,194" Text="&lt;size&gt;" TextAlignment="Center"/>
+        <TextBlock FontSize="15" Margin="35,130,35,164" Text="Would you like to accept this file?" TextAlignment="Center"/>
     </Grid>
 </Window>

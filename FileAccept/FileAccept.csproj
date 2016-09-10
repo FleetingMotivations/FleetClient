@@ -37,7 +37,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -101,7 +104,18 @@
       <Project>{E5ABEC53-D8B6-4C9D-BAAD-EA3FFD4A68C9}</Project>
       <Name>FileShare</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FleetDaemon\FleetDaemon.csproj">
+      <Project>{5682FDB7-8AC3-4C06-87AF-309AEB5B987D}</Project>
+      <Name>FleetDaemon</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="jordan_the_tool.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <Import Project="..\FileAcceptIPC\FileAcceptIPC.projitems" Label="Shared" />
+  <Import Project="..\FleetIPC\FleetIPC.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
