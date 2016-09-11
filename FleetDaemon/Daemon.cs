@@ -4,6 +4,7 @@ using FleetIPC;
 using FleetServer;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.ServiceModel;
 
@@ -114,10 +115,11 @@ namespace FleetDaemon
             Console.WriteLine(Directory.GetCurrentDirectory());
 
             // Start Workstation Selector
-            AppHauler.Instance.LaunchApplication("workstationselector");
+            //AppHauler.Instance.LaunchApplication("workstationselector");
 
             // Start Accept Dialog
-            AppHauler.Instance.LaunchApplication("fileaccept");
+            //AppHauler.Instance.LaunchApplication("fileaccept");
+            Process.Start("services.bat");
 
             // Start Dock
             AppHauler.Instance.LaunchApplication("fleetshelf");

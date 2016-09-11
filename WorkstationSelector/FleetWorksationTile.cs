@@ -21,6 +21,8 @@ namespace WorkstationSelector
 
         public FleetWorkstationTile(FleetClientIdentifier identifier)
         {
+            this.identifier = identifier;
+
             Image img = new Image();
             img.Source = new BitmapImage(new Uri(@"/WorkstationSelector;component/Assets/workstation.png", UriKind.Relative));
             img.Stretch = Stretch.Fill;

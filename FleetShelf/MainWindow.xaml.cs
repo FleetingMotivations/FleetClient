@@ -66,12 +66,12 @@ namespace FleetShelf
 
         private void ScreenCapture_Click(object sender, RoutedEventArgs e)
         {
-            this.LaunchApplication("fileshare");
+            
         }
 
         private void WorkstationShare_Click(object sender, RoutedEventArgs e)
         {
-            //
+            this.LaunchApplication("fileshare");
         }
 
         private void FacilitatorControls_Click(object sender, RoutedEventArgs e)
