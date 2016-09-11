@@ -18,6 +18,7 @@ using System.Windows.Interop;
 using System.Reflection;
 
 using MahApps.Metro.Controls;
+using System.Windows.Media.Animation;
 
 namespace FileShare
 {
@@ -39,7 +40,8 @@ namespace FileShare
 
         private void OnFileDragLeave(object sender, DragEventArgs e)
         {
-            this.AddFilePanel.Background = Brushes.Transparent;
+            this.AddFilePanel.Background = Brushes.Gray;
+            this.AddFilePanel.Opacity = 0.1;
         }
 
         private void Window_Drop(object sender, DragEventArgs e)
@@ -55,12 +57,16 @@ namespace FileShare
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as String[];
+
+                this.AttachedFiles.Items.Add(droppedFiles[0]);
+                this.RemoveFileButton.IsEnabled = true;
+                this.SelectWorkstationsButton.IsEnabled = true;
             }
 
             if ((null == droppedFiles) || (!droppedFiles.Any())) { return; }
 
             var daemonClient = IPCUtil.MakeDaemonClient();
-            
+
             try
             {
                 daemonClient.Open();
@@ -75,14 +81,15 @@ namespace FileShare
                 daemonClient.Request(message);
                 daemonClient.Close();
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 daemonClient.Abort();
             }
         }
 
-        private void AddFile_Click(object sender, RoutedEventArgs e)
+        private void AddFileButton_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog exp = new Microsoft.Win32.OpenFileDialog();
 
@@ -91,10 +98,37 @@ namespace FileShare
             if(result == true)
             {
                 String filename = exp.FileName;
-                Console.Write(filename);
+                this.AttachedFiles.Items.Add(filename);
             }
 
-            //TODO: Link this to the rest of the system to send the file selected by the user
+            this.SelectWorkstationsButton.IsEnabled = true;
+            this.RemoveFileButton.IsEnabled = true;
+        }
+
+        private void RemoveFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.AttachedFiles.SelectedItems.Count > 0)
+            {
+                foreach (var item in this.AttachedFiles.SelectedItems)
+                {
+                    Console.WriteLine("DELETING " + item);
+                    this.AttachedFiles.Items.Remove(item);
+
+                    if(this.AttachedFiles.SelectedItems.Count == 0) { break; }
+                }
+
+                if (this.AttachedFiles.Items.Count == 0)
+                {
+                    this.RemoveFileButton.IsEnabled = false;
+                    this.SelectWorkstationsButton.IsEnabled = false;
+                }
+            }
+
+        }
+
+        private void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Send this.AttachedFiles.Items - requires Workstation Selections
         }
     }
 }
