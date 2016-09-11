@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FleetIPC;
+using FleetDaemon.Hauler;
 
 namespace FleetDaemon.MessageDispatcher
 {
@@ -27,7 +28,73 @@ namespace FleetDaemon.MessageDispatcher
 
         public void Dispatch(IPCMessage message)
         {
-            throw new NotImplementedException();
+            if (ValidateSender(message))
+            {
+                HandleMessage(message);
+
+            } else
+            {
+                Console.WriteLine("Message Security Error. Application does not have privilege to send daemon messages");
+            }
+        }
+
+        private Boolean ValidateSender(IPCMessage message)
+        {
+            // Check if application is registered to send daemon messages
+            return true;
+        }
+
+        private void HandleMessage(IPCMessage message)
+        {
+            switch (message.Type)
+            {
+                case "knownApplications":
+                    HandleKnownApplicationsMessage(message);
+                    break;
+                case "launchApplication":
+                    HandleLaunchApplicationMessage(message);
+                    break;
+                default:
+                    Console.WriteLine("Unhandled message type");
+                    break;
+            }
+        }
+
+        private void HandleKnownApplicationsMessage(IPCMessage message)
+        {
+            var knownApps = AppHauler.Instance.KnownApplications.Values;
+            var knownAppMessages = new List<IPCMessage>();
+
+            foreach (var app in knownApps)
+            {
+                var m = new IPCMessage();
+                m.Content["name"] = app.Name;
+                m.Content["identifier"] = app.Identifier;
+                m.Content["path"] = app.Path;
+
+                knownAppMessages.Add(m);
+            }
+
+            var client = IPCUtil.MakeApplicationClient(message.ApplicaitonSenderID);
+
+            try
+            {
+                client.Open();
+                client.Inform(knownAppMessages);
+                client.Close();
+
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                client.Abort();
+            }
+        }
+
+        private void HandleLaunchApplicationMessage(IPCMessage message)
+        {
+            var appID = message.Content["application"];
+
+            AppHauler.Instance.LaunchApplication(appID);
         }
     }
 }

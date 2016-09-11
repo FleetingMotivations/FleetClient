@@ -101,7 +101,7 @@ namespace FleetDaemon.Hauler
                 {
                     var exe = record.Path;
 
-                    var process = Process.Start(exe);
+                    Process process = Process.Start(exe);
                     process.Exited += Process_Exited;
 
                     var runningRecord = new FleetRunningApplication();

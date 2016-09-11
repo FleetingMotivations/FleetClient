@@ -1,14 +1,11 @@
-﻿using FleetDaemon.Storage.Interfaces;
+﻿using FleetDaemon.Hauler;
+using FleetDaemon.Storage.Interfaces;
 using FleetIPC;
 using FleetServer;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
-using FleetDaemon.Hauler;
 using System.IO;
+using System.ServiceModel;
 
 namespace FleetDaemon
 {
@@ -83,6 +80,13 @@ namespace FleetDaemon
             Console.WriteLine("Daemon running. Press the any key to exit.");
             Console.ReadLine();
             this.Service.Close();
+
+            //HeartbeatManager.Instance.StopHeartbeat();
+
+            foreach (var app in AppHauler.Instance.RunningApplications.Values)
+            {
+                app.Process.Kill();
+            }
         }
 
         private void StartService()
@@ -92,7 +96,7 @@ namespace FleetDaemon
             this.Service = new ServiceHost(typeof(DaemonService));
             this.Service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
             this.Service.Open();
-
+            
             Console.WriteLine("Daemon IPC service listening");
         }
 
@@ -116,7 +120,7 @@ namespace FleetDaemon
             AppHauler.Instance.LaunchApplication("fileaccept");
 
             // Start Dock
-            //AppHauler.Instance.LaunchApplication("fleetshelf");
+            AppHauler.Instance.LaunchApplication("fleetshelf");
         }
 
         private void InitialiseAppHauler()
@@ -154,14 +158,13 @@ namespace FleetDaemon
                 Visible = false
             };
 
-            /*apphauler.KnownApplications["fleetshelf"] = new FleetKnownApplication
+            apphauler.KnownApplications["fleetshelf"] = new FleetKnownApplication
             {
-                Name = "File Inbox",
-                Path = @"..\..\..\FileShare\bin\Debug\FileInbox.exe",
-                Identifier = "fileinbox",
+                Name = "Fleet Shelf",
+                Path = @"..\..\..\FleetShelf\bin\Debug\FleetShelf.exe",
+                Identifier = "fleetshelf",
                 Visible = false
-            };*/
-
+            };
         }
     }
 }

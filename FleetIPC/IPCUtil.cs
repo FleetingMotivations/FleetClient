@@ -43,6 +43,6 @@ namespace FleetIPC
             var service = new ServiceHost(typeof(ApplicationService));
             service.AddServiceEndpoint(typeof(IApplicationIPC), binding, address);
             return service;
-        }  
+        }
     }
 }
