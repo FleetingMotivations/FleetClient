@@ -50,6 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppHauler.cs" />
+    <Compile Include="AppHauler\AppHauler.cs" />
+    <Compile Include="Daemon.cs" />
+    <Compile Include="MessageDispatcher\DaemonMessageDispatcher.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Router.cs" />

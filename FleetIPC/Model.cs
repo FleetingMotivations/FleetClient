@@ -38,7 +38,5 @@ namespace FleetIPC
 
         [DataMember]
         public bool SkipSelector { get; set; }
-
     }
-
 }

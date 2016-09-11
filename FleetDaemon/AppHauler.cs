@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace FleetDaemon
+/*namespace FleetDaemon
 {
 
     public class FleetAppConfig
@@ -52,12 +52,7 @@ namespace FleetDaemon
 
         public AppHauler(ISimpleStorage storage)
         {
-            /*  {"Name":"workstation_selector", 
-             *   "Id":"", 
-             *   "Location":"..\..\..\WorkstationSelector\bin\Debug\WorkstationSelector.exe",
-             *   "PipeName":"WorkstationSelector"
-             *   "SingleInstance": true}
-             */
+            
 
             // "drag_drop":"..\..\..\FileShare\bin\Debug\FileShare.exe"
 
@@ -164,6 +159,6 @@ namespace FleetDaemon
             }
             return true;
         }
-
     }
 }
+*/

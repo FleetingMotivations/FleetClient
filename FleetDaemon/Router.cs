@@ -22,23 +22,23 @@ namespace FleetDaemon
     {
         private FleetClientToken ClientToken;
         private ISimpleStorage Storage;
-        private IAppHauler AppHauler;
-        private List<ApplicationBinding> AppBindings;
+        //private IAppHauler AppHauler;
+        //private List<ApplicationBinding> AppBindings;
 
-        private IPCMessage FileShareMessage;
+        //private IPCMessage FileShareMessage;
 
-        private struct ApplicationBinding {
+        /*private struct ApplicationBinding {
             public FleetApplication App;
             public ApplicationClient Client;
             public bool Registered;
-        } 
+        } */
 
-        public Router(IAppHauler appHauler, ISimpleStorage storage, FleetClientToken token)
+        public Router(/*IAppHauler appHauler,*/ISimpleStorage storage, FleetClientToken token)
         {
-            this.AppHauler = appHauler;
+            //this.AppHauler = appHauler;
             this.ClientToken = token;
             this.Storage = storage;
-            this.AppBindings = new List<ApplicationBinding>();
+            //this.AppBindings = new List<ApplicationBinding>();
         }
 
         public void HandleMessage(IPCMessage message)
@@ -56,7 +56,7 @@ namespace FleetDaemon
                         break;
 
                     case IPCMessage.MessageTarget.Daemon:
-                        HandleDaemonMessage(message);
+                        DaemonMessageDispatcher.Instance.Dispatch(message);
                         break;
                 }
             }
@@ -67,7 +67,7 @@ namespace FleetDaemon
  
         }
 
-        private void LaunchApplication(string applicationName)
+        /*private void LaunchApplication(string applicationName)
         {
             var app = this.AppHauler.GetAppByName(applicationName);
 
@@ -87,9 +87,9 @@ namespace FleetDaemon
                     CreateBinding(app);
                 }
             }
-        }
+        }*/
 
-        private void CreateBinding(FleetApplication app)
+        /*private void CreateBinding(FleetApplication app)
         {
             var appBinding = new ApplicationBinding {
                 App = app,
@@ -98,14 +98,14 @@ namespace FleetDaemon
             };
 
             this.AppBindings.Add(appBinding);
-        }
+        }*/
 
-        private void CloseBinding(string id)
+        /*private void CloseBinding(string id)
         {
             var binding = AppBindings.FirstOrDefault<ApplicationBinding>(b => b.App.Id == id);
             binding.Registered = false;
             AppBindings.Remove(binding);
-        }
+        }*/
 
 
         /*private void HandleRemoteMessage(IPCMessage message)
@@ -148,7 +148,7 @@ namespace FleetDaemon
             }
         }*/
 
-        private void HandleLocalMessage(IPCMessage message)
+        /*private void HandleLocalMessage(IPCMessage message)
         {
             var binding = AppBindings.First<ApplicationBinding>(b => b.App.Id == message.ApplicationRecipientID);
             
@@ -173,9 +173,9 @@ namespace FleetDaemon
                     // send message to message.ApplicationSenderID
                 }
             }
-        }
+        }*/
 
-        private void HandleDaemonMessage(IPCMessage message)
+        /*private void HandleDaemonMessage(IPCMessage message)
         {
             if(message.Type == "Register")
             {
@@ -235,7 +235,7 @@ namespace FleetDaemon
                 // message.Content["filePath"]
                 //TODO(AL+JORDAN):  open the file in the default thing
             }
-        }
+        }*/
     }
 
 }
