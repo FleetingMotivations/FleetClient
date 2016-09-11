@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using MahApps.Metro.Controls;
+
 namespace FleetShelf
 {
     /// <summary>
@@ -23,6 +25,54 @@ namespace FleetShelf
         public MainWindow()
         {
             InitializeComponent();
+            this.AllowsTransparency = true;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (FleetShelf.Visibility == Visibility.Collapsed)
+            {
+                FleetShelf.Visibility = Visibility.Visible;
+                (sender as Button).Margin = new Thickness(45, 0, 0, 0);
+            }
+            else
+            {
+                FleetShelf.Visibility = Visibility.Collapsed;
+                Image img = new Image();
+                img.Source = new BitmapImage(new Uri(@"/FleetShelf;component/Assets/Fleet_Logo.png", UriKind.Relative));
+                (sender as Button).Content = img;
+                (sender as Button).Margin = new Thickness(0, 0, 0, 0);
+            }
+        }
+
+        private void UnFocusDock(object sender, RoutedEventArgs e)
+        {
+            (sender as DockPanel).Visibility = Visibility.Collapsed;
+        }
+
+        private void Inbox_Click(object sender, RoutedEventArgs e)
+        {
+            //
+        }
+
+        private void ScreenCapture_Click(object sender, RoutedEventArgs e)
+        {
+            //
+        }
+
+        private void WorkstationShare_Click(object sender, RoutedEventArgs e)
+        {
+            //
+        }
+
+        private void FacilitatorControls_Click(object sender, RoutedEventArgs e)
+        {
+            //
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            //
         }
     }
 }
