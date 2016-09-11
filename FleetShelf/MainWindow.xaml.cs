@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using MahApps.Metro.Controls;
+using FleetIPC;
 
 namespace FleetShelf
 {
@@ -22,6 +23,9 @@ namespace FleetShelf
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private List<FleetShelfApplication> applications;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -50,14 +54,19 @@ namespace FleetShelf
             (sender as DockPanel).Visibility = Visibility.Collapsed;
         }
 
+        /*
+         *  Might want to replace these with a generic on click method
+         *  that send the correct message based on a tag or something?
+         */
+
         private void Inbox_Click(object sender, RoutedEventArgs e)
         {
-            //
+            this.LaunchApplication("fileinbox");
         }
 
         private void ScreenCapture_Click(object sender, RoutedEventArgs e)
         {
-            //
+            this.LaunchApplication("fileshare");
         }
 
         private void WorkstationShare_Click(object sender, RoutedEventArgs e)
@@ -73,6 +82,37 @@ namespace FleetShelf
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             //
+        }
+
+        // 3. We have received a list of applications
+        // We can render them and stuff.
+
+        internal void UpdateApplications(List<FleetShelfApplication> applications)
+        {
+            this.applications = applications;
+        }
+
+        private void LaunchApplication(String identifier)
+        {
+            var message = new IPCMessage();
+            message.ApplicaitonSenderID = App.ApplicationIdentifier;
+            message.Target = IPCMessage.MessageTarget.Daemon;
+            message.Type = "launchApplication";
+            message.Content["application"] = identifier;
+
+            var client = IPCUtil.MakeDaemonClient();
+
+            try
+            {
+                client.Open();
+                client.Request(message);
+                client.Abort();
+
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                client.Abort();
+            }
         }
     }
 }
