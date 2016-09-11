@@ -25,40 +25,29 @@ namespace FileShare
             ApplicationService.OnInform += ApplicationService_OnInform;
             ApplicationService.OnDeliver += ApplicationService_OnDeliver;
 
-            // Might want to do this as a background task?
-            // Define address & binding for this applications service
-            var address = new Uri("net.pipe://localhost/fileshare");
-            var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-
             // Create and open the service
-            this.service = new ServiceHost(typeof(ApplicationService));
-            this.service.AddServiceEndpoint(typeof(IApplicationIPC), binding, address);
+            this.service = IPCUtil.MakeApplicationService("fileshare");
             this.service.Open();
-
-
-
 
             // Communicate with the daemon. Obviously will not have to do this here (maybe registration though?)
             // 1. Create binding and address.
             //    Note that the address for a client is a different type
             //    Then create the client
-            var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
-            var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            var daemon = new FleetDaemonClient(cBinding, cAddress);
+            var daemon = IPCUtil.MakeDaemonClient();
 
             // Create a dummy message
-            var message = new IPCMessage();
+            /*var message = new IPCMessage();
             message.ApplicaitonSenderID = "fileshare";
             message.ApplicationRecipientID = "friendface";
             message.Content["type"] = "Register Application";
             message.Content["register"] = "Yo bud I exist aight!?";
-
-            daemon.Request(message);
+            */
+            //daemon.Request(message);
         }
 
         private void ApplicationService_OnDeliver(IPCMessage message)
         {
-            // Do some fun stuff
+            // Have received
         }
 
         private void ApplicationService_OnInform(List<IPCMessage> message)

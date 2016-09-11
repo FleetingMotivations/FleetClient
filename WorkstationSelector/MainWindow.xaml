@@ -1,0 +1,83 @@
+﻿<Controls:MetroWindow x:Class="WorkstationSelector.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WorkstationSelector"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        mc:Ignorable="d"
+        Title="Workstation Selector" Height="669.345" Width="735.925"
+        TitlebarHeight="30" WindowStartupLocation="CenterScreen"
+        ShowTitleBar="True" ResizeMode="CanMinimize"
+        GlowBrush="{DynamicResource AccentColorBrush}">
+
+    <!-- Styling Resources -->
+    <Window.Resources>
+        <SolidColorBrush x:Key="AvailableWorkstation" Color="#FFF5F5F5" />
+        <SolidColorBrush x:Key="UnavailableWorkstation" Color="#B1B1B1"/>
+        <SolidColorBrush x:Key="SelectedWorkstation" Color="#057bc6" />
+        <SolidColorBrush x:Key="DarkBlueColour" Color="#0C68C1" />
+        <SolidColorBrush x:Key="RedColour" Color="#BB0231" />
+
+        <Style x:Key="LargeTileStyle" TargetType="Controls:Tile">
+            <Setter Property="Width" Value="300" />
+            <Setter Property="Height" Value="125" />
+            <Setter Property="TitleFontSize" Value="10" />
+        </Style>
+
+        <Style x:Key="SmallTileStyle" TargetType="Controls:Tile">
+            <Setter Property="Width" Value="147" />
+            <Setter Property="Height" Value="125" />
+            <Setter Property="TitleFontSize" Value="12" />
+            <Setter Property="Background" Value="WhiteSmoke" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
+    </Window.Resources>
+
+    <!--Flyout -->
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl Margin="0, 30, 0, 0">
+            <Controls:Flyout Position="Left" Width="68" Theme="Light" x:Name="WorkstationFlyout" CloseCommand="{Binding CloseButton_Click()}">
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+
+    <!--Gridding -->
+    <Grid x:Name="WorkstationSelectorGrid" Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="83*"/>
+            <RowDefinition Height="259*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="1"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Left"
+                   Text="Select the workstations to send to"
+                   FontWeight="SemiBold"
+                   Foreground="Black"
+                   FontSize="30"
+                   FontFamily="Segoe UI" Height="40" Margin="118,0,0,57" Width="464" />
+
+        <WrapPanel x:Name="WorkstationSelectorPanel" Grid.Row="1" Grid.Column="1" Margin="118,10,118,77">
+            <!-- Workstations Dynamically Stored Here -->
+        </WrapPanel>
+
+        <!-- Workstation Context Button (Flyout) -->
+        <Button x:Name="WorkstationScope" Style="{DynamicResource MetroCircleButtonStyle}" BorderThickness="0" 
+                Background="Transparent" FontSize="18" FontFamily="Segoe MDL2 Assets" Content="&#xE212;" Cursor="Hand" Height="30" 
+                VerticalAlignment="Top" Click="WorkstationScope_Click" x:Uid="Closed" ToolTip="Change Context" />
+        <Button x:Name="AllButton" FontSize="18" FontFamily="Segoe MDL2 Assets" Content="&#xE8B3;" Grid.Column="1" 
+                Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Left" Height="31" Margin="588,257,0,0" 
+                Grid.Row="1" VerticalAlignment="Top" Width="33" BorderBrush="Transparent" ToolTip="Select all workstations"
+                Click="AllWorkstations_Click" Tag="Select"/>
+        <Button x:Name="Send" FontSize="18" FontFamily="Segoe MDL2 Assets" Content="&#xE725;" Grid.Column="1" 
+                Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Left" Height="31" Margin="588,298,0,0" 
+                Grid.Row="1" VerticalAlignment="Top" Width="33" BorderBrush="Transparent" ToolTip="Send to workstations"
+                Click="Send_Click"/>
+    </Grid>
+
+</Controls:MetroWindow>

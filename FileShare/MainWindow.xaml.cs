@@ -39,19 +39,27 @@ namespace FileShare
 
             if ((null == droppedFiles) || (!droppedFiles.Any())) { return; }
 
-            var cAddress = new EndpointAddress("net.pipe://localhost/fleetdaemon");
-            var cBinding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            var daemon = new FleetDaemonClient(cBinding, cAddress);
-
+            var daemonClient = IPCUtil.MakeDaemonClient();
             
-            var message = new IPCMessage();
-            message.ApplicaitonSenderID = "fileshare";
-            message.ApplicationRecipientID = "friendface";
-            message.Content["type"] = "sendFile";
-            message.Content["fileurl"] = droppedFiles[0];
+            try
+            {
+                daemonClient.Open();
 
-            daemon.Request(message);
-            
+                var message = new IPCMessage();
+                message.ApplicaitonSenderID = "FileShare";
+                message.ApplicationRecipientID = "friendface";
+                message.Target = IPCMessage.MessageTarget.Remote;
+                message.Type = "sendFile";
+                message.Content["filePath"] = droppedFiles[0];      // TODO: Handle multiple files (seperate by character? or encode as JSON?)
+
+                daemonClient.Request(message);
+                daemonClient.Close();
+
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                daemonClient.Abort();
+            }
         }
     }
 }

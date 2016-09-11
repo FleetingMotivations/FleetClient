@@ -8,23 +8,37 @@ namespace FleetIPC
     [DataContract]
     public class IPCMessage
     {
+
+        public enum MessageTarget
+        {
+            Local,
+            Remote,
+            Daemon
+        };
+
         public IPCMessage()
         {
-            this.Content = new Dictionary<String, String>();
-            this.IsRemoteMessage = false;
+            this.Content = new Dictionary<string, string>();
         }
 
         [DataMember]
-        public String ApplicaitonSenderID { get; set; }
+        public string ApplicaitonSenderID { get; set; }
 
         [DataMember]
-        public String ApplicationRecipientID { get; set; }
+        public string ApplicationRecipientID { get; set; }
 
         [DataMember]
-        public Dictionary<String,String> Content { get; set; }
-        
+        public Dictionary<string, string> Content { get; set; }
+
         [DataMember]
-        public bool IsRemoteMessage { get; internal set; }
+        public MessageTarget Target { get; set; }
+
+        [DataMember]
+        public String Type { get; set; }
+
+        [DataMember]
+        public bool SkipSelector { get; set; }
 
     }
+
 }

@@ -10,6 +10,11 @@ using System.IO;
 using FleetServer;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
+using WorkstationSelectorIPC;
+using FleetDaemon.Storage;
+using FleetDaemon.Storage.Interfaces;
+using System.Threading;
+using FleetDaemon.MessageDispatcher;
 
 namespace FleetDaemon
 {
@@ -17,190 +22,133 @@ namespace FleetDaemon
     {
         static void Main(string[] args)
         {
-            var daemon = new Daemon();
+            var storage = new SimpleStorage("./filestore.json");
+            var serverResourceName = "BasicHttpBinding_IFleetService";
+
+            var handshakeWaitTime = storage.Get<int>("ServerHandshakeWaitTime");
+
+            if (handshakeWaitTime == 0)
+            {
+                handshakeWaitTime = 5000;
+            }
+
+            // Create registration token
+            var clientReg = new FleetClientRegistration();
+            clientReg.FriendlyName = System.Environment.MachineName;
+
+            // Register with server
+            var client = new FleetServiceClient(serverResourceName);
+
+            FleetClientToken clientToken = null;
+
+            while(true)
+            {
+                try
+                {
+                    client.Open();
+                    clientToken = client.RegisterClient(clientReg);
+                    client.Close();
+                    break;
+                }
+                catch (Exception e)
+                {
+                    client.Abort();
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine("Couldn't connect to server. Waiting...");
+                }
+
+                Thread.Sleep(handshakeWaitTime);
+            }
+
+            Console.WriteLine("Received registration token");
+            
+            // Dependancy Injection
+            var appHauler = new AppHauler(storage);
+            RemoteMessageDispatcher.Token = clientToken;
+            var router = new Router(appHauler, storage, clientToken);
+
+            var daemon = new Daemon(storage, router, clientToken);
             daemon.Run();
             Console.ReadLine();
         }
     }
 
-    class Daemon
+    public class Daemon
     {
-        private ServiceHost service;
-        private SimpleStorage Storage;
-        private IFleetService FleetServer; // This will need to be populated with the
-                                           // actual client or whatever
-        public Daemon()
+        // Static instance handling
+        private ServiceHost Service;
+        private ISimpleStorage Storage { get; set; }
+        private IRouter Router { get; set; }
+
+        private FleetClientToken ClientToken { get; set; }
+        
+        public Daemon(ISimpleStorage Store, IRouter router, FleetClientToken token)
         {
+            this.Storage = Store;
+            this.Router = router;
+            this.ClientToken = token;
             DaemonService.OnRequest += DaemonService_OnRequest;
-            this.FleetServer = new FleetServerStub();
-            this.Storage = new SimpleStorage("./filestore.json");
+
+            //this.Storage.Store("process_list", processes);
         }
 
         private void DaemonService_OnRequest(IPCMessage message)
         {
             Console.WriteLine(String.Format("Received message from: {0}, to: {1}", message.ApplicaitonSenderID, message.ApplicationRecipientID));
 
-            //Accept-reject goes here... Receiving a message from a process and handling it
+            this.Router.HandleMessage(message);
+        }
 
-            Console.WriteLine(String.Format("Message Type: {0}", message.Content["type"]));
+        /// <summary>
+        /// File handling interface called from the RemoteFileManager object
+        /// Converts the passed path and attributes to an IPC message before
+        /// dispatching to the recipient application
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="attributes"></param>
+        public void HandleFileReceive(String filepath, Dictionary<String, String> attributes)
+        {
+            var message = new IPCMessage();
+            message.ApplicaitonSenderID = "fileshare";  // TODO(hc): Change this to the actual sender
+            message.ApplicationRecipientID = "fileinbox";
+            message.Target = IPCMessage.MessageTarget.Local;
+            message.Content["filepath"] = filepath;
+            message.Type = "sendFile";
 
-            if(message.Content["type"] == "sendFile")
+            foreach (var pair in attributes)
             {
-                Console.WriteLine("We got a file.");
-                Console.WriteLine(String.Format("File URL: {0}", message.Content["fileurl"]));
+                message.Content[pair.Key] = pair.Value;
             }
 
+            this.Router.HandleMessage(message);
         }
 
         public void Run()
         {
+            // Service initialisation
             var address = new Uri("net.pipe://localhost/fleetdaemon");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+            this.Service = new ServiceHost(typeof(DaemonService));
+            this.Service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
+            this.Service.Open();
 
-            this.service = new ServiceHost(typeof(DaemonService));
-            this.service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
-            this.service.Open();
-            
+            Console.WriteLine("Daemon IPC service listening");
+
+            // Start heartbeat
+            RemoteFileManager.DaemonInstance = this;
+            HeartbeatManager.WaitLength = 3000;
+            HeartbeatManager.Instance.StartHeartbeat(ClientToken);
+
+            Console.WriteLine("Heartbeat is running");
+
+            // Other loading
+            // ????
+
+            // Daemon is running
             Console.WriteLine("Daemon running. Press the any key to exit.");
-            Console.WriteLine(Directory.GetCurrentDirectory());
+            Console.ReadLine();
 
-            var clientReg = new FleetClientRegistration();
-            clientReg.FriendlyName = System.Environment.MachineName;
-            clientReg.IpAddress = "boop boop we gotta implement";
-            clientReg.MacAddress = (from nic in NetworkInterface.GetAllNetworkInterfaces()
-                                    where nic.OperationalStatus == OperationalStatus.Up
-                                    select nic.GetPhysicalAddress().ToString()
-                                    ).FirstOrDefault(); ;
-
-            //var clientToken = this.FleetServer.RegisterClient(clientReg);
-            //this.Storage.store("token", clientToken);
-            this.Storage.store("token", "test_token_cool");
-            Console.WriteLine("Client registered to Server.");
-
-            Process.Start(@"..\..\..\FileShare\bin\Debug\FileShare.exe");
-            
-        }
-        
-    }
-
-    public class FleetServerStub : IFleetService
-    {
-        public FleetFile GetFile(FleetClientToken token, FleetFileIdentifier fileId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetMessage GetMessage(FleetClientToken token, FleetMessageIdentifier fileId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetHearbeatEnum Heartbeat(FleetClientToken token, FleetClientIdentifier[] knownClients)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetFileIdentifier[] QueryFiles(FleetClientToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetMessageIdentifier[] QueryMessages(FleetClientToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FleetClientToken RegisterClient(FleetClientRegistration registrationModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendFileMultipleRecipient(FleetClientToken token, FleetClientIdentifier[] recipients, FleetFile file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendFileSingleRecipient(FleetClientToken token, FleetClientIdentifier recipient, FleetFile file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendMessageMultipleRecipient(FleetClientToken token, FleetClientIdentifier[] recipients, FleetMessage msg)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SendMessageSingleRecipient(FleetClientToken token, FleetClientIdentifier recipient, FleetMessage msg)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
-    class SimpleStorage
-    {
-        public String filePath;
-        public Dictionary<String, Object> storage;
-        public SimpleStorage(String filePath)
-        {
-            this.filePath = filePath;
-
-            if(File.Exists(filePath))
-            {
-                try
-                {
-                    using (StreamReader file = File.OpenText(filePath))
-                    {
-                        JsonSerializer serializer = new JsonSerializer();
-                        this.storage = (Dictionary<String, Object>)serializer.Deserialize(file, typeof(Dictionary<String, Object>));
-                    }
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine(e);
-                    this.storage = new Dictionary<String, Object>();
-                }
-            }
-            else
-            {
-                this.storage = new Dictionary<String, Object>();
-            }
-        }
-
-        public Object get(String key)
-        {
-            return storage[key];
-        }
-
-        public bool store(Dictionary<String, Object> dict)
-        {
-            this.storage = new Dictionary<String, Object>(dict);
-            return writeToFile();
-        }
-
-        public bool store(String key, Object value)
-        {
-            this.storage[key] = value;
-            return writeToFile();
-        }
-
-        private bool writeToFile()
-        {
-            try
-            {
-               using (StreamWriter file = File.CreateText(this.filePath))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, storage);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-
-            return true;
+            this.Service.Close();
         }
     }
 }

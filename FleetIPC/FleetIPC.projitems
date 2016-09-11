@@ -9,6 +9,7 @@
     <Import_RootNamespace>FleetIPC</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)IPCUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceInterface.cs" />

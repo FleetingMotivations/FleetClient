@@ -49,8 +49,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppHauler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Router.cs" />
+    <Compile Include="Storage\Interfaces\ISimpleStorage.cs" />
+    <Compile Include="Storage\SimpleStorage.cs" />
+    <Compile Include="Heartbeat\Heartbeat.cs" />
+    <Compile Include="Heartbeat\IRemoteFileManager.cs" />
+    <Compile Include="MessageDispatcher\IMessageDispatcher.cs" />
+    <Compile Include="MessageDispatcher\LocalMessageDispatcher.cs" />
+    <Compile Include="MessageDispatcher\RemoteMessageDispatcher.cs" />
+    <Compile Include="Heartbeat\RemoteFileManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -58,6 +68,8 @@
   </ItemGroup>
   <Import Project="..\FleetIPC\FleetIPC.projitems" Label="Shared" />
   <Import Project="lib\FleetServerClient\FleetServerClient.projitems" Label="Shared" />
+  <Import Project="..\FileAcceptIPC\FileAcceptIPC.projitems" Label="Shared" />
+  <Import Project="..\WorkstationSelectorIPC\WorkstationSelectorIPC.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
