@@ -1,14 +1,19 @@
-﻿<Window x:Name="FlileShare" x:Class="FileShare.MainWindow"
+﻿<Controls:MetroWindow x:Name="FlileShare" x:Class="FileShare.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileShare"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="MainWindow" Height="321.269" Width="519.776" AllowDrop="True" Drop="Window_Drop">
+        Title="Share Files" Height="330.679" Width="537.251" AllowDrop="True"
+        BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
 
     <Grid>
-        <Label>Kill me</Label>
-        <ListBox x:Name="listFiles"></ListBox>
+        <StackPanel x:Name="AddFilePanel" Background="Transparent" Visibility="Visible" Margin="10" DragOver="OnFileDragOver" DragLeave="OnFileDragLeave" Drop="Window_Drop">
+            <TextBlock Margin="0,0,0,0" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" ><Run Text=" "/><Run Text="Drag-and-drop or select the button below to add files to send "/></TextBlock>
+            <Button x:Name="AddFile" ToolTip="Add file to send" Foreground="Black" FontWeight="Bold" Click="AddFile_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE109;" Height="26" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Margin="226,100,226,0"/>
+        </StackPanel>
     </Grid>
-</Window>
+</Controls:MetroWindow>
