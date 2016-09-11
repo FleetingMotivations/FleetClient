@@ -13,19 +13,24 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace FileInbox
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         public MainWindow()
         {
             InitializeComponent();
 
             this.storage = new FileStore();
+            this.storage.OnCreate += FilesDidChangeEvent;
+            this.storage.OnChange += FilesDidChangeEvent;
+            this.storage.OnDelete += FilesDidChangeEvent;
+            this.storage.OnRename += FilesDidChangeEvent;
             this.filesTable.ItemsSource = this.Storage.Files;            
         }
 
@@ -34,6 +39,14 @@ namespace FileInbox
             base.BeginInit();
             
             this.RefreshFiles();
+        }
+
+        private void FilesDidChangeEvent()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                this.RefreshFiles();
+            });
         }
 
         private FileStore storage;
@@ -52,10 +65,10 @@ namespace FileInbox
 
         private void openButton_Click(object sender, RoutedEventArgs e)
         {
-            var index = this.filesTable.SelectedIndex;
-            var item = this.storage.Files[index];
             try
             {
+                var index = this.filesTable.SelectedIndex;
+                var item = this.storage.Files[index];
                 Process.Start(item.Filepath);
             }
             catch(Exception ex)

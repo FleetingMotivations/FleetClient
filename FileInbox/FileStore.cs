@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace FileInbox
 {
+    public delegate void FileStoreDidChangeEvent();
+
     public class FileStore
     {
+        public FileStoreDidChangeEvent OnChange;
+        public FileStoreDidChangeEvent OnCreate;
+        public FileStoreDidChangeEvent OnRename;
+        public FileStoreDidChangeEvent OnDelete;
+
         private String rootFolder;
         private List<StoredFile> files;
         public List<StoredFile> Files { get
@@ -17,12 +24,74 @@ namespace FileInbox
             }
         }
 
+        private FileSystemWatcher folderWatcher;
+
         public FileStore() : this(FileStoreUtils.GetStorePath()) { }
         public FileStore(String rootFolder)
         {
             this.rootFolder = rootFolder;
             this.files = new List<StoredFile>();
             this.LoadStore();
+
+            var watcher = new FileSystemWatcher(rootFolder);
+            watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastAccess;
+            watcher.Filter = "*.*";
+            watcher.Changed += Watcher_Changed;
+            watcher.Created += Watcher_Created;
+            watcher.Renamed += Watcher_Renamed;
+            watcher.Deleted += Watcher_Deleted;
+            watcher.EnableRaisingEvents = true;
+            this.folderWatcher = watcher;
+        }
+
+        ~FileStore()
+        {
+            this.folderWatcher.Dispose();
+        }
+
+        //  File System Watch Events
+
+        private void Watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            //MakeRecord(e.FullPath);
+            Console.WriteLine("File changed: " + e.FullPath);
+            this.OnChange();
+        }
+
+        private void Watcher_Deleted(object sender, FileSystemEventArgs e)
+        {
+            RemoveRecord(e.FullPath);
+            this.OnDelete();
+        }
+
+        private void Watcher_Renamed(object sender, RenamedEventArgs e)
+        {
+            RemoveRecord(e.OldFullPath);
+            MakeRecord(e.FullPath);
+            this.OnRename();
+        }
+
+        private void Watcher_Created(object sender, FileSystemEventArgs e)
+        {
+            MakeRecord(e.FullPath);
+            this.OnCreate();
+        }
+
+        private void MakeRecord(String filename)
+        {
+            var record = new StoredFile();
+            record.IconURL = "";
+            record.Filepath = filename;
+            record.Sender = "";
+            record.Received = "";
+
+            this.files.Add(record);
+        }
+
+        private void RemoveRecord(String filename)
+        {
+            var index = this.files.FindIndex(file => file.Filepath == filename);
+            this.files.RemoveAt(index);
         }
 
         public void StoreFile(String filepath, Dictionary<String, String> attributes)
@@ -31,13 +100,13 @@ namespace FileInbox
 
             File.Move(filepath, filename);
 
-            var record = new StoredFile();
+            /*var record = new StoredFile();
             record.IconURL = "";
             record.Filepath = filename;
             record.Sender = "";
-            record.Received = "";
+            record.Received = "";*/
 
-            this.files.Add(record);
+            //this.files.Add(record);*/
         }
 
         private String MakeOwnedFilename(String filepath)
