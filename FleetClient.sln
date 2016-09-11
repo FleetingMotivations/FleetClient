@@ -37,6 +37,7 @@ Global
 		FleetIPC\FleetIPC.projitems*{5682fdb7-8ac3-4c06-87af-309aeb5b987d}*SharedItemsImports = 4
 		WorkstationSelectorIPC\WorkstationSelectorIPC.projitems*{5682fdb7-8ac3-4c06-87af-309aeb5b987d}*SharedItemsImports = 4
 		FileAcceptIPC\FileAcceptIPC.projitems*{63c0fc04-cb56-4e03-a82b-73e5885e86c9}*SharedItemsImports = 13
+		FleetIPC\FleetIPC.projitems*{a6e11ce9-8e5d-4140-966e-e0c57310eda8}*SharedItemsImports = 4
 		WorkstationSelectorIPC\WorkstationSelectorIPC.projitems*{af7a3e41-3d62-43e6-8d99-cef420387e5a}*SharedItemsImports = 13
 		FleetIPC\FleetIPC.projitems*{e5abec53-d8b6-4c9d-baad-ea3ffd4a68c9}*SharedItemsImports = 4
 	EndGlobalSection
