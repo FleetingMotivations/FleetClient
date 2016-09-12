@@ -30,6 +30,7 @@ namespace FleetShelf
         {
             InitializeComponent();
             this.AllowsTransparency = true;
+            this.Focus();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

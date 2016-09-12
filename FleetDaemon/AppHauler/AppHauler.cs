@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -101,7 +102,8 @@ namespace FleetDaemon.Hauler
                 {
                     var exe = record.Path;
 
-                    Process process = Process.Start(exe);
+                    var process = Process.Start(exe);
+                    process.SetMainWindowFocus();
                     process.Exited += Process_Exited;
 
                     var runningRecord = new FleetRunningApplication();
@@ -176,6 +178,17 @@ namespace FleetDaemon.Hauler
         private void Process_Exited(object sender, EventArgs e)
         {
             Console.WriteLine("Process has exited");
+        }
+    }
+
+    internal static class ProcessUtils
+    {
+        [DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)]
+        internal static extern IntPtr SetFocus(HandleRef handle);
+
+        internal static void SetMainWindowFocus(this Process p)
+        {
+            SetFocus(new HandleRef(null, p.MainWindowHandle));
         }
     }
 }

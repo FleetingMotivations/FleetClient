@@ -29,6 +29,12 @@ namespace FleetShelf
             this.service = IPCUtil.MakeApplicationService(ApplicationIdentifier);
             this.service.Open();
 
+            // Bad, put in on a background thread to make sure shit doesn't hit the fan!
+            Task.Run(() => RequestApplications());
+        }
+
+        private void RequestApplications()
+        {
             // 1. Request the known application from the daemon
             var message = new IPCMessage();
             message.ApplicaitonSenderID = ApplicationIdentifier;
@@ -44,7 +50,8 @@ namespace FleetShelf
                 client.Request(message);
                 client.Close();
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 client.Abort();
