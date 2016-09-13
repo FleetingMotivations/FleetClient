@@ -73,7 +73,7 @@ namespace FleetDaemon
             InitialiseAppHauler();
 
             // Platform Services
-            StartPlatformServices();
+            //StartPlatformServices();
 
             // Other loading
             // ????
