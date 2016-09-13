@@ -35,6 +35,8 @@ namespace FleetDaemon
             // Create registration token
             var clientReg = new FleetClientRegistration();
             clientReg.FriendlyName = System.Environment.MachineName;
+            clientReg.IpAddress = "void";
+            clientReg.MacAddress = "void";
 
             // Register with server
             var client = new FleetServiceClient(serverResourceName);

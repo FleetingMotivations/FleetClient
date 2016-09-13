@@ -29,6 +29,9 @@ namespace FleetShelf
         public MainWindow()
         {
             InitializeComponent();
+            // TODO: Fit to screen without taskbar
+            //this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            //this.Height = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height;
             this.AllowsTransparency = true;
             this.Focus();
         }
