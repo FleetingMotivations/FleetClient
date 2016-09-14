@@ -29,6 +29,7 @@ namespace FleetShelf
         public MainWindow()
         {
             InitializeComponent();
+            //TODO: Fit to screen without taskbar
             this.AllowsTransparency = true;
         }
 

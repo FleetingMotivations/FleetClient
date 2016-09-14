@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FleetShelf"
         mc:Ignorable="d"
+        ShowInTaskbar="False"
         WindowStyle="None" WindowState="Maximized" Topmost="True"
         AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
