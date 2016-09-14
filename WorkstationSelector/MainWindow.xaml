@@ -8,8 +8,8 @@
         mc:Ignorable="d"
         Title="Workstation Selector" Height="669.345" Width="735.925"
         TitlebarHeight="30" WindowStartupLocation="CenterScreen"
-        ShowTitleBar="True" ResizeMode="CanMinimize"
-        GlowBrush="{DynamicResource AccentColorBrush}">
+        ShowTitleBar="True" ResizeMode="CanMinimize" WindowTitleBrush="#00A1F1"
+        BorderThickness="1" GlowBrush="{DynamicResource AccentColorBrush}" Icon="Assets/workstation_icon.ico">
 
     <!-- Styling Resources -->
     <Window.Resources>

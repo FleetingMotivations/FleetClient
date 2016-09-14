@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        Title="File Inbox" ShowIconOnTitleBar="True" Icon="Assets/envelope.png"
-        Height="240" Width="600"
+        Title="File Inbox" ShowIconOnTitleBar="True" Icon="Assets/inbox_icon.ico"
+        Height="240" Width="600" WindowTitleBrush="#00A1F1" ResizeMode="CanMinimize"
         BorderThickness="1" GlowBrush="{DynamicResource AccentColorBrush}">
     <Grid>
         <Button IsEnabled="True" x:Name="openButton" Content="Open..." Click="openButton_Click" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>

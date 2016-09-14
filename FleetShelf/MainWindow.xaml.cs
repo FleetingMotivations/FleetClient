@@ -25,11 +25,39 @@ namespace FleetShelf
     {
 
         private List<FleetShelfApplication> applications;
+        private System.Windows.Forms.NotifyIcon trayIcon = new System.Windows.Forms.NotifyIcon();
 
         public MainWindow()
         {
             InitializeComponent();
+            
+            //TrayIcon
+            trayIcon.Visible = true;
+            trayIcon.Icon = new System.Drawing.Icon("../../Assets/fleet.ico");
+            trayIcon.Text = "Fleet";
+            trayIcon.BalloonTipClicked += TrayIconBalloonTip_Clicked;
+
+            //ContexMenu:
+            var fleetContextMenu = new System.Windows.Forms.ContextMenu();
+
+            //Menu Items:
+            var help = new System.Windows.Forms.MenuItem();
+            help.Index = 0;
+            help.Text = "Help";
+            help.Click += new EventHandler(this.TrayHelp_Click);
+            var exit = new System.Windows.Forms.MenuItem();
+            exit.Index = 1;
+            exit.Text = "Exit";
+            exit.Click += new EventHandler(this.TrayExit_Click);
+
+            //Add MenuItems to the ContextMenu:
+            fleetContextMenu.MenuItems.Add(help);
+            fleetContextMenu.MenuItems.Add(exit);
+            //Map ContextMenu to trayIcon:
+            trayIcon.ContextMenu = fleetContextMenu;
+
             //TODO: Fit to screen without taskbar
+
             this.AllowsTransparency = true;
         }
 
@@ -44,7 +72,7 @@ namespace FleetShelf
             {
                 FleetShelf.Visibility = Visibility.Collapsed;
                 Image img = new Image();
-                img.Source = new BitmapImage(new Uri(@"/FleetShelf;component/Assets/Fleet_Logo.png", UriKind.Relative));
+                img.Source = new BitmapImage(new Uri(@"/FleetShelf;component/Assets/favicon.ico", UriKind.Relative));
                 (sender as Button).Content = img;
                 (sender as Button).Margin = new Thickness(0, 0, 0, 0);
             }
@@ -114,6 +142,29 @@ namespace FleetShelf
                 Console.WriteLine(e.Message);
                 client.Abort();
             }
+        }
+
+        private void TrayHelp_Click(object sender, EventArgs e)
+        {
+            //Redirect users to a help document/window/webpage
+
+            //Balloon Sample
+            string title = "Fleet Files Delivered";
+            string text = "X Files Accepted\nY Files Rejected";
+            
+            trayIcon.ShowBalloonTip(1000, title, text, System.Windows.Forms.ToolTipIcon.Info);
+        }
+
+        private void TrayIconBalloonTip_Clicked(object sender, EventArgs e)
+        {
+            Console.WriteLine("asdfasdfasdf");
+        }
+
+        private void TrayExit_Click(object sender, EventArgs e)
+        {
+            //Close the FleetShelf
+            this.Close();
+            
         }
     }
 }

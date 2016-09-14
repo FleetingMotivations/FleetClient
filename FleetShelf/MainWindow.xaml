@@ -20,8 +20,8 @@
             <Button DockPanel.Dock="Bottom" Height="50" Width="50" VerticalAlignment="Bottom" Margin="5, 5, 5, 5" Style="{DynamicResource MetroCircleButtonStyle}" Click="FacilitatorControls_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE1A6;" ToolTip="Facilitator Controls"></Button>
             <Button DockPanel.Dock="Bottom" Height="50" Width="50" VerticalAlignment="Bottom" Margin="5, 5, 5, 5" Style="{DynamicResource MetroCircleButtonStyle}" Click="Settings_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE115;" ToolTip="Settings"></Button>
         </DockPanel>
-        <Button Name="FleetDockButton" Width="30" Height="30" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{DynamicResource MetroCircleButtonStyle}" Background="Transparent" Click="Button_Click">
-            <Image Name="FleetLogo" Source="/FleetShelf;component/Assets/Fleet_Logo.png"></Image>
+        <Button Name="FleetDockButton" Width="50" Height="40" FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{DynamicResource MetroCircleButtonStyle}" Background="Transparent" Click="Button_Click">
+            <Image Name="FleetLogo" Source="/FleetShelf;component/Assets/fleet.ico"></Image>
         </Button>
     </Grid>
 </Window>

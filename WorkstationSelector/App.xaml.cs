@@ -22,11 +22,6 @@ namespace WorkstationSelector
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var trayIcon = new NotifyIcon();
-            trayIcon.Visible = true;
-            trayIcon.Icon = new System.Drawing.Icon("../../jordan_the_tool.ico");
-            trayIcon.Text = "Fleet Workstation Selector";
-
             var address = new Uri("net.pipe://localhost/workstationselector");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
             this.service = new ServiceHost(typeof(WorkstationSelectService));

@@ -8,9 +8,8 @@
         mc:Ignorable="d"
         Title="Share Files" Height="330.679" Width="537.251" AllowDrop="True"
         BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
-        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
-
-        <Grid>
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Assets/share_icon.ico">
+    <Grid>
             <TextBlock Margin="14,3,13,0" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Top" ><Run Text=" "/><Run Text="Drag-and-drop or select the button below to add files to send "/></TextBlock>
             <StackPanel x:Name="AddFilePanel" Background="#FFC9C9C9" Visibility="Visible" Margin="10,32,172,10" DragOver="OnFileDragOver" DragLeave="OnFileDragLeave" Drop="Window_Drop">
                 <StackPanel.Triggers>
