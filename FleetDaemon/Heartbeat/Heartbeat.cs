@@ -106,12 +106,7 @@ namespace FleetDaemon
                     Console.WriteLine("Heartbeat");
                     var flags = client.Heartbeat(token);
 
-                    if (flags.HasFlag(FleetHearbeatEnum.ClientUpdate))
-                    {
-                        // TODO(hd): Implement
-                    }
-
-                    if (flags.HasFlag(FleetHearbeatEnum.ControlUpdate))
+                    if (flags.HasFlag(FleetHearbeatEnum.InWorkgroup))
                     {
                         // TODO(hd): Implement
                     }
