@@ -7,26 +7,35 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
         Title="Share Files" Height="330.679" Width="537.251" AllowDrop="True"
-        BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
-        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Assets/share_icon.ico">
+        BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1" WindowTitleBrush="#00A1F1"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" ShowIconOnTitleBar="True" Icon="Assets/share_icon.ico">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="FleetGreen" Color="#7CBB00" />
+        <SolidColorBrush x:Key="FleetRed" Color="#F65314"/>
+        <SolidColorBrush x:Key="FleetGray" Color="#737373"/>
+        <SolidColorBrush x:Key="FleetYellow" Color="#FFBB00"/>
+        <SolidColorBrush x:Key="FleetBlue" Color="#00A1F1"/>
+    </Window.Resources>
+    
     <Grid>
-            <TextBlock Margin="14,3,13,0" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Top" ><Run Text=" "/><Run Text="Drag-and-drop or select the button below to add files to send "/></TextBlock>
-            <StackPanel x:Name="AddFilePanel" Background="#FFC9C9C9" Visibility="Visible" Margin="10,32,172,10" DragOver="OnFileDragOver" DragLeave="OnFileDragLeave" Drop="Window_Drop">
-                <StackPanel.Triggers>
-                    <EventTrigger RoutedEvent="StackPanel.Drop">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="AddFilePanel" From="0.1" To="0.5" Duration="0:0:1" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </StackPanel.Triggers>
+        <TextBlock Margin="14,3,13,0" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Top" ><Run Text=" "/><Run Text="Drag-and-drop or select the button below to add files to send "/></TextBlock>
+        <StackPanel x:Name="AddFilePanel" Background="#FFC9C9C9" Visibility="Visible" Margin="10,32,172,10" DragOver="OnFileDragOver" DragLeave="OnFileDragLeave" Drop="Window_Drop">
+            <StackPanel.Triggers>
+                <EventTrigger RoutedEvent="StackPanel.Drop">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" Storyboard.TargetName="AddFilePanel" From="0.1" To="0.5" Duration="0:0:1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </StackPanel.Triggers>
             <TextBlock Text="Drag files here to add to sending list" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="77,100,77,0" Foreground="#FFB0B0B0" Background="Transparent"/>
         </StackPanel>
-            <TextBlock Margin="370,92,10,182" Text="Attached Files" FontSize="13" FontWeight="Bold" TextAlignment="Center"/>
-            <ListBox x:Name="AttachedFiles" Margin="370,123,10,60" BorderBrush="Black" BorderThickness="1"/>
-            <Button x:Name="AddFileButton" ToolTip="Add file to send" Foreground="Black" FontWeight="Bold" Click="AddFileButton_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE109;" Height="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Margin="375,0,114,227"/>
-            <Button x:Name="RemoveFileButton" ToolTip="Remove file from list" Foreground="Black" IsEnabled="False" FontWeight="Bold" Click="RemoveFileButton_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE107;" Height="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Margin="457,0,32,227"/>
-            <Button x:Name="SelectWorkstationsButton" ToolTip="Select Workstations to send files to" IsEnabled="False" Foreground="Black" FontWeight="Bold" Click="SendButton_Click" Content="Send" Height="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="76" Margin="404,0,49,21"/>
-        </Grid>
+        <TextBlock Margin="370,92,10,182" Text="Attached Files" FontSize="13" FontWeight="Bold" TextAlignment="Center"/>
+        <ListBox x:Name="AttachedFiles" Margin="370,123,10,60" BorderBrush="Black" BorderThickness="1"/>
+        <Button x:Name="AddFileButton" ToolTip="Add file to send" Foreground="Black" FontWeight="Bold" Click="AddFileButton_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE109;" Height="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Margin="375,0,114,227"/>
+        <Button x:Name="RemoveFileButton" ToolTip="Remove file from list" Foreground="Black" IsEnabled="False" FontWeight="Bold" Click="RemoveFileButton_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE107;" Height="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Margin="457,0,32,227"/>
+        <Button x:Name="SelectWorkstationsButton" ToolTip="Select Workstations to send files to" IsEnabled="False" Foreground="Black" FontWeight="Bold" Click="SendButton_Click" Content="Send" Height="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="76" Margin="404,0,49,21"/>
+    </Grid>
 </Controls:MetroWindow>

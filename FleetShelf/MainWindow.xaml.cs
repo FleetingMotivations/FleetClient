@@ -56,7 +56,7 @@ namespace FleetShelf
             //Map ContextMenu to trayIcon:
             trayIcon.ContextMenu = fleetContextMenu;
 
-            //TODO: Fit to screen without taskbar
+            // TODO: Fit to screen without taskbar
 
             this.AllowsTransparency = true;
         }
@@ -72,7 +72,7 @@ namespace FleetShelf
             {
                 FleetShelf.Visibility = Visibility.Collapsed;
                 Image img = new Image();
-                img.Source = new BitmapImage(new Uri(@"/FleetShelf;component/Assets/favicon.ico", UriKind.Relative));
+                img.Source = new BitmapImage(new Uri(@"/FleetShelf;component/Assets/fleet.ico", UriKind.Relative));
                 (sender as Button).Content = img;
                 (sender as Button).Margin = new Thickness(0, 0, 0, 0);
             }
@@ -157,7 +157,7 @@ namespace FleetShelf
 
         private void TrayIconBalloonTip_Clicked(object sender, EventArgs e)
         {
-            Console.WriteLine("asdfasdfasdf");
+            //Once the BalloonTip is selected, open a file delivery summary
         }
 
         private void TrayExit_Click(object sender, EventArgs e)
