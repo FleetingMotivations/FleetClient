@@ -17,8 +17,12 @@
         <SolidColorBrush x:Key="FleetYellow" Color="#FFBB00"/>
         <SolidColorBrush x:Key="FleetBlue" Color="#00A1F1"/>
     </Window.Resources>
-    
+
     <Grid>
-        
+        <ListBox x:Name="DeliveredList" HorizontalAlignment="Left" Height="178" Margin="10,124,0,0" VerticalAlignment="Top" Width="240"/>
+        <ListBox x:Name="RejectedList" HorizontalAlignment="Left" Height="178" Margin="267,124,0,0" VerticalAlignment="Top" Width="240"/>
+        <TextBlock x:Name="DeliveredText" HorizontalAlignment="Left" Margin="10,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="240" FontSize="14" TextAlignment="Center" Text="Delivered"/>
+        <TextBlock x:Name="RejectedText" HorizontalAlignment="Left" Margin="267,70,0,0" TextWrapping="Wrap" Text="Rejected" VerticalAlignment="Top" Height="30" Width="240" FontSize="14" TextAlignment="Center"/>
+        <TextBlock x:Name="HeadingText" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="File Delivery Summary" VerticalAlignment="Top" Height="30" Width="497" FontSize="16" TextAlignment="Center"/>
     </Grid>
 </Controls:MetroWindow>

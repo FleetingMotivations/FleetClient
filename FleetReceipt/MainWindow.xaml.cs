@@ -25,6 +25,31 @@ namespace FleetReceipt
         public MainWindow()
         {
             InitializeComponent();
+            PopulateListBox();
+        }
+
+        private void PopulateListBox()
+        {
+            //TODO: Logic to populate the lists based on accept/reject results
+            //In the mean time, dummy data is being used
+
+            for (int i = 0; i < 10; i++) //To be replaced with a loop through all workstations that the file has been sent to
+            {
+                String workstation = "Workstation " + (i+1);
+                if(i % 2 == 0) //To be replaced with "if delivered else rejected"
+                {
+                    DeliveredList.Items.Add(workstation);
+                }
+                else
+                {
+                    if(i % 3 == 0) //To be replaced with a message of rejection (cause behind the rejection)
+                    {
+                        workstation += " (Timeout)";
+                    }
+                    RejectedList.Items.Add(workstation);
+                }
+            }
+
         }
     }
 }
