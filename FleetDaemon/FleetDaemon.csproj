@@ -81,7 +81,11 @@
     <Compile Include="Heartbeat\RemoteFileManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Config\App.Debug.config" />
+    <None Include="Config\App.Release.config" />
     <None Include="packages.config" />
     <None Include="services.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -111,4 +115,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild">
+    <Delete Files="$App.config" />
+    <Copy SourceFiles="$(ProjectDir)\Config\App.$(Configuration).config" DestinationFiles="App.config" />
+  </Target>
 </Project>
