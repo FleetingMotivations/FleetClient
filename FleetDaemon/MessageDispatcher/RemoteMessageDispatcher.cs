@@ -88,7 +88,7 @@ namespace FleetDaemon.MessageDispatcher
                 try
                 {
                     serviceClient.Open();
-                    clients = serviceClient.QueryClients(Token);
+                    clients = serviceClient.QueryClients(Token, FleetClientContext.Room, 1);
                     serviceClient.Close();
                 }
                 catch (Exception e)
