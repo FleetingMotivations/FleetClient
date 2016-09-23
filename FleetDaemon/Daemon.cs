@@ -65,7 +65,11 @@ namespace FleetDaemon
         }
 
         public void HandleControlMessageReceive(FleetMessage message) {
+            // todo(hc): implement handler
+            var ipcMessage = new IPCMessage();
+            
 
+            this.Router.HandleMessage(ipcMessage);
         }
 
         public void Run()
@@ -81,9 +85,6 @@ namespace FleetDaemon
 
             // Platform Services
             //StartPlatformServices();
-
-            // Other loading
-            // ????
 
             // Daemon is running
             Console.WriteLine("Daemon running. Press the any key to exit.");

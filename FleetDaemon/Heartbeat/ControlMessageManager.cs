@@ -86,7 +86,7 @@ namespace FleetDaemon
                 client.Open();
 
                 var message = client.GetMessage(token, identifier);
-                DaemonInstance.HandleControlMessageReceive(message);
+                Task.Run(() => DaemonInstance.HandleControlMessageReceive(message));
 
                 client.Close();
             } catch (Exception e)

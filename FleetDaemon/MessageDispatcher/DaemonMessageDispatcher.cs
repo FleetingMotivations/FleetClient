@@ -93,7 +93,6 @@ namespace FleetDaemon.MessageDispatcher
         private void HandleLaunchApplicationMessage(IPCMessage message)
         {
             var appID = message.Content["application"];
-
             AppHauler.Instance.LaunchApplication(appID);
         }
     }
