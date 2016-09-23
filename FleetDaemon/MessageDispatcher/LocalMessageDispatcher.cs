@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FleetIPC;
 using System.Diagnostics;
+using FleetDaemon.Hauler;
 
 namespace FleetDaemon.MessageDispatcher
 {
@@ -44,7 +45,14 @@ namespace FleetDaemon.MessageDispatcher
 
         private Boolean ValidateMessage(IPCMessage message)
         {
-            Boolean valid = true;
+            Boolean valid = false;
+
+            var recipient = message.ApplicationRecipientID;
+
+            if (AppHauler.Instance.KnownApplications.ContainsKey(recipient))
+            {
+                valid = AppHauler.Instance.IsRunningOrLaunch(recipient);
+            }
 
             // TODO(hc): Check that sender is a valid process
 
