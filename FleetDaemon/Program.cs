@@ -15,6 +15,7 @@ using FleetDaemon.Storage;
 using FleetDaemon.Storage.Interfaces;
 using System.Threading;
 using FleetDaemon.MessageDispatcher;
+using FleetDaemon.Hauler;
 
 namespace FleetDaemon
 {
@@ -70,7 +71,6 @@ namespace FleetDaemon
 
             var daemon = new Daemon(storage, router, clientToken);
             daemon.Run();
-            Console.ReadLine();
         }
     }
 }

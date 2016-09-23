@@ -26,7 +26,8 @@ namespace FleetDaemon
 
         // Members
         private Thread worker;
-        private FleetClientToken token;
+
+        public FleetClientToken Token { get; set; }
 
         private Boolean isRunning;
         public Boolean IsRunning { get {
@@ -45,10 +46,10 @@ namespace FleetDaemon
         /// </summary>
         /// <param name="token">Workstation token</param>
         /// <returns></returns>
-        public Boolean StartHeartbeat(FleetClientToken token)
+        public Boolean StartHeartbeat()
         {
             // Requires a token
-            if (token == null)
+            if (this.Token == null)
             {
                 throw new Exception("Hearbeat token cannot be null");
             }
@@ -56,7 +57,6 @@ namespace FleetDaemon
             // Ensure not running then start on background thread
             if (!this.isRunning)
             {
-                this.token = token;
                 this.worker = new Thread(new ThreadStart(RunLoop));
                 this.worker.Start();
                 Console.WriteLine("Heartbeat Thread Started");
@@ -80,7 +80,6 @@ namespace FleetDaemon
             {
                 this.worker.Interrupt();
                 this.worker = null;
-                this.token = null;
                 this.isRunning = false;
 
                 return true;
@@ -104,22 +103,25 @@ namespace FleetDaemon
                 try
                 {
                     Console.WriteLine("Heartbeat");
-                    var flags = client.Heartbeat(token);
+                    var flags = client.Heartbeat(this.Token);
                     
                     if (flags.HasFlag(FleetHearbeatEnum.InWorkgroup))
                     {
                         // TODO(hd): Implement
+                        // This will probably set some flag somewhere that states the current workgroup context
+
                     }
 
                     if (flags.HasFlag(FleetHearbeatEnum.ManageUpdate))
                     {
-                        // TODO(hd): Implement
+                        Console.WriteLine("MessageAvailable");
+                        ControlMessageManager.Instance.HandleControlMessageUpdate(this.Token);
                     }
 
                     if (flags.HasFlag(FleetHearbeatEnum.FileAvailable))
                     {
                         Console.WriteLine("FileAvailable");
-                        RemoteFileManager.Instance.HandleFileAvailable(this.token);
+                        RemoteFileManager.Instance.HandleFileAvailable(this.Token);
                     }
 
                     Thread.Sleep(HeartbeatManager.WaitLength);

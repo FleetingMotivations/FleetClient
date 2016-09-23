@@ -69,6 +69,8 @@
     <Compile Include="AppHauler\AppHaulerModel.cs" />
     <Compile Include="AppHauler\IAppHauler.cs" />
     <Compile Include="Daemon.cs" />
+    <Compile Include="Heartbeat\ControlMessageManager.cs" />
+    <Compile Include="Heartbeat\IControlMessageManager.cs" />
     <Compile Include="MessageDispatcher\DaemonMessageDispatcher.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

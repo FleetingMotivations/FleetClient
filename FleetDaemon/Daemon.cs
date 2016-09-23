@@ -37,6 +37,9 @@ namespace FleetDaemon
             this.Router.HandleMessage(message);
         }
 
+
+        //  todo: Refactor this out into the remote file manager object
+
         /// <summary>
         /// File handling interface called from the RemoteFileManager object
         /// Converts the passed path and attributes to an IPC message before
@@ -59,6 +62,10 @@ namespace FleetDaemon
             }
 
             this.Router.HandleMessage(message);
+        }
+
+        public void HandleControlMessageReceive(FleetMessage message) {
+
         }
 
         public void Run()
@@ -106,7 +113,8 @@ namespace FleetDaemon
         {
             RemoteFileManager.DaemonInstance = this;
             HeartbeatManager.WaitLength = 3000;
-            HeartbeatManager.Instance.StartHeartbeat(ClientToken);
+            HeartbeatManager.Instance.Token = this.ClientToken;
+            HeartbeatManager.Instance.StartHeartbeat();
 
             Console.WriteLine("Heartbeat is running");
         }
