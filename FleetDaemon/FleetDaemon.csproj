@@ -66,6 +66,8 @@
   <ItemGroup>
     <Compile Include="AppHauler.cs" />
     <Compile Include="AppHauler\AppHauler.cs" />
+    <Compile Include="AppHauler\AppHaulerModel.cs" />
+    <Compile Include="AppHauler\IAppHauler.cs" />
     <Compile Include="Daemon.cs" />
     <Compile Include="MessageDispatcher\DaemonMessageDispatcher.cs" />
     <Compile Include="Program.cs" />

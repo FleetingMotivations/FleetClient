@@ -11,34 +11,6 @@ using System.Threading.Tasks;
 
 namespace FleetDaemon.Hauler
 {
-    public class FleetRunningApplication
-    {
-        public Process Process { get; set; }
-        public String Identifier { get; set; }
-        public String Name { get; set; }
-    }
-
-    public class FleetKnownApplication
-    {
-        public String Name { get; set; }
-        public String Path { get; set; }
-        public String Identifier { get; set; }
-        public Boolean Visible { get; set; } = true;
-    }
-
-    public interface IAppHauler
-    {
-        Dictionary<String, FleetRunningApplication> RunningApplications { get; }
-        Dictionary<String, FleetKnownApplication> KnownApplications { get; }
-
-        Boolean LaunchApplication(String identifier);
-        Boolean CloseApplication(String identifier);
-        Boolean IsRunning(String identifier);
-        Boolean IsRunningOrLaunch(String identifier);
-
-        Boolean IsKnown(String identifier);
-    }
-
     public class AppHauler: IAppHauler
     {
         // Configuration
