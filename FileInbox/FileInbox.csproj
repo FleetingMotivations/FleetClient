@@ -107,6 +107,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\inbox_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\help_icon.ico" />
+  </ItemGroup>
   <Import Project="..\FleetIPC\FleetIPC.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

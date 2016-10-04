@@ -8,28 +8,23 @@
         mc:Ignorable="d"
         Title="Workstation Selector" Height="669.345" Width="735.925"
         TitlebarHeight="30" WindowStartupLocation="CenterScreen"
-        ShowTitleBar="True" ResizeMode="CanMinimize"
-        GlowBrush="{DynamicResource AccentColorBrush}">
+        ShowTitleBar="True" ResizeMode="CanMinimize" WindowTitleBrush="#00A1F1"
+        BorderThickness="1" GlowBrush="{DynamicResource AccentColorBrush}" ShowIconOnTitleBar="True" Icon="Assets/workstation_icon.ico">
 
     <!-- Styling Resources -->
     <Window.Resources>
-        <SolidColorBrush x:Key="AvailableWorkstation" Color="#FFF5F5F5" />
-        <SolidColorBrush x:Key="UnavailableWorkstation" Color="#B1B1B1"/>
-        <SolidColorBrush x:Key="SelectedWorkstation" Color="#057bc6" />
-        <SolidColorBrush x:Key="DarkBlueColour" Color="#0C68C1" />
-        <SolidColorBrush x:Key="RedColour" Color="#BB0231" />
-
-        <Style x:Key="LargeTileStyle" TargetType="Controls:Tile">
-            <Setter Property="Width" Value="300" />
-            <Setter Property="Height" Value="125" />
-            <Setter Property="TitleFontSize" Value="10" />
-        </Style>
+        <SolidColorBrush x:Key="FleetGreen" Color="#7CBB00" />
+        <SolidColorBrush x:Key="FleetRed" Color="#F65314"/>
+        <SolidColorBrush x:Key="FleetGray" Color="#737373"/>
+        <SolidColorBrush x:Key="FleetYellow" Color="#FFBB00"/>
+        <SolidColorBrush x:Key="FleetBlue" Color="#00A1F1"/>
+        <SolidColorBrush x:Key="SelectedWorkstation" Color="#006FA7" />
 
         <Style x:Key="SmallTileStyle" TargetType="Controls:Tile">
             <Setter Property="Width" Value="147" />
             <Setter Property="Height" Value="125" />
             <Setter Property="TitleFontSize" Value="12" />
-            <Setter Property="Background" Value="WhiteSmoke" />
+            <Setter Property="Background" Value="{StaticResource FleetBlue}" /> <!-- Test this - this was the "bug" that Shamus found during the demo (from whitesmoke to available) -->
             <Setter Property="Foreground" Value="Black" />
         </Style>
     </Window.Resources>

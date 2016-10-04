@@ -24,7 +24,7 @@ namespace WorkstationSelector
             this.identifier = identifier;
 
             Image img = new Image();
-            img.Source = new BitmapImage(new Uri(@"/WorkstationSelector;component/Assets/workstation.png", UriKind.Relative));
+            img.Source = new BitmapImage(new Uri(@"/WorkstationSelector;component/Assets/workstation_icon.ico", UriKind.Relative));
             img.Stretch = Stretch.Fill;
             img.Margin = new Thickness(0, 10, 0, 20);
             this.Content = img;

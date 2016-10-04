@@ -7,13 +7,14 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace FleetShelf
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         public const String ApplicationIdentifier = "fleetshelf";
 
@@ -21,6 +22,7 @@ namespace FleetShelf
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            
             // Event handlers
             ApplicationService.OnDeliver += ApplicationService_OnDeliver;
             ApplicationService.OnInform += ApplicationService_OnInform;
