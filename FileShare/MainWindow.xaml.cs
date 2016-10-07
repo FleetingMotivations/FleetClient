@@ -132,8 +132,7 @@ namespace FileShare
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
             int delayTime = 5000;
-
-            Console.WriteLine("start");
+            
             var flyout = this.SendingFlyout;
             flyout.Visibility = Visibility.Visible;
             ((Storyboard)FindResource("SendSpinner")).Begin();
@@ -141,7 +140,6 @@ namespace FileShare
             await Task.Delay(delayTime);
 
             flyout.Visibility = Visibility.Collapsed;
-            Console.WriteLine("end");
 
             //Send this.AttachedFiles.Items - requires Workstation Selections
 
