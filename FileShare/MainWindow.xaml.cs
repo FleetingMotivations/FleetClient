@@ -19,6 +19,7 @@ using System.Reflection;
 
 using MahApps.Metro.Controls;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace FileShare
 {
@@ -27,6 +28,8 @@ namespace FileShare
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private const string SendMessage = "Sending Files to Workstation(s)";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -126,9 +129,21 @@ namespace FileShare
 
         }
 
-        private void SendButton_Click(object sender, RoutedEventArgs e)
+        private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
+            int delayTime = 5000;
+            
+            var flyout = this.SendingFlyout;
+            flyout.Visibility = Visibility.Visible;
+            ((Storyboard)FindResource("SendSpinner")).Begin();
+
+            await Task.Delay(delayTime);
+
+            flyout.Visibility = Visibility.Collapsed;
+
             //Send this.AttachedFiles.Items - requires Workstation Selections
+
+
         }
     }
 }
