@@ -74,14 +74,18 @@ namespace FileShare
             {
                 daemonClient.Open();
 
-                var message = new IPCMessage();
-                message.ApplicaitonSenderID = "FileShare";
-                message.ApplicationRecipientID = "friendface";
-                message.Target = IPCMessage.MessageTarget.Remote;
-                message.Type = "sendFile";
-                message.Content["filePath"] = droppedFiles[0];      // TODO: Handle multiple files (seperate by character? or encode as JSON?)
+                foreach (var file in droppedFiles)
+                {
+                    var message = new IPCMessage();
+                    message.ApplicaitonSenderID = "FileShare";
+                    message.ApplicationRecipientID = "FileInbox";
+                    message.Target = IPCMessage.MessageTarget.Remote;
+                    message.Type = "sendFile";
+                    message.Content["filePath"] = file;      // TODO: Handle multiple files (seperate by character? or encode as JSON?)
 
-                daemonClient.Request(message);
+                    daemonClient.Request(message);
+                }
+                
                 daemonClient.Close();
 
             }

@@ -16,6 +16,7 @@ using FleetDaemon.Storage.Interfaces;
 using System.Threading;
 using FleetDaemon.MessageDispatcher;
 using FleetDaemon.Hauler;
+using System.Net;
 
 namespace FleetDaemon
 {
@@ -23,6 +24,12 @@ namespace FleetDaemon
     {
         static void Main(string[] args)
         {
+            // SSSHHHHHHHH
+            ServicePointManager.ServerCertificateValidationCallback += (server, certificate, chain, errors) =>
+            {
+                return true;
+            };
+
             var storage = new SimpleStorage("./filestore.json");
             var serverResourceName = "BasicHttpBinding_IFleetService";
 
