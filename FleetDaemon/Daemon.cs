@@ -11,6 +11,11 @@ using System.Threading.Tasks;
 
 namespace FleetDaemon
 {
+    public static class DaemonContext
+    {
+        public static FleetClientContext CurrentContext { get; set; } = FleetClientContext.Campus;
+    }
+
     public class Daemon
     {
         // Static instance handling
@@ -26,8 +31,6 @@ namespace FleetDaemon
             this.Router = router;
             this.ClientToken = token;
             DaemonService.OnRequest += DaemonService_OnRequest;
-
-            //this.Storage.Store("process_list", processes);
         }
 
         private void DaemonService_OnRequest(IPCMessage message)
@@ -36,9 +39,6 @@ namespace FleetDaemon
 
             this.Router.HandleMessage(message);
         }
-
-
-        //  todo: Refactor this out into the remote file manager object
 
         /// <summary>
         /// File handling interface called from the RemoteFileManager object
@@ -67,7 +67,16 @@ namespace FleetDaemon
         public void HandleControlMessageReceive(FleetMessage message) {
             // todo(hc): implement handler
             var ipcMessage = new IPCMessage();
-            
+            ipcMessage.ApplicationRecipientID = message.Application;
+            ipcMessage.Content["message"] = message.Message;
+            ipcMessage.Content["sent"] = message.Sent.ToString();
+            ipcMessage.Type = "control";
+
+            if (message.Application == "daemon") {
+                ipcMessage.Target = IPCMessage.MessageTarget.Daemon;
+            } else {
+                ipcMessage.Target = IPCMessage.MessageTarget.Local;
+            }
 
             this.Router.HandleMessage(ipcMessage);
         }
@@ -81,7 +90,7 @@ namespace FleetDaemon
             StartHeartbeat();
 
             // App Hauler
-            InitialiseAppHauler();
+            //InitialiseAppHauler();
 
             // Platform Services
             //StartPlatformServices();
@@ -124,59 +133,11 @@ namespace FleetDaemon
         {
             Console.WriteLine(Directory.GetCurrentDirectory());
 
-            // Start Workstation Selector
-            //AppHauler.Instance.LaunchApplication("workstationselector");
-
-            // Start Accept Dialog
-            //AppHauler.Instance.LaunchApplication("fileaccept");
+            // Start Workstation Selector & Accept Dialog
             Process.Start("services.bat");
 
             // Start Dock
             AppHauler.Instance.LaunchApplication("fleetshelf");
-        }
-
-        private void InitialiseAppHauler()
-        {
-            var apphauler = AppHauler.Instance;
-
-            // For Testing
-            apphauler.KnownApplications["fileshare"] = new FleetKnownApplication
-            {
-                Name = "File Share",
-                Path = @"..\..\..\FileShare\bin\Debug\FileShare.exe",
-                Identifier = "fileshare"
-            };
-
-            apphauler.KnownApplications["fileinbox"] = new FleetKnownApplication
-            {
-                Name = "File Inbox",
-                Path = @"..\..\..\FileInbox\bin\Debug\FileInbox.exe",
-                Identifier = "fileinbox"
-            };
-
-            apphauler.KnownApplications["fileaccept"] = new FleetKnownApplication
-            {
-                Name = "File Accept",
-                Path = @"..\..\..\FileAccept\bin\Debug\FileAccept.exe",
-                Identifier = "fileaccept",
-                Visible = false
-            };
-
-            apphauler.KnownApplications["workstationselector"] = new FleetKnownApplication
-            {
-                Name = "Workstation Selector",
-                Path = @"..\..\..\WorkstationSelector\bin\Debug\WorkstationSelector.exe",
-                Identifier = "workstationselector",
-                Visible = false
-            };
-
-            apphauler.KnownApplications["fleetshelf"] = new FleetKnownApplication
-            {
-                Name = "Fleet Shelf",
-                Path = @"..\..\..\FleetShelf\bin\Debug\FleetShelf.exe",
-                Identifier = "fleetshelf",
-                Visible = false
-            };
         }
     }
 }

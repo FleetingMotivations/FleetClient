@@ -64,7 +64,7 @@ namespace FleetDaemon
                 foreach (var id in fileIds)
                 {
                     Console.WriteLine("Requesting file: " + id.FileName);
-
+                    
                     var client = FileAcceptIPCUtils.MakeClient();
                     var accepted = client.RequestAcceptFile(id);
 
@@ -76,10 +76,15 @@ namespace FleetDaemon
                         Task.Run(() => this.HandleRetreiveFile(token, id));
                     } else
                     {
-                        // TODO(hc): Notify refusal
+                        Task.Run(() => this.NotifyRefusal(token, id));
                     }
                 }
             }
+        }
+
+        private void NotifyRefusal(FleetClientToken token, FleetFileIdentifier id)
+        {
+
         }
 
         /// <summary>
@@ -122,7 +127,7 @@ namespace FleetDaemon
                 client.Open();
                 var file = client.GetFile(token, id);
                 client.Close();
-
+                
                 var attributes = new Dictionary<String, String>();
                 attributes["filesize"] = "" + id.FileSize;
                 attributes["sender"] = id.SenderName;

@@ -25,6 +25,7 @@ namespace FleetDaemon
         static void Main(string[] args)
         {
             // SSSHHHHHHHH
+            // Accept any ssl certificate
             ServicePointManager.ServerCertificateValidationCallback += (server, certificate, chain, errors) =>
             {
                 return true;
@@ -72,9 +73,8 @@ namespace FleetDaemon
             Console.WriteLine("Received registration token");
             
             // Dependancy Injection
-            //var appHauler = new AppHauler(storage);
             RemoteMessageDispatcher.Token = clientToken;
-            var router = new Router(/*appHauler,*/ storage, clientToken);
+            var router = new Router(storage, clientToken);
 
             var daemon = new Daemon(storage, router, clientToken);
             daemon.Run();

@@ -60,7 +60,57 @@ namespace FleetDaemon.Hauler
             this.storage = new SimpleStorage(StoragePath);
 
             this.runningApplications = new Dictionary<String, FleetRunningApplication>();
-            this.knownApplications = this.storage.Get<Dictionary<String, FleetKnownApplication>>("AppHauler_KnownApplications") ?? new Dictionary<string, FleetKnownApplication>();
+            this.knownApplications = this.storage.Get<Dictionary<String, FleetKnownApplication>>("AppHauler_KnownApplications");
+            if (knownApplications == null)
+            {
+                this.knownApplications =  new Dictionary<string, FleetKnownApplication>();
+                InitialiseKnownApplications();
+                this.storage.Store("AppHauler_KnownApplications", this.knownApplications);
+            }
+        }
+
+        private void InitialiseKnownApplications()
+        {
+            var apphauler = AppHauler.Instance;
+
+            // For Testing
+            apphauler.KnownApplications["fileshare"] = new FleetKnownApplication
+            {
+                Name = "File Share",
+                Path = @"..\..\..\FileShare\bin\Debug\FileShare.exe",
+                Identifier = "fileshare"
+            };
+
+            apphauler.KnownApplications["fileinbox"] = new FleetKnownApplication
+            {
+                Name = "File Inbox",
+                Path = @"..\..\..\FileInbox\bin\Debug\FileInbox.exe",
+                Identifier = "fileinbox"
+            };
+
+            apphauler.KnownApplications["fileaccept"] = new FleetKnownApplication
+            {
+                Name = "File Accept",
+                Path = @"..\..\..\FileAccept\bin\Debug\FileAccept.exe",
+                Identifier = "fileaccept",
+                Visible = false
+            };
+
+            apphauler.KnownApplications["workstationselector"] = new FleetKnownApplication
+            {
+                Name = "Workstation Selector",
+                Path = @"..\..\..\WorkstationSelector\bin\Debug\WorkstationSelector.exe",
+                Identifier = "workstationselector",
+                Visible = false
+            };
+
+            apphauler.KnownApplications["fleetshelf"] = new FleetKnownApplication
+            {
+                Name = "Fleet Shelf",
+                Path = @"..\..\..\FleetShelf\bin\Debug\FleetShelf.exe",
+                Identifier = "fleetshelf",
+                Visible = false
+            };
         }
 
         // Methods

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FleetIPC;
 using FleetDaemon.Hauler;
+using FleetServer;
 
 namespace FleetDaemon.MessageDispatcher
 {
@@ -54,8 +55,32 @@ namespace FleetDaemon.MessageDispatcher
                 case "launchApplication":
                     HandleLaunchApplicationMessage(message);
                     break;
+                case "control":
+                    HandleControlMessage(message);
+                    break;
                 default:
                     Console.WriteLine("Unhandled message type");
+                    break;
+            }
+        }
+
+        private void HandleControlMessage(IPCMessage message)
+        {
+            var content = message.Content["message"];
+
+            switch (content)
+            {
+                case "FleetClientContext:Room":
+                    DaemonContext.CurrentContext = FleetClientContext.Room;
+                    break;
+                case "FleetClientContext:Building":
+                    DaemonContext.CurrentContext = FleetClientContext.Building;
+                    break;
+                case "FleetClientContext:Campus":
+                    DaemonContext.CurrentContext = FleetClientContext.Campus;
+                    break;
+                case "FleetClientContext:Workgroup":
+                    DaemonContext.CurrentContext = FleetClientContext.Workgroup;
                     break;
             }
         }

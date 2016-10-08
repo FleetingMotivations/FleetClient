@@ -28,8 +28,6 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
-        public static Dictionary<String, Process> Processes { get; set; }
-
         public void Dispatch(IPCMessage message)
         {
             if (ValidateMessage(message))

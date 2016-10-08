@@ -64,7 +64,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppHauler.cs" />
     <Compile Include="AppHauler\AppHauler.cs" />
     <Compile Include="AppHauler\AppHaulerModel.cs" />
     <Compile Include="AppHauler\IAppHauler.cs" />
