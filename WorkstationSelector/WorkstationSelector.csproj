@@ -120,12 +120,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="jordan_the_tool.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Assets\workstation.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\workstation.png" />
+    <Resource Include="Assets\workstation_icon.ico" />
   </ItemGroup>
   <Import Project="..\WorkstationSelectorIPC\WorkstationSelectorIPC.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

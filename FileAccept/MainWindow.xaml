@@ -1,17 +1,29 @@
-﻿<Window x:Class="FileAccept.MainWindow"
+﻿<Controls:MetroWindow x:Class="FileAccept.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:FileAccept"
         mc:Ignorable="d"
-        Title="Incoming File" Height="350" Width="525">
+        Title="Incoming File" Height="350" Width="525" WindowTitleBrush="#00A1F1"
+        GlowBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" ShowIconOnTitleBar="True" Icon="Assets/file_icon.ico">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="FleetGreen" Color="#7CBB00" />
+        <SolidColorBrush x:Key="FleetRed" Color="#F65314"/>
+        <SolidColorBrush x:Key="FleetGray" Color="#737373"/>
+        <SolidColorBrush x:Key="FleetYellow" Color="#FFBB00"/>
+        <SolidColorBrush x:Key="FleetBlue" Color="#00A1F1"/>
+    </Window.Resources>
+    
     <Grid>
         <TextBlock Name="Filename" FontSize="15" Margin="35,70,35,224" Text="&lt;file name&gt;" TextAlignment="Center"/>
-        <Button Content="Accept" Name="AcceptButton" Margin="130,200,304,76" Background="LightGreen" Click="AcceptButton_Click"/>
-        <Button Content ="Reject" Name="RejectButton" Margin="303,200,130,76" Background="Salmon" Click="RejectButton_Click"/>
+        <Button Content="Accept" Name="AcceptButton" Margin="130,200,304,76" Background="{StaticResource FleetGreen }" Click="AcceptButton_Click"/>
+        <Button Content ="Reject" Name="RejectButton" Margin="303,200,130,76" Background="{StaticResource FleetRed}" Click="RejectButton_Click"/>
         <TextBlock Name="Name" FontSize="15" Margin="35,40,35,254" Text="Incoming file from &lt;unknown&gt;" TextAlignment="Center"/>
         <TextBlock Name="Size" FontSize="15" Margin="35,100,35,194" Text="&lt;size&gt;" TextAlignment="Center"/>
         <TextBlock FontSize="15" Margin="35,130,35,164" Text="Would you like to accept this file?" TextAlignment="Center"/>
     </Grid>
-</Window>
+</Controls:MetroWindow>

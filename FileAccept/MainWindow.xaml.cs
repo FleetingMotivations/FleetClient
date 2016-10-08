@@ -3,9 +3,11 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 
+using MahApps.Metro.Controls;
+
 namespace FileAccept
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         public Boolean DidAccept { get; set; } = false;
 

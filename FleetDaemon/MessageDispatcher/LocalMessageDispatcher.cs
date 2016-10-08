@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FleetIPC;
 using System.Diagnostics;
+using FleetDaemon.Hauler;
 
 namespace FleetDaemon.MessageDispatcher
 {
@@ -27,11 +28,9 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
-        public static Dictionary<String, Process> Processes { get; set; }
-
         public void Dispatch(IPCMessage message)
         {
-            if (ValidateMessage(message) || true)       // Override stopgap
+            if (ValidateMessage(message))
             {
                 HandleMessageDispatch(message);
 
@@ -39,21 +38,23 @@ namespace FleetDaemon.MessageDispatcher
             {
                 Console.WriteLine("IPCMessage could not be validated");
                 Console.WriteLine(message);
+
+                //  TODO(hc): Notify somebody that it couldn't be sent.
             }
         }
 
         private Boolean ValidateMessage(IPCMessage message)
         {
-            Boolean valid = true;
+            Boolean valid = false;
+
+            var recipient = message.ApplicationRecipientID;
+
+            if (AppHauler.Instance.KnownApplications.ContainsKey(recipient))
+            {
+                valid = AppHauler.Instance.IsRunningOrLaunch(recipient);
+            }
 
             // TODO(hc): Check that sender is a valid process
-
-            // Check that recipeint process is running
-            /*var recipient = Processes[message.ApplicationRecipientID];
-            if (recipient != null && !recipient.HasExited)
-            {
-                valid = false;
-            }*/
 
             // TODO(hc): Check for message integrity
 

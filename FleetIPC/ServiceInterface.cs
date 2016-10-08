@@ -10,10 +10,10 @@ namespace FleetIPC
     {
        
         /*This Interface is what the application exposes */
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void Inform(List<IPCMessage> messages);
 
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void Deliver(IPCMessage message);
     }
 
@@ -21,7 +21,7 @@ namespace FleetIPC
     public interface IDaemonIPC
     {
         /*This interface is what the Daemon exposes */
-        [OperationContract]
+        [OperationContract(IsOneWay=true)]
         void Request(IPCMessage message);
 
         // We may want a register and deregister method so the daemon knows that

@@ -15,6 +15,8 @@ using FleetDaemon.Storage;
 using FleetDaemon.Storage.Interfaces;
 using System.Threading;
 using FleetDaemon.MessageDispatcher;
+using FleetDaemon.Hauler;
+using System.Net;
 
 namespace FleetDaemon
 {
@@ -22,6 +24,13 @@ namespace FleetDaemon
     {
         static void Main(string[] args)
         {
+            // SSSHHHHHHHH
+            // Accept any ssl certificate
+            ServicePointManager.ServerCertificateValidationCallback += (server, certificate, chain, errors) =>
+            {
+                return true;
+            };
+
             var storage = new SimpleStorage("./filestore.json");
             var serverResourceName = "BasicHttpBinding_IFleetService";
 
@@ -35,6 +44,7 @@ namespace FleetDaemon
             // Create registration token
             var clientReg = new FleetClientRegistration();
             clientReg.FriendlyName = System.Environment.MachineName;
+            clientReg.RoomIdentifier = "ES205";
 
             // Register with server
             var client = new FleetServiceClient(serverResourceName);
@@ -63,92 +73,11 @@ namespace FleetDaemon
             Console.WriteLine("Received registration token");
             
             // Dependancy Injection
-            var appHauler = new AppHauler(storage);
             RemoteMessageDispatcher.Token = clientToken;
-            var router = new Router(appHauler, storage, clientToken);
+            var router = new Router(storage, clientToken);
 
             var daemon = new Daemon(storage, router, clientToken);
             daemon.Run();
-            Console.ReadLine();
-        }
-    }
-
-    public class Daemon
-    {
-        // Static instance handling
-        private ServiceHost Service;
-        private ISimpleStorage Storage { get; set; }
-        private IRouter Router { get; set; }
-
-        private FleetClientToken ClientToken { get; set; }
-        
-        public Daemon(ISimpleStorage Store, IRouter router, FleetClientToken token)
-        {
-            this.Storage = Store;
-            this.Router = router;
-            this.ClientToken = token;
-            DaemonService.OnRequest += DaemonService_OnRequest;
-
-            //this.Storage.Store("process_list", processes);
-        }
-
-        private void DaemonService_OnRequest(IPCMessage message)
-        {
-            Console.WriteLine(String.Format("Received message from: {0}, to: {1}", message.ApplicaitonSenderID, message.ApplicationRecipientID));
-
-            this.Router.HandleMessage(message);
-        }
-
-        /// <summary>
-        /// File handling interface called from the RemoteFileManager object
-        /// Converts the passed path and attributes to an IPC message before
-        /// dispatching to the recipient application
-        /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="attributes"></param>
-        public void HandleFileReceive(String filepath, Dictionary<String, String> attributes)
-        {
-            var message = new IPCMessage();
-            message.ApplicaitonSenderID = "fileshare";  // TODO(hc): Change this to the actual sender
-            message.ApplicationRecipientID = "fileinbox";
-            message.Target = IPCMessage.MessageTarget.Local;
-            message.Content["filepath"] = filepath;
-            message.Type = "sendFile";
-
-            foreach (var pair in attributes)
-            {
-                message.Content[pair.Key] = pair.Value;
-            }
-
-            this.Router.HandleMessage(message);
-        }
-
-        public void Run()
-        {
-            // Service initialisation
-            var address = new Uri("net.pipe://localhost/fleetdaemon");
-            var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
-            this.Service = new ServiceHost(typeof(DaemonService));
-            this.Service.AddServiceEndpoint(typeof(IDaemonIPC), binding, address);
-            this.Service.Open();
-
-            Console.WriteLine("Daemon IPC service listening");
-
-            // Start heartbeat
-            RemoteFileManager.DaemonInstance = this;
-            HeartbeatManager.WaitLength = 3000;
-            HeartbeatManager.Instance.StartHeartbeat(ClientToken);
-
-            Console.WriteLine("Heartbeat is running");
-
-            // Other loading
-            // ????
-
-            // Daemon is running
-            Console.WriteLine("Daemon running. Press the any key to exit.");
-            Console.ReadLine();
-
-            this.Service.Close();
         }
     }
 }

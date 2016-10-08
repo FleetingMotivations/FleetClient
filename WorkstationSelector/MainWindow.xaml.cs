@@ -30,6 +30,13 @@ namespace WorkstationSelector
 
         private void RenderWorkstations()
         {
+            //TODO:
+            //If unavailable: Change Opacity for usability:
+            //img.Opacity = 0.1;
+
+            //TODO:
+            //If unavailable: Add ToolTip for why it is unavailable:
+            //tile.ToolTip = tile.Title.ToString() + " unavailable. (Offline)";
 
             foreach (var client in availableClients)
             {
@@ -37,32 +44,6 @@ namespace WorkstationSelector
                 tile.Click += SelectWorkstation_Click;
                 WorkstationSelectorPanel.Children.Add(tile);
             }
-
-            /*for (int i = 0; i < 9; i++) //TODO: Change for all Workstations in the context
-            {
-                Image img = new Image();
-                img.Source = new BitmapImage(new Uri(@"/WorkstationSelector;component/Assets/workstation.png", UriKind.Relative));
-                img.Stretch = Stretch.Fill;
-                img.Margin = new Thickness(0, 10, 0, 20);
-
-                //TODO:
-                //If unavailable: Change Opacity for usability:
-                //img.Opacity = 0.1;
-
-                Tile tile = new Tile();
-                tile.Content = img;
-                tile.Title = "Workstation " + (i + 1);
-
-                //TODO:
-                //If unavailable: Add ToolTip for why it is unavailable:
-                //tile.ToolTip = tile.Title.ToString() + " unavailable. (Offline)";
-
-                tile.Style = (Style)Resources["SmallTileStyle"];
-                tile.Click += new RoutedEventHandler(SelectWorkstation_Click);
-                tile.Tag = "0"; //Not selected
-
-                WorkstationSelectorPanel.Children.Add(tile);
-            }*/
         }
 
         private void SelectWorkstation_Click(object sender, RoutedEventArgs e)
@@ -79,7 +60,7 @@ namespace WorkstationSelector
             else //The Tile was selected, so deselect it
             {
                 tile.Tag = "0";
-                tile.Background = (SolidColorBrush)Resources["AvailableWorkstation"];
+                tile.Background = (SolidColorBrush)Resources["FleetBlue"];
                 this.AllButton.Content = "\xE8B3"; //Select All
                 this.AllButton.ToolTip = "Select all workstations";
                 this.AllButton.Click += new RoutedEventHandler(SelectAllWorkstations_Click);
@@ -127,7 +108,7 @@ namespace WorkstationSelector
             foreach (Tile t in workstations)
             {
                 t.Tag = "0"; //Deactivate button
-                t.Background = (SolidColorBrush)Resources["AvailableWorkstation"];
+                t.Background = (SolidColorBrush)Resources["FleetBlue"];
             }
 
             this.selectedClients.Clear();
