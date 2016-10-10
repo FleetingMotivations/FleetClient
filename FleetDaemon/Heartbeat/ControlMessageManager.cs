@@ -64,7 +64,7 @@ namespace FleetDaemon
                 client.Open();
 
                 var ids = client.QueryMessages(token);
-                identifiers = new List<FleetMessageIdentifier>();
+                identifiers = new List<FleetMessageIdentifier>(ids);
 
                 client.Close();
             } catch (Exception e)
