@@ -1,4 +1,14 @@
-﻿using System;
+﻿/* 
+ * Description: FleetShelf application interface.
+ *              This application is the entry point for the users and consistents of popout 'shelf' (similar to a horizontal dock)
+ *              which contains each of the applications of the Fleet system.
+ * Project: Fleet/FleetClient
+ * Last modified: 11 October 2016
+ * Last Author: Jordan Collins
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,10 +33,14 @@ namespace FleetShelf
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        //get the list of Fleet applications:
         private List<FleetShelfApplication> applications;
+        //initialise the Fleet notification tray icon:
         private System.Windows.Forms.NotifyIcon trayIcon = new System.Windows.Forms.NotifyIcon();
 
+        /*
+         * MainWindow(): initialise the FleetShelf
+        */
         public MainWindow()
         {
             InitializeComponent();
@@ -56,20 +70,22 @@ namespace FleetShelf
             //Map ContextMenu to trayIcon:
             trayIcon.ContextMenu = fleetContextMenu;
 
-            // TODO: Fit to screen without taskbar
-
             this.AllowsTransparency = true;
             this.Focus();
         }
 
+        /*
+         * Button_Click(object, RoutedEventArgs): Change the FleetShelf state when the Fleet icon is selected.
+        */
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //if the FleetShelf is closed, open it
             if (FleetShelf.Visibility == Visibility.Collapsed)
             {
                 FleetShelf.Visibility = Visibility.Visible;
                 (sender as Button).Margin = new Thickness(45, 0, 0, 0);
             }
-            else
+            else //if the FleetShelf is open, close it
             {
                 FleetShelf.Visibility = Visibility.Collapsed;
                 Image img = new Image();
@@ -79,39 +95,52 @@ namespace FleetShelf
             }
         }
 
-        private void UnFocusDock(object sender, RoutedEventArgs e)
-        {
-            (sender as DockPanel).Visibility = Visibility.Collapsed;
-        }
-
         /*
-         *  Might want to replace these with a generic on click method
-         *  that send the correct message based on a tag or something?
-         */
-
+         * Inbox_Click(object, RoutedEventArgs): Open the FleetInbox application
+        */
         private void Inbox_Click(object sender, RoutedEventArgs e)
         {
             this.LaunchApplication("fileinbox");
         }
 
+        /*
+         * ScreenCapture_Click(object, RoutedEventArgs): Open the ScreenCapture application
+        */
         private void ScreenCapture_Click(object sender, RoutedEventArgs e)
         {
-            
+            //this.LaunchApplication("screencapture");
         }
 
+        /*
+         * WorkstationShare_Click(object, RoutedEventArgs): Open the FileShare application
+        */
         private void WorkstationShare_Click(object sender, RoutedEventArgs e)
         {
             this.LaunchApplication("fileshare");
         }
 
+        /*
+         * FacilitatorControls_Click(object, RoutedEventArgs): Open the FacilitatorControls application
+        */
         private void FacilitatorControls_Click(object sender, RoutedEventArgs e)
         {
-            //
+            //this.LaunchApplication("facilitatorcontrols");
         }
 
+        /*
+         * Help_Click(object, RoutedEventArgs): Open the FleetHelp application
+        */
+        private void Help_Click(object sender, RoutedEventArgs e)
+        {
+            //this.LaunchApplication("fleethelp");
+        }
+
+        /*
+         * Settings_Click(object, RoutedEventArgs): Open the Settings application
+        */
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
-            //
+            //this.LaunchApplication("settings");
         }
 
         // 3. We have received a list of applications
@@ -122,6 +151,9 @@ namespace FleetShelf
             this.applications = applications;
         }
 
+        /*
+         * LaunchApplication(String): Launch the Fleet application based on the application id
+        */
         private void LaunchApplication(String identifier)
         {
             var message = new IPCMessage();
@@ -145,27 +177,34 @@ namespace FleetShelf
             }
         }
 
+        /*
+         * TrayHelp_Click(object, EventArgs): Open the FleetHelp application
+        */
         private void TrayHelp_Click(object sender, EventArgs e)
         {
             //Redirect users to a help document/window/webpage
+            //this.LaunchApplication("fleethelp");
 
             //Balloon Sample
             string title = "Fleet Files Delivered";
             string text = "X Files Accepted\nY Files Rejected";
-            
             trayIcon.ShowBalloonTip(1000, title, text, System.Windows.Forms.ToolTipIcon.Info);
         }
 
+        /*
+         * TrayHelp_Click(object, EventArgs): Open the FleetHelp application
+        */
         private void TrayIconBalloonTip_Clicked(object sender, EventArgs e)
         {
             //Once the BalloonTip is selected, open a file delivery summary
         }
 
+        /*
+         * TrayExit_Click(object, EventArgs): Close FleetShelf
+        */
         private void TrayExit_Click(object sender, EventArgs e)
         {
-            //Close the FleetShelf
             this.Close();
-            
         }
     }
 }

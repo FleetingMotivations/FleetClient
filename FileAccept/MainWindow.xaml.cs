@@ -1,4 +1,15 @@
-﻿using FleetServer;
+﻿/* 
+ * Description: FleetAccept application interface.
+ *              This application is used as a notifcation for the receiving workstation, asking for a response whethere
+ *              they wish to accept or decline the incoming file.
+ * Project: Fleet/FleetClient
+ * Last modified: 11 October 2016
+ * Last Author: Jordan Collins
+ * 
+*/
+
+
+using FleetServer;
 using System;
 using System.Windows;
 using System.Windows.Media;
@@ -11,11 +22,17 @@ namespace FileAccept
     {
         public Boolean DidAccept { get; set; } = false;
 
+        /*
+         * MainWindow(): initialise FleetAccept
+        */
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        /*
+         * AcceptButton_Click(object, RoutedEventArgs): Accept the incoming file
+        */
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
             AcceptButton.Background = Brushes.LawnGreen;
@@ -23,6 +40,9 @@ namespace FileAccept
             this.Close();
         }
 
+        /*
+         * RejectButton_Click(object, RoutedEventArgs): Reject the incoming file
+        */
         private void RejectButton_Click(object sender, RoutedEventArgs e)
         {
             RejectButton.Background = Brushes.OrangeRed;
@@ -30,6 +50,9 @@ namespace FileAccept
             this.Close();
         }
 
+        /*
+         * Boolean? ShowRequestDialog(FleetFileIdentifier): Show the incoming message details, awaiting a reply
+        */
         public Boolean? ShowRequestDialog(FleetFileIdentifier ident)
         {
             this.Name.Text = "<Unknown>";

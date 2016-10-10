@@ -1,4 +1,14 @@
-﻿using FileAcceptIPC;
+﻿/* 
+ * Description: FleetAccept application.
+ *              This application is used as a notifcation for the receiving workstation, asking for a response whethere
+ *              they wish to accept or decline the incoming file.
+ * Project: Fleet/FleetClient
+ * Last modified: 11 October 2016
+ * Last Author: Jordan Collins
+ * 
+*/
+
+using FileAcceptIPC;
 using FleetIPC;
 using FleetServer;
 using System;

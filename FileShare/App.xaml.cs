@@ -1,4 +1,13 @@
-﻿using FleetIPC;
+﻿/* 
+ * Description: FileShare application.
+ *              This application provides a file delivery service for the Fleet system.
+ * Project: Fleet/FleetClient
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using FleetIPC;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

@@ -1,4 +1,14 @@
-﻿using System;
+﻿/* 
+ * Description: FleetHelp application interface.
+ *              This application is used to provide help for users of the Fleet system. Including FAQs,
+ *              tutorials and information about Fleet as a system.
+ * Project: Fleet/FleetClient
+ * Last modified: 11 October 2016
+ * Last Author: Jordan Collins
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
