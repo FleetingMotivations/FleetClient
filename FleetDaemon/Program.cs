@@ -77,6 +77,8 @@ namespace FleetDaemon
             var router = new Router(storage, clientToken);
 
             var daemon = new Daemon(storage, router, clientToken);
+            ControlMessageManager.DaemonInstance = daemon;
+            RemoteFileManager.DaemonInstance = daemon;
             daemon.Run();
         }
     }

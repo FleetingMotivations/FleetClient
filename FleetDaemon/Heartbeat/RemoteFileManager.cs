@@ -7,6 +7,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace FleetDaemon
 {
@@ -84,7 +85,29 @@ namespace FleetDaemon
 
         private void NotifyRefusal(FleetClientToken token, FleetFileIdentifier id)
         {
+            var message = new FleetMessage();
+            message.Application = "daemon";
+            message.ApplicationId = 2;
+            message.Message = $"FileRejected:{id.FileName}:{Dns.GetHostName()}";
+            message.Sender = Dns.GetHostName();
 
+            var recipient = new FleetClientIdentifier();
+            recipient.Identifier = id.SenderIdentifier;
+
+            var client = new FleetServiceClient("BasicHttpBinding_IFleetService");
+            
+            try
+            {
+                client.Open();
+
+                client.SendMessageSingleRecipient(token, recipient, message);
+
+                client.Close();
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                client.Abort();
+            }
         }
 
         /// <summary>
@@ -122,9 +145,19 @@ namespace FleetDaemon
         {
             var client = new FleetServiceClient("BasicHttpBinding_IFleetService");
 
+            var message = new FleetMessage();
+            message.Application = "daemon";
+            message.ApplicationId = 2;
+            message.Message = $"FileAccepted:{id.FileName}:{Dns.GetHostName()}";
+            message.Sender = Dns.GetHostName();
+
+            var recipient = new FleetClientIdentifier();
+            recipient.Identifier = id.SenderIdentifier;
+
             try
             {
                 client.Open();
+                client.SendMessageSingleRecipient(token, recipient, message);
                 var file = client.GetFile(token, id);
                 client.Close();
                 
