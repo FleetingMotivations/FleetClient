@@ -9,7 +9,7 @@
         Title="Help" Height="350" Width="525" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
         WindowTitleBrush="#00A1F1" ShowIconOnTitleBar="True" Icon="Assets/help_icon.ico" BorderThickness="1" 
         GlowBrush="{DynamicResource AccentColorBrush}">
-    
+
     <Window.Resources>
         <SolidColorBrush x:Key="FleetGreen" Color="#7CBB00" />
         <SolidColorBrush x:Key="FleetRed" Color="#F65314"/>
@@ -17,26 +17,28 @@
         <SolidColorBrush x:Key="FleetYellow" Color="#FFBB00"/>
         <SolidColorBrush x:Key="FleetBlue" Color="#00A1F1"/>
     </Window.Resources>
-    
+
     <Grid>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="299" Margin="10,10,0,0" VerticalAlignment="Top" Width="497" FontSize="10">
-            <TabItem Header="FAQs" Controls:ControlsHelper.HeaderFontSize="18">
+            <TabItem Header="FAQ" Controls:ControlsHelper.HeaderFontSize="18">
                 <Grid Background="WhiteSmoke">
-                    <TextBlock x:Name="faqs" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="41" Width="461"><Run FontWeight="Bold" Text="FAQs"/><Run FontWeight="Bold" Text=" "/><Run Text="..."/></TextBlock>
+                    <TextBlock x:Name="faqs" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="245" Width="461"><Run Text="FAQ will be added after the usability testing phase of the project."/><LineBreak/><Run/><LineBreak/><Run Text="These will be determined by:"/><LineBreak/><LineBreak/><Run Text="- Questions asked by the test participants that have been asked multiple times"/><LineBreak/><Run Text="- Issues encountered throughout the test which have halted progress in the scenario or task"/><LineBreak/><Run Text="- Post-test questions that may potentially be uncovered based on the usability test results"/><LineBreak/><Run/><LineBreak/><Run Text="These questions will be ordered based on priority, which is determined by:"/><LineBreak/><Run/><LineBreak/><Run Text="- The potential risk to usability (highest risk placed above lowest risk)"/><LineBreak/><Run Text="- The potential damage that can be caused as a result of a lack of information (highest damage above lower damage)"/><LineBreak/><Run/></TextBlock>
                 </Grid>
             </TabItem>
 
             <TabItem Header="Tutorials" Controls:ControlsHelper.HeaderFontSize="18">
                 <Grid Background="WhiteSmoke">
-                    <TextBlock x:Name="tutorials" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="41" Width="461"><Run FontWeight="Bold" Text="Tutorials"/><Run FontWeight="Bold" Text=" "/><Run Text="..."/></TextBlock>
+                    <TextBlock x:Name="tutorials" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="245" Width="461"><Run Text="Tutorials"/><Run Text=" will be added after the usability testing phase of the project."/><Run Text=" Tutorials will be made up of step-by-step instructions as well as images to accomplish this."/><LineBreak/><Run/><LineBreak/><Run Text="These tutorials will be determined based on accessing essential aspects of the Fleet system, such as:"/><LineBreak/><Run/><LineBreak/><Run Text="- Sending a file and selecting the designated workstations"/><LineBreak/><Run Text="- Opening a file which exists in your inbox"/><LineBreak/><Run Text="- Capturing a portion of the screen and sending it"/><LineBreak/><Run/><LineBreak/><Run Text="These "/><Run Text="tutorials "/><Run Text="will be ordered based on priority, which is determined by:"/><LineBreak/><Run/><LineBreak/><Run Text="- The potential risk to usability (highest risk placed above lowest risk)"/><LineBreak/><Run Text="- The potential damage that can be caused as a result of a lack of information (highest damage above lower damage)"/><LineBreak/><Run/></TextBlock>
                 </Grid>
             </TabItem>
 
             <TabItem Header="About" Controls:ControlsHelper.HeaderFontSize="18">
                 <Grid Background="WhiteSmoke">
-                    <TextBlock x:Name="about" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="41" Width="461">
-                        <Run FontWeight="Bold" Text="Fleet"/><Run Text=" is "/><Run Text="an interactive collaboration environment"/><Run Text="..."/>
-                    </TextBlock>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="90*"/>
+                        <ColumnDefinition Width="401*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="about" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="245" Width="461" Grid.ColumnSpan="2"><Run FontWeight="Bold" Text="Fleet"/><Run Text=" is "/><Run Text="an interactive "/><Run Text="technology suit which aims to provide both facilitators and students with a platform to promote classroom collaboration."/><LineBreak/><Run/><LineBreak/><Run Text=""/></TextBlock>
                 </Grid>
             </TabItem>
         </TabControl>
