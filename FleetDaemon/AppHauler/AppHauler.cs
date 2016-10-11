@@ -60,7 +60,7 @@ namespace FleetDaemon.Hauler
             this.storage = new SimpleStorage(StoragePath);
 
             this.runningApplications = new Dictionary<String, FleetRunningApplication>();
-            this.knownApplications = this.storage.Get<Dictionary<String, FleetKnownApplication>>("AppHauler_KnownApplications");
+            //this.knownApplications = this.storage.Get<Dictionary<String, FleetKnownApplication>>("AppHauler_KnownApplications");
             if (knownApplications == null)
             {
                 this.knownApplications =  new Dictionary<string, FleetKnownApplication>();
@@ -71,7 +71,8 @@ namespace FleetDaemon.Hauler
 
         private void InitialiseKnownApplications()
         {
-            var apphauler = AppHauler.Instance;
+            //var apphauler = AppHauler.Instance;
+            var apphauler = this;
 
             // For Testing
             apphauler.KnownApplications["fileshare"] = new FleetKnownApplication
