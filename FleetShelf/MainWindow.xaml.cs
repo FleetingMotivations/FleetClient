@@ -175,7 +175,7 @@ namespace FleetShelf
         private void TrayHelp_Click(object sender, EventArgs e)
         {
             //Redirect users to a help document/window/webpage
-            //this.LaunchApplication("fleethelp");
+            this.LaunchApplication("fleethelp");
 
             //Balloon Sample
             string title = "Fleet Files Delivered";

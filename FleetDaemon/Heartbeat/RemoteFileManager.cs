@@ -157,7 +157,7 @@ namespace FleetDaemon
             try
             {
                 client.Open();
-                client.SendMessageSingleRecipient(token, recipient, message);
+                //client.SendMessageSingleRecipient(token, recipient, message);
                 var file = client.GetFile(token, id);
                 client.Close();
                 
