@@ -2,7 +2,10 @@
  * Description: FleetReceipt application interface.
  *              This application is the receipt returned after sending files to workstations.
  *              Informs the user if the file was delivered or not and the reason behind.
+ *              Currently this application is not integrated with the Fleet system, but used as a reference point
+ *              to understand what is required for the Toast notifications of file delivery.
  * Project: Fleet/FleetClient
+ * Project Member: Jordan Collins, Hayden Cheers, Alistair Woodcock, Tristan Newmann
  * Last modified: 11 October 2016
  * Last Author: Jordan Collins
  * 
@@ -48,6 +51,8 @@ namespace FleetReceipt
         {
             //TODO: Logic to populate the lists based on accept/reject results
             //In the mean time, dummy data is being used
+
+            //Note: this project may be integrated into a Toast notification form
 
             for (int i = 0; i < 10; i++) //To be replaced with a loop through all workstations that the file has been sent to
             {

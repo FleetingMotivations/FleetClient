@@ -3,6 +3,7 @@
  *              This application is the entry point for the users and consistents of popout 'shelf' (similar to a horizontal dock)
  *              which contains each of the applications of the Fleet system.
  * Project: Fleet/FleetClient
+ * Project Member: Jordan Collins, Hayden Cheers, Alistair Woodcock, Tristan Newmann
  * Last modified: 11 October 2016
  * Last Author: Hayden Cheers
  * 
@@ -41,7 +42,7 @@ namespace FleetShelf
             this.service = IPCUtil.MakeApplicationService(ApplicationIdentifier);
             this.service.Open();
 
-            // Bad, put in on a background thread to make sure shit doesn't hit the fan!
+            // Request the applications (potentially shift this to a background threat in future)
             Task.Run(() => RequestApplications());
         }
 
@@ -67,8 +68,6 @@ namespace FleetShelf
             {
                 Console.WriteLine(ex.Message);
                 client.Abort();
-
-                // This is bad, you can handle this one. Wait and try again maybe?
             }
         }
 

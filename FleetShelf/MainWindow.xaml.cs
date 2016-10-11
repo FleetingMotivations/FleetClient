@@ -3,6 +3,7 @@
  *              This application is the entry point for the users and consistents of popout 'shelf' (similar to a horizontal dock)
  *              which contains each of the applications of the Fleet system.
  * Project: Fleet/FleetClient
+ * Project Member: Jordan Collins, Hayden Cheers, Alistair Woodcock, Tristan Newmann
  * Last modified: 11 October 2016
  * Last Author: Jordan Collins
  * 
@@ -136,7 +137,7 @@ namespace FleetShelf
         }
 
         // 3. We have received a list of applications
-        // We can render them and stuff.
+        // We can render them
 
         internal void UpdateApplications(List<FleetShelfApplication> applications)
         {

@@ -2,6 +2,7 @@
  * Description: FileShare application.
  *              This application provides a file delivery service for the Fleet system.
  * Project: Fleet/FleetClient
+ * Project Member: Jordan Collins, Hayden Cheers, Alistair Woodcock, Tristan Newmann
  * Last modified: 11 October 2016
  * Last Author: Hayden Cheers
  * 
