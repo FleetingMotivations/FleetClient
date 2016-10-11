@@ -27,6 +27,10 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
+        /// <summary>
+        /// Interface to displatch message. First validates then sends
+        /// </summary>
+        /// <param name="message"></param>
         public void Dispatch(IPCMessage message)
         {
             if (ValidateSender(message))
@@ -39,12 +43,21 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
+        /// <summary>
+        /// Ensure the sender is a correct application (ie is the the list of known applciations)
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private Boolean ValidateSender(IPCMessage message)
         {
             // Check if application is registered to send daemon messages
             return true;
         }
 
+        /// <summary>
+        /// Handle sendign the message to the target application
+        /// </summary>
+        /// <param name="message"></param>
         private void HandleMessage(IPCMessage message)
         {
             switch (message.Type)
@@ -64,6 +77,11 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
+        /// <summary>
+        /// Handle diaptching a control message. 
+        /// These are context change events
+        /// </summary>
+        /// <param name="message"></param>
         private void HandleControlMessage(IPCMessage message)
         {
             var content = message.Content["message"];
@@ -91,23 +109,8 @@ namespace FleetDaemon.MessageDispatcher
                 {
                     var components = content.Split(':');
 
-                    //var xml = "<toast>";
-                    //xml += "<visual>";
-                    //xml += "<binding template='ToastGeneric'>";
-                    //xml += "<text>File Accepted</text>";
-                    //xml += "<text>" + components[1] + " - " + components[2] + "</text>";
-                    //xml += "</binding>";
-                    //xml += "</visual>";
-                    //xml += "</toast>";
+                   // DISPLAY NOTIFICATION HERE
 
-                    //var xmlDoc = new XmlDocument();
-                    //xmlDoc.LoadXml(xml);
-
-                    //var notification = new ToastNotification(xmlDoc);
-                    //notification.Tag = "tag";
-                    //notification.Group = "FleetDaemon";
-
-                    //ToastNotificationManager.CreateToastNotifier("FleetDaemon").Show(notification);
                 } catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
@@ -119,23 +122,8 @@ namespace FleetDaemon.MessageDispatcher
                 {
                     var components = content.Split(':');
 
-                    //var xml = "<toast>";
-                    //    xml += "<visual>";
-                    //        xml += "<binding template='ToastGeneric'>";
-                    //            xml += "<text>File Rejected</text>";
-                    //            xml += "<text>" + components[1] + " - " + components[2] + "</text>";
-                    //        xml += "</binding>";
-                    //    xml += "</visual>";
-                    //xml += "</toast>";
+                    // DISPLAY NOTIFICATION HERE
 
-                    //var xmlDoc = new XmlDocument();
-                    //xmlDoc.LoadXml(xml);
-
-                    //var notification = new ToastNotification(xmlDoc);
-                    //notification.Tag = "tag";
-                    //notification.Group = "FleetDaemon";
-
-                    //ToastNotificationManager.CreateToastNotifier("FleetDaemon").Show(notification);
                 }
                 catch (Exception e)
                 {
@@ -144,11 +132,17 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
+        /// <summary>
+        /// Handle sending a list of known applications to the requesing application
+        /// </summary>
+        /// <param name="message"></param>
         private void HandleKnownApplicationsMessage(IPCMessage message)
         {
+            // Get known apps
             var knownApps = AppHauler.Instance.KnownApplications.Values;
             var knownAppMessages = new List<IPCMessage>();
 
+            // Convert to IPC messages
             foreach (var app in knownApps)
             {
                 var m = new IPCMessage();
@@ -159,10 +153,12 @@ namespace FleetDaemon.MessageDispatcher
                 knownAppMessages.Add(m);
             }
 
+            // Create client
             var client = IPCUtil.MakeApplicationClient(message.ApplicaitonSenderID);
 
             try
             {
+                // Snd to recipient
                 client.Open();
                 client.Inform(knownAppMessages);
                 client.Close();

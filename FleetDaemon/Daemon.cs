@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace FleetDaemon
 {
+    /// <summary>
+    /// Basic storage class to store context-specifc settings
+    /// </summary>
     public static class DaemonContext
     {
         public static FleetClientContext CurrentContext { get; set; } = FleetClientContext.Campus;
@@ -22,7 +25,6 @@ namespace FleetDaemon
 
     public class Daemon
     {
-        // Static instance handling
         private ServiceHost Service;
         private ISimpleStorage Storage { get; set; }
         private IRouter Router { get; set; }
@@ -37,6 +39,10 @@ namespace FleetDaemon
             DaemonService.OnRequest += DaemonService_OnRequest;
         }
 
+        /// <summary>
+        /// On request received, dispatch it to the router
+        /// </summary>
+        /// <param name="message"></param>
         private void DaemonService_OnRequest(IPCMessage message)
         {
             Console.WriteLine(String.Format("Received message from: {0}, to: {1}", message.ApplicaitonSenderID, message.ApplicationRecipientID));
@@ -68,6 +74,11 @@ namespace FleetDaemon
             this.Router.HandleMessage(message);
         }
 
+        /// <summary>
+        /// Handles the receipt of a control message
+        /// converts to an IPC message, before passing on the the router
+        /// </summary>
+        /// <param name="message"></param>
         public void HandleControlMessageReceive(FleetMessage message) {
             // todo(hc): implement handler
             var ipcMessage = new IPCMessage();
@@ -85,6 +96,9 @@ namespace FleetDaemon
             this.Router.HandleMessage(ipcMessage);
         }
 
+        /// <summary>
+        /// Servuce run loop of the daemon
+        /// </summary>
         public void Run()
         {
             // Service initialisation
@@ -112,6 +126,9 @@ namespace FleetDaemon
             }
         }
 
+        /// <summary>
+        /// Sets up and starts the IPC service of the daemon
+        /// </summary>
         private void StartService()
         {
             var address = new Uri("net.pipe://localhost/fleetdaemon");
@@ -123,6 +140,9 @@ namespace FleetDaemon
             Console.WriteLine("Daemon IPC service listening");
         }
 
+        /// <summary>
+        /// Sets up and starts the client heartbeat manager thread
+        /// </summary>
         private void StartHeartbeat()
         {
             RemoteFileManager.DaemonInstance = this;
@@ -133,6 +153,9 @@ namespace FleetDaemon
             Console.WriteLine("Heartbeat is running");
         }
 
+        /// <summary>
+        /// Sets up and starts and required services by the deamon
+        /// </summary>
         private void StartPlatformServices()
         {
             Console.WriteLine(Directory.GetCurrentDirectory());

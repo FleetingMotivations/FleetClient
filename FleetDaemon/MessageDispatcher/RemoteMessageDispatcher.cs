@@ -31,12 +31,15 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
+        /// <summary>
+        /// Validates the message then dispatches
+        /// </summary>
+        /// <param name="message"></param>
         public void Dispatch(IPCMessage message)
         {
             if (ValidateMessage(message))
             {
                 HandleMessageDispatch(message);
-
             }
             else
             {
@@ -45,14 +48,24 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
+        /// <summary>
+        /// Valudate hte message before sending
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private Boolean ValidateMessage(IPCMessage message)
         {
+            //  todo
             // Check format
             // Check sending restrictions
             // etc
             return true;
         }
 
+        /// <summary>
+        /// Handles sending the message based on type
+        /// </summary>
+        /// <param name="message"></param>
         private void HandleMessageDispatch(IPCMessage message)
         {
             switch (message.Type)
@@ -65,12 +78,17 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
+        /// <summary>
+        /// Handle for sending file messages
+        /// Retreives clients from server, prompts user to select, then send to server
+        /// </summary>
+        /// <param name="message"></param>
         private void HandleSendFileDispatch(IPCMessage message)
         {
 
             if (message.SkipSelector)
             {
-                // Use the recipient id
+                // Just send to the designated recipient
                 var recipient = new FleetClientIdentifier();
                 recipient.Identifier = message.ApplicationRecipientID;
 
@@ -87,16 +105,19 @@ namespace FleetDaemon.MessageDispatcher
 
                 try
                 {
-
+                    // Get the context id. if zero, set to 1 (this is flag)
+                    // Do not ask what this does.
                     var id = DaemonContext.CurrentWorkgroupId;
                     if (id == 0)
                     {
                         id = 1;
                     }
 
+                    // debug
                     Console.WriteLine(id);
                     Console.WriteLine(DaemonContext.CurrentContext);
 
+                    // get clients
                     serviceClient.Open();
                     clients = serviceClient.QueryClients(Token, DaemonContext.CurrentContext, id);
                     Console.WriteLine("X" + clients);
@@ -111,7 +132,7 @@ namespace FleetDaemon.MessageDispatcher
                     return;
                 }
 
-                // Make selector client
+                // Make workstation selector client
                 var address = new EndpointAddress("net.pipe://localhost/workstationselector");
                 var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
                 var selectorClient = new WorkstationSelectIPCClient(binding, address);
@@ -119,7 +140,7 @@ namespace FleetDaemon.MessageDispatcher
 
                 try
                 {
-                    // Get selection
+                    // Get selection (IPC call to selector, then await for the results)
                     selectorClient.Open();
                     targets = selectorClient.SelectWorkstations(new List<FleetClientIdentifier>(clients));
                     selectorClient.Close();
@@ -141,6 +162,7 @@ namespace FleetDaemon.MessageDispatcher
 
         private void SendFileMessage(IPCMessage message, List<FleetClientIdentifier> clients)
         {
+            // Create client
             var serviceClient = new FleetServiceClient("BasicHttpBinding_IFleetService");
 
             // Serialise file
@@ -151,6 +173,7 @@ namespace FleetDaemon.MessageDispatcher
 
             try
             {
+                // Send
                 serviceClient.Open();
                 serviceClient.SendFileMultipleRecipient(Token, clients.ToArray(), fFile);
                 serviceClient.Close();

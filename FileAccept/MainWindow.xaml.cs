@@ -20,6 +20,7 @@ namespace FileAccept
 {
     public partial class MainWindow : MetroWindow
     {
+        // Flag if the user accepted the file
         public Boolean DidAccept { get; set; } = false;
 
         /*
@@ -55,7 +56,8 @@ namespace FileAccept
         */
         public Boolean? ShowRequestDialog(FleetFileIdentifier ident)
         {
-            this.Name.Text = "<Unknown>";
+            // Set attributes
+            this.Name.Text = ident.SenderName;
             this.Filename.Text = ident.FileName;
             this.Size.Text = ident.FileSize + "kb";
 

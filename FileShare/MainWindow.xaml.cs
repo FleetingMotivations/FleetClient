@@ -99,6 +99,7 @@ namespace FileShare
 
                 foreach (var file in droppedFile)
                 {
+                    // Create message and send file
                     var message = new IPCMessage();
                     message.ApplicaitonSenderID = "FileShare";
                     message.ApplicationRecipientID = "FileInbox";
@@ -187,6 +188,7 @@ namespace FileShare
 
             try
             {
+                // Create message and send file
                 daemonClient.Open();
 
                 var message = new IPCMessage();

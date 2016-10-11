@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace FleetDaemon.Hauler
 {
+    /// <summary>
+    /// Public interface for the AppHauler
+    /// Exposes known and runnig applications
+    /// Methods to control lifecycle of applicatipons
+    /// </summary>
     public interface IAppHauler
     {
         Dictionary<String, FleetRunningApplication> RunningApplications { get; }

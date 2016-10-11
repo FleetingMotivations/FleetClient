@@ -29,6 +29,7 @@ namespace FileAccept
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            // create and start IPC service
             var address = new Uri("net.pipe://localhost/fileaccept");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
             this.service = new ServiceHost(typeof(FileAcceptService));
@@ -43,6 +44,7 @@ namespace FileAccept
     {
         public Boolean RequestAcceptFile(FleetFileIdentifier ident)
         {
+            // Create winodw. show dialog and return the accept flag
             var window = new MainWindow();
             window.ShowRequestDialog(ident);
             return window.DidAccept;

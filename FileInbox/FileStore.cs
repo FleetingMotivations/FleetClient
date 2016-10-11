@@ -11,11 +11,15 @@ namespace FileInbox
 
     public class FileStore
     {
+        /// <summary>
+        /// File change events
+        /// </summary>
         public FileStoreDidChangeEvent OnChange;
         public FileStoreDidChangeEvent OnCreate;
         public FileStoreDidChangeEvent OnRename;
         public FileStoreDidChangeEvent OnDelete;
 
+        // File tracking
         private String rootFolder;
         private List<StoredFile> files;
         public List<StoredFile> Files { get
@@ -24,15 +28,18 @@ namespace FileInbox
             }
         }
 
+        // File monitor
         private FileSystemWatcher folderWatcher;
 
         public FileStore() : this(FileStoreUtils.GetStorePath()) { }
         public FileStore(String rootFolder)
         {
+            // Initialise the file store
             this.rootFolder = rootFolder;
             this.files = new List<StoredFile>();
             this.LoadStore();
 
+            // Create & link the file watcher (for any changes in the directory
             var watcher = new FileSystemWatcher(rootFolder);
             watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastAccess;
             watcher.Filter = "*.*";
@@ -51,6 +58,11 @@ namespace FileInbox
 
         //  File System Watch Events
 
+            /// <summary>
+            /// On change event ahdnler
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
             //MakeRecord(e.FullPath);
@@ -58,12 +70,22 @@ namespace FileInbox
             this.OnChange();
         }
 
+        /// <summary>
+        /// On delete event handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
             RemoveRecord(e.FullPath);
             this.OnDelete();
         }
 
+        /// <summary>
+        /// On rename event handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
             RemoveRecord(e.OldFullPath);
@@ -71,12 +93,21 @@ namespace FileInbox
             this.OnRename();
         }
 
+        /// <summary>
+        /// On create event handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Watcher_Created(object sender, FileSystemEventArgs e)
         {
             MakeRecord(e.FullPath);
             this.OnCreate();
         }
 
+        /// <summary>
+        /// Makes the record for the specified filename
+        /// </summary>
+        /// <param name="filename"></param>
         private void MakeRecord(String filename)
         {
             var record = new StoredFile();
@@ -88,12 +119,21 @@ namespace FileInbox
             this.files.Add(record);
         }
 
+        /// <summary>
+        /// Remove the record for the specified file name
+        /// </summary>
+        /// <param name="filename"></param>
         private void RemoveRecord(String filename)
         {
             var index = this.files.FindIndex(file => file.Filepath == filename);
             this.files.RemoveAt(index);
         }
 
+        /// <summary>
+        /// Store the file in the sotrage directory
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="attributes">(unused)</param>
         public void StoreFile(String filepath, Dictionary<String, String> attributes)
         {
             var filename = this.MakeOwnedFilename(filepath);
@@ -109,10 +149,17 @@ namespace FileInbox
             //this.files.Add(record);*/
         }
 
+        /// <summary>
+        /// Create the filename for the file once moved to the storage directory
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <returns></returns>
         private String MakeOwnedFilename(String filepath)
         {
+            // Get full path
             var newPath = Path.Combine(this.rootFolder, Path.GetFileName(filepath));
 
+            // If filename alraedy taken, keep incrementing a suffix
             if (File.Exists(newPath))
             {
                 var i = 1;
@@ -130,6 +177,9 @@ namespace FileInbox
             return newPath;
         }
 
+        /// <summary>
+        /// Load the files in the directory. Create directory if not exists
+        /// </summary>
         private void LoadStore()
         {
             if (!Directory.Exists(this.rootFolder))
@@ -137,9 +187,11 @@ namespace FileInbox
                 Directory.CreateDirectory(this.rootFolder);
             }
 
+            // Get contents of storage
             var directoryContents = Directory.GetFiles(this.rootFolder);
             var fileStorage = new List<StoredFile>();
 
+            // Create recirds
             foreach (var file in directoryContents)
             {
                 var record = new StoredFile();
@@ -151,12 +203,17 @@ namespace FileInbox
                 fileStorage.Add(record);
             }
 
+            // Update list
             this.files = fileStorage;
         }
     }
 
     internal static class FileStoreUtils
     {
+        /// <summary>
+        /// Utility to find oath of the store
+        /// </summary>
+        /// <returns></returns>
         public static String GetStorePath()
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -165,6 +222,9 @@ namespace FileInbox
         }
     }
 
+    /// <summary>
+    /// Utility for each record displayed int eh list
+    /// </summary>
     public class StoredFile
     {
         public String IconURL { get; set; }

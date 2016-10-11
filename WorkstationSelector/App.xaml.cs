@@ -22,6 +22,7 @@ namespace WorkstationSelector
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            // Create and start IPC service
             var address = new Uri("net.pipe://localhost/workstationselector");
             var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
             this.service = new ServiceHost(typeof(WorkstationSelectService));
@@ -34,7 +35,7 @@ namespace WorkstationSelector
     {
         public List<FleetClientIdentifier> SelectWorkstations(List<FleetClientIdentifier> clients)
         {
-            // Just return all for now
+           // Create window. Filter the clients based on user input. and reutrn the list.
             var window = new MainWindow();
             var selected = window.ShowSelectorDialog(clients);
             return selected;

@@ -31,30 +31,33 @@ namespace FileInbox
             ApplicationService.OnInform += ApplicationService_OnInform;
             ApplicationService.OnDeliver += ApplicationService_OnDeliver;
             
-            // Create service
+            // Create IPC service
             this.service = IPCUtil.MakeApplicationService("fileinbox");
             this.service.Open();
-
-            // Register with client
-            var daemon = IPCUtil.MakeDaemonClient();
-
-            // Register with Daemon
-            // TODO(hc):
-
-            daemon.Close();
         }
 
+        /// <summary>
+        /// Event to handle a IPC message being delivered.
+        /// </summary>
+        /// <param name="message"></param>
         private void ApplicationService_OnDeliver(IPCMessage message)
         {
+            // Get window
             var window = App.Current.MainWindow as MainWindow;
 
+            // Get file properties and path
             var props = message.Content;
             var path = props["filepath"];
 
+            // Store the file and update the list
             window?.Storage.StoreFile(path, props);
             window?.RefreshFiles();
         }
-
+        
+        /// <summary>
+        /// Not used
+        /// </summary>
+        /// <param name="message"></param>
         private void ApplicationService_OnInform(List<IPCMessage> message)
         {
             Console.WriteLine("ApplicationService_OnInform");

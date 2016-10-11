@@ -22,9 +22,14 @@ namespace WorkstationSelector
 
         public List<FleetClientIdentifier> ShowSelectorDialog(List<FleetClientIdentifier> clients)
         {
+            // Update UI with list of clients
             this.availableClients = clients;
             this.RenderWorkstations();
+            
+            // Show dialog
             this.ShowDialog();
+
+            // Return the selected clients
             return selectedClients;
         }
 

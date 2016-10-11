@@ -37,31 +37,16 @@ namespace FileShare
             // Create and open the service
             this.service = IPCUtil.MakeApplicationService("fileshare");
             this.service.Open();
-
-            // Communicate with the daemon. Obviously will not have to do this here (maybe registration though?)
-            // 1. Create binding and address.
-            //    Note that the address for a client is a different type
-            //    Then create the client
-            var daemon = IPCUtil.MakeDaemonClient();
-
-            // Create a dummy message
-            /*var message = new IPCMessage();
-            message.ApplicaitonSenderID = "fileshare";
-            message.ApplicationRecipientID = "friendface";
-            message.Content["type"] = "Register Application";
-            message.Content["register"] = "Yo bud I exist aight!?";
-            */
-            //daemon.Request(message);
         }
 
         private void ApplicationService_OnDeliver(IPCMessage message)
         {
-            // Have received
+            // Not used, this application does not receive files
         }
 
         private void ApplicationService_OnInform(List<IPCMessage> message)
         {
-            // Do some even more fun stuff
+            // Not used, this application does not receive files
         }
     }
 }

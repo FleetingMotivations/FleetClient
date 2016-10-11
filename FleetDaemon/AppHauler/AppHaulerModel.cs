@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace FleetDaemon.Hauler
 {
+    /// <summary>
+    /// Record of a running application
+    /// </summary>
     public class FleetRunningApplication
     {
         public Process Process { get; set; }
@@ -14,6 +17,9 @@ namespace FleetDaemon.Hauler
         public String Name { get; set; }
     }
 
+    /// <summary>
+    /// Record of a known application
+    /// </summary>
     public class FleetKnownApplication
     {
         public String Name { get; set; }

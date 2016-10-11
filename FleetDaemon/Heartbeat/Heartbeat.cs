@@ -27,8 +27,10 @@ namespace FleetDaemon
         // Members
         private Thread worker;
 
+        // registration token
         public FleetClientToken Token { get; set; }
 
+        // Flag for running
         private Boolean isRunning;
         public Boolean IsRunning { get {
                 return isRunning;
@@ -105,20 +107,24 @@ namespace FleetDaemon
                     Console.WriteLine("Heartbeat");
                     var flags = client.Heartbeat(this.Token);
                     
+                    // Handle control satus changes
                     Task.Run(() => HandleControlStatusChange(this.Token));
 
+                    // Handle control message updates
                     if (flags.HasFlag(FleetHearbeatEnum.ManageUpdate))
                     {
                         Console.WriteLine("MessageAvailable");
                         ControlMessageManager.Instance.HandleControlMessageUpdate(this.Token);
                     }
 
+                    // Handle new file messages
                     if (flags.HasFlag(FleetHearbeatEnum.FileAvailable))
                     {
                         Console.WriteLine("FileAvailable");
                         RemoteFileManager.Instance.HandleFileAvailable(this.Token);
                     }
 
+                    // Wait between polls
                     Thread.Sleep(HeartbeatManager.WaitLength);
 
                 } catch (Exception e)
@@ -130,13 +136,19 @@ namespace FleetDaemon
             client.Close();
         }
 
+        /// <summary>
+        /// Handle any mnessages for change in control status
+        /// </summary>
+        /// <param name="token"></param>
         private void HandleControlStatusChange(FleetClientToken token)
         {
+            // Make client
             var client = new FleetServiceClient("BasicHttpBinding_IFleetService");
             FleetControlStatus status;
 
             try
             {
+                // Get status
                 client.Open();
                 status = client.QueryControlStatus(token);
                 client.Close();
@@ -146,6 +158,7 @@ namespace FleetDaemon
                 return;
             }
 
+            // If not status, reset to default
             if (status == null)
             {
                 DaemonContext.CanShare = true;
@@ -154,6 +167,7 @@ namespace FleetDaemon
                 return;
             }
 
+            // Otherwise set context changes.
             DaemonContext.CanShare = status.CanShare;
             DaemonContext.CurrentWorkgroupId = status.WorkgroupId;
             DaemonContext.CurrentContext = FleetClientContext.Workgroup;

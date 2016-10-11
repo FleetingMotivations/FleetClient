@@ -83,21 +83,30 @@ namespace FleetDaemon
             }
         }
 
+        /// <summary>
+        /// Notify the sender that their file was rejected
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="id"></param>
         private void NotifyRefusal(FleetClientToken token, FleetFileIdentifier id)
         {
+            // Create message
             var message = new FleetMessage();
             message.Application = "daemon";
             message.ApplicationId = 2;
             message.Message = $"FileRejected:{id.FileName}:{Dns.GetHostName()}";
             message.Sender = Dns.GetHostName();
 
+            // Get recipient
             var recipient = new FleetClientIdentifier();
             recipient.Identifier = id.SenderIdentifier;
 
+            // Create client
             var client = new FleetServiceClient("BasicHttpBinding_IFleetService");
             
             try
             {
+                // Send
                 client.Open();
 
                 client.SendMessageSingleRecipient(token, recipient, message);
@@ -117,11 +126,13 @@ namespace FleetDaemon
         /// <returns>A List of identifiers for sent files pending receipt</returns>
         private List<FleetFileIdentifier> GetFileIds(FleetClientToken token)
         {
+            // Create client
             var client = new FleetServiceClient("BasicHttpBinding_IFleetService");
             List<FleetFileIdentifier> ids = null;
 
             try
             {
+                // Get idents
                 client.Open();
                 var idents = client.QueryFiles(token);
                 ids = new List<FleetFileIdentifier>(idents);
@@ -145,12 +156,14 @@ namespace FleetDaemon
         {
             var client = new FleetServiceClient("BasicHttpBinding_IFleetService");
 
+            // Create accept message
             var message = new FleetMessage();
             message.Application = "daemon";
             message.ApplicationId = 2;
             message.Message = $"FileAccepted:{id.FileName}:{Dns.GetHostName()}";
             message.Sender = Dns.GetHostName();
 
+            // Create reply-recpient id
             var recipient = new FleetClientIdentifier();
             recipient.Identifier = id.SenderIdentifier;
 

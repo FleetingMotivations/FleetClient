@@ -28,6 +28,10 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
+        /// <summary>
+        /// Interface to displatch message. First validates then sends
+        /// </summary>
+        /// <param name="message"></param>
         public void Dispatch(IPCMessage message)
         {
             if (ValidateMessage(message))
@@ -43,12 +47,18 @@ namespace FleetDaemon.MessageDispatcher
             }
         }
 
+        /// <summary>
+        /// Validat the content of an IPC message
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private Boolean ValidateMessage(IPCMessage message)
         {
             Boolean valid = false;
 
             var recipient = message.ApplicationRecipientID;
 
+            // Check that it is targeted to a valid application
             if (AppHauler.Instance.KnownApplications.ContainsKey(recipient))
             {
                 valid = AppHauler.Instance.IsRunningOrLaunch(recipient);
@@ -58,17 +68,24 @@ namespace FleetDaemon.MessageDispatcher
 
             // TODO(hc): Check for message integrity
 
+            //  TODO(hc): Checl tja tjte application can be opened
+
             return valid;
         }
 
+        /// <summary>
+        /// Handle sendign the message to the target application
+        /// </summary>
+        /// <param name="message"></param>
         private void HandleMessageDispatch(IPCMessage message)
         {
-
+            // Get client to process
             var pipeIdent = message.ApplicationRecipientID;
             var client = IPCUtil.MakeApplicationClient(pipeIdent);
             
             try
             {
+                // Send
                 client.Open();
                 client.Deliver(message);
                 client.Close();

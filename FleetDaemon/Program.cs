@@ -24,16 +24,20 @@ namespace FleetDaemon
     {
         static void Main(string[] args)
         {
-            // SSSHHHHHHHH
-            // Accept any ssl certificate
+            // Accept any ssl certificate (this is extremely bad, but allows self-signed SSL certificated to beused
+            // Reccomended by Bradley Lindsley
             ServicePointManager.ServerCertificateValidationCallback += (server, certificate, chain, errors) =>
             {
                 return true;
             };
 
+            // Create storage manager
             var storage = new SimpleStorage("./filestore.json");
+
+            // Name of the resource to create service connectio with
             var serverResourceName = "BasicHttpBinding_IFleetService";
 
+            // Load config
             var handshakeWaitTime = storage.Get<int>("ServerHandshakeWaitTime");
 
             if (handshakeWaitTime == 0)
@@ -48,9 +52,9 @@ namespace FleetDaemon
 
             // Register with server
             var client = new FleetServiceClient(serverResourceName);
-
             FleetClientToken clientToken = null;
 
+            // Try to register in n-second intervals
             while(true)
             {
                 try
@@ -76,6 +80,7 @@ namespace FleetDaemon
             RemoteMessageDispatcher.Token = clientToken;
             var router = new Router(storage, clientToken);
 
+            // Create and run daemon
             var daemon = new Daemon(storage, router, clientToken);
             ControlMessageManager.DaemonInstance = daemon;
             RemoteFileManager.DaemonInstance = daemon;

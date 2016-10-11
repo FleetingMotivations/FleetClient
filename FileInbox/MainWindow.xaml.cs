@@ -38,6 +38,7 @@ namespace FileInbox
         {
             InitializeComponent();
 
+            // Initialise file store and link events to handler
             this.storage = new FileStore();
             this.storage.OnCreate += FilesDidChangeEvent;
             this.storage.OnChange += FilesDidChangeEvent;
@@ -46,13 +47,21 @@ namespace FileInbox
             this.filesTable.ItemsSource = this.Storage.Files;            
         }
 
+        /// <summary>
+        /// Called when UI is initialised
+        /// Load the list of files to display
+        /// </summary>
         public override void BeginInit()
         {
             base.BeginInit();
             
+            // Load the files to display
             this.RefreshFiles();
         }
 
+        /// <summary>
+        /// On files did change, refresh the file list
+        /// </summary>
         private void FilesDidChangeEvent()
         {
             Dispatcher.Invoke(() =>
@@ -61,6 +70,7 @@ namespace FileInbox
             });
         }
 
+        // read-only property for file store
         private FileStore storage;
         public FileStore Storage { get
             {
@@ -68,6 +78,9 @@ namespace FileInbox
             }
         }
 
+        /// <summary>
+        /// Refresh the file table (if exists)
+        /// </summary>
         public void RefreshFiles()
         {
             this.filesTable?.Items?.Refresh();
@@ -75,12 +88,20 @@ namespace FileInbox
 
         // Button Events
 
+            /// <summary>
+            /// Open the selected file
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
         private void openButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                // Get the item
                 var index = this.filesTable.SelectedIndex;
                 var item = this.storage.Files[index];
+
+                // Start the item (this will cause windows to open it using the associated application based on file type
                 Process.Start(item.Filepath);
             }
             catch(Exception ex)
@@ -88,11 +109,21 @@ namespace FileInbox
 
         }
 
+        /// <summary>
+        /// Copy the selected file to a defined location
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void copyButton_Click(object sender, RoutedEventArgs e)
         {
-
+            //  Todo: Implement
         }
 
+        /// <summary>
+        /// Refresh button handler. Refreshes the file list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void refreshButton_Click(object sender, RoutedEventArgs e)
         {
             this.RefreshFiles();

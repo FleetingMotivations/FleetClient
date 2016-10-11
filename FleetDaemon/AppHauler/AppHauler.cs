@@ -69,12 +69,15 @@ namespace FleetDaemon.Hauler
             }
         }
 
+        /// <summary>
+        /// Initialse the known applications list with any possible applications (for testing)
+        /// </summary>
         private void InitialiseKnownApplications()
         {
             //var apphauler = AppHauler.Instance;
             var apphauler = this;
 
-            // For Testing
+            // For Testing, add all known applications
             this.KnownApplications["fileshare"] = new FleetKnownApplication
             {
                 Name = "File Share",
@@ -123,20 +126,31 @@ namespace FleetDaemon.Hauler
         }
 
         // Methods
+
+            /// <summary>
+            /// Launch the application with the passed id if valid. Record execution. 
+            /// If not return false
+            /// </summary>
+            /// <param name="identifier"></param>
+            /// <returns></returns>
         public bool LaunchApplication(string identifier)
         {
             try
             {
+                // Get record
                 var record = this.knownApplications[identifier];
                 
                 if (!this.runningApplications.ContainsKey(identifier))
                 {
+                    // Get executable
                     var exe = record.Path;
 
+                    // Start process
                     var process = Process.Start(exe);
                     process.SetMainWindowFocus();
                     process.Exited += Process_Exited;
 
+                    // Record execution
                     var runningRecord = new FleetRunningApplication();
                     runningRecord.Identifier = identifier;
                     runningRecord.Name = record.Name;
@@ -156,6 +170,11 @@ namespace FleetDaemon.Hauler
             }
         }
 
+        /// <summary>
+        /// Close the application wiht the passed id, or retiurn false if not running
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
         public bool CloseApplication(string identifier)
         {
             try
@@ -178,6 +197,11 @@ namespace FleetDaemon.Hauler
             }
         }
 
+        /// <summary>
+        /// Check if the applciation with the passed id is running
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
         public bool IsRunning(string identifier)
         {
             try
@@ -191,6 +215,11 @@ namespace FleetDaemon.Hauler
             }
         }
 
+        /// <summary>
+        /// Check if the application with the passed id is runnig, if not launch it
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
         public bool IsRunningOrLaunch(string identifier)
         {
             if (!this.IsRunning(identifier))
@@ -200,18 +229,27 @@ namespace FleetDaemon.Hauler
             return true;
         }
 
+        /// <summary>
+        /// Determines if the application with passed application is known
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
         public bool IsKnown(string identifier)
         {
             return this.knownApplications.ContainsKey(identifier);
         }
 
-        // Event Handlers
+        // Event Handlers - not used
         private void Process_Exited(object sender, EventArgs e)
         {
             Console.WriteLine("Process has exited");
         }
     }
 
+    /// <summary>
+    /// Utility to make the main window of a process the main window
+    /// This is not used.
+    /// </summary>
     internal static class ProcessUtils
     {
         [DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)]
