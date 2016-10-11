@@ -83,6 +83,65 @@ namespace FleetDaemon.MessageDispatcher
                     DaemonContext.CurrentContext = FleetClientContext.Workgroup;
                     break;
             }
+
+            // TODO FileAccept and FileReject messages
+            if (content.Contains("FileAccepted:"))
+            {
+                try
+                {
+                    var components = content.Split(':');
+
+                    //var xml = "<toast>";
+                    //xml += "<visual>";
+                    //xml += "<binding template='ToastGeneric'>";
+                    //xml += "<text>File Accepted</text>";
+                    //xml += "<text>" + components[1] + " - " + components[2] + "</text>";
+                    //xml += "</binding>";
+                    //xml += "</visual>";
+                    //xml += "</toast>";
+
+                    //var xmlDoc = new XmlDocument();
+                    //xmlDoc.LoadXml(xml);
+
+                    //var notification = new ToastNotification(xmlDoc);
+                    //notification.Tag = "tag";
+                    //notification.Group = "FleetDaemon";
+
+                    //ToastNotificationManager.CreateToastNotifier("FleetDaemon").Show(notification);
+                } catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+            } else if (content.Contains("FileRejected:"))
+            {
+                try
+                {
+                    var components = content.Split(':');
+
+                    //var xml = "<toast>";
+                    //    xml += "<visual>";
+                    //        xml += "<binding template='ToastGeneric'>";
+                    //            xml += "<text>File Rejected</text>";
+                    //            xml += "<text>" + components[1] + " - " + components[2] + "</text>";
+                    //        xml += "</binding>";
+                    //    xml += "</visual>";
+                    //xml += "</toast>";
+
+                    //var xmlDoc = new XmlDocument();
+                    //xmlDoc.LoadXml(xml);
+
+                    //var notification = new ToastNotification(xmlDoc);
+                    //notification.Tag = "tag";
+                    //notification.Group = "FleetDaemon";
+
+                    //ToastNotificationManager.CreateToastNotifier("FleetDaemon").Show(notification);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
         }
 
         private void HandleKnownApplicationsMessage(IPCMessage message)

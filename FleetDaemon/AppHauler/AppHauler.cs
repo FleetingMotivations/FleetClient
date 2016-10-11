@@ -81,15 +81,14 @@ namespace FleetDaemon.Hauler
                 Path = @"..\..\..\FileShare\bin\Debug\FileShare.exe",
                 Identifier = "fileshare"
             };
-
-            apphauler.KnownApplications["fileinbox"] = new FleetKnownApplication
+            this.KnownApplications["fileinbox"] = new FleetKnownApplication
             {
                 Name = "File Inbox",
                 Path = @"..\..\..\FileInbox\bin\Debug\FileInbox.exe",
                 Identifier = "fileinbox"
             };
 
-            apphauler.KnownApplications["fileaccept"] = new FleetKnownApplication
+            this.KnownApplications["fileaccept"] = new FleetKnownApplication
             {
                 Name = "File Accept",
                 Path = @"..\..\..\FileAccept\bin\Debug\FileAccept.exe",
@@ -97,15 +96,14 @@ namespace FleetDaemon.Hauler
                 Visible = false
             };
 
-            apphauler.KnownApplications["workstationselector"] = new FleetKnownApplication
+            this.KnownApplications["workstationselector"] = new FleetKnownApplication
             {
                 Name = "Workstation Selector",
                 Path = @"..\..\..\WorkstationSelector\bin\Debug\WorkstationSelector.exe",
                 Identifier = "workstationselector",
                 Visible = false
             };
-
-            apphauler.KnownApplications["fleetshelf"] = new FleetKnownApplication
+            this.KnownApplications["fleetshelf"] = new FleetKnownApplication
             {
                 Name = "Fleet Shelf",
                 Path = @"..\..\..\FleetShelf\bin\Debug\FleetShelf.exe",
