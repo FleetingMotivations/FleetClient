@@ -1,4 +1,15 @@
-﻿using System;
+﻿/* 
+ * Description: WorkstationSelector application - FleetWorkstationTile.
+ *              This application provides the interface and logic allowing users to select the workstation which they would like
+ *              to send a particular file to. This class contains the Tile object used to display individual workstations
+ * Project: Fleet/FleetClient
+ * Project Member: Jordan Collins, Hayden Cheers, Alistair Woodcock, Tristan Newmann
+ * Last modified: 11 October 2016
+ * Last Author: Jordan Collins
+ * 
+*/
+
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

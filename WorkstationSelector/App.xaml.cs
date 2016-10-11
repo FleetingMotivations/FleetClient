@@ -1,4 +1,15 @@
-﻿using System;
+﻿/* 
+ * Description: WorkstationSelector application.
+ *              This application provides the interface and logic allowing users to select the workstation which they would like
+ *              to send a particular file to.
+ * Project: Fleet/FleetClient
+ * Project Member: Jordan Collins, Hayden Cheers, Alistair Woodcock, Tristan Newmann
+ * Last modified: 11 October 2016
+ * Last Author: Jordan Collins
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;

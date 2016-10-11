@@ -3,6 +3,7 @@
  *              This application is used to provide help for users of the Fleet system. Including FAQs,
  *              tutorials and information about Fleet as a system.
  * Project: Fleet/FleetClient
+ * Project Member: Jordan Collins, Hayden Cheers, Alistair Woodcock, Tristan Newmann
  * Last modified: 11 October 2016
  * Last Author: Jordan Collins
  * 
@@ -83,20 +84,25 @@ namespace FileShare
                 //add to dropped files:
                 droppedFile = e.Data.GetData(DataFormats.FileDrop, true) as String[];
 
+                //update interface to match:
                 this.AttachedFiles.Items.Add(droppedFile[0]);
                 this.RemoveFileButton.IsEnabled = true;
                 this.SelectWorkstationsButton.IsEnabled = true;
             }
 
+            //ensure valid files exist in droppedFile:
             if ((null == droppedFile) || (!droppedFile.Any())) { return; }
 
+            //create a Daemon instance:
             var daemonClient = IPCUtil.MakeDaemonClient();
 
             //create messages from the files:
             try
             {
+                //open the client 
                 daemonClient.Open();
 
+                //for all files in the list to send:
                 foreach (var file in droppedFile)
                 {
                     // Create message and send file
@@ -105,8 +111,9 @@ namespace FileShare
                     message.ApplicationRecipientID = "FileInbox";
                     message.Target = IPCMessage.MessageTarget.Remote;
                     message.Type = "sendFile";
-                    message.Content["filePath"] = file;      // TODO: Handle multiple files (seperate by character? or encode as JSON?)
+                    message.Content["filePath"] = file;
 
+                    //send message to daemon:
                     daemonClient.Request(message);
                 }
 
@@ -115,6 +122,7 @@ namespace FileShare
             }
             catch (Exception ex)
             {
+                //print error and abort:
                 Console.WriteLine(ex.Message);
                 daemonClient.Abort();
             }
@@ -177,6 +185,8 @@ namespace FileShare
         {
             //int delayTime = 5000;
 
+            //For future reference. This will be used to provide a loading screen for usability:
+
             //popup a flyout that informs the user that the files are being delivered
             //var flyout = this.SendingFlyout;
             //flyout.Visibility = Visibility.Visible;
@@ -184,12 +194,14 @@ namespace FileShare
 
             //await Task.Delay(delayTime);
 
+            //create an instance of Daemon:
             var daemonClient = IPCUtil.MakeDaemonClient();
 
             try
             {
-                // Create message and send file
                 daemonClient.Open();
+                
+                // Create message:
 
                 var message = new IPCMessage();
                 message.ApplicaitonSenderID = "FileShare";
@@ -198,6 +210,7 @@ namespace FileShare
                 message.Type = "sendFile";
                 message.Content["filePath"] = fileToSend;
 
+                //send file to daemon
                 daemonClient.Request(message);
 
                 daemonClient.Close();
@@ -205,6 +218,7 @@ namespace FileShare
             }
             catch (Exception ex)
             {
+                //print error and abort:
                 Console.WriteLine(ex.Message);
                 daemonClient.Abort();
             }

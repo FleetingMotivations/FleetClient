@@ -3,6 +3,7 @@
  *              This application is used as a notifcation for the receiving workstation, asking for a response whethere
  *              they wish to accept or decline the incoming file.
  * Project: Fleet/FleetClient
+ * Project Member: Jordan Collins, Hayden Cheers, Alistair Woodcock, Tristan Newmann
  * Last modified: 11 October 2016
  * Last Author: Jordan Collins
  * 

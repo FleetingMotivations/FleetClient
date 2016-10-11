@@ -2,6 +2,7 @@
  * Description: FileInbox application.
  *              This application is the inbox containing the received files.
  * Project: Fleet/FleetClient
+ * Project Member: Jordan Collins, Hayden Cheers, Alistair Woodcock, Tristan Newmann
  * Last modified: 11 October 2016
  * Last Author: Hayden Cheers
  * 
