@@ -1,4 +1,13 @@
-﻿using FleetDaemon.Storage.Interfaces;
+﻿/* 
+ * Description: Router
+ *              Class to manage the routing of messages to/from the server from/to applications
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using FleetDaemon.Storage.Interfaces;
 using FleetIPC;
 using FleetServer;
 using Newtonsoft.Json;

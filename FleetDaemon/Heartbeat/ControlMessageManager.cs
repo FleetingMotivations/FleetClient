@@ -1,4 +1,13 @@
-﻿using System;
+﻿/* 
+ * Description: ControLMessageManager
+ *              Handles retreiving & dispatching control messages from the server
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

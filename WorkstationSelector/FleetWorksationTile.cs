@@ -1,4 +1,13 @@
-﻿using System;
+﻿/* 
+ * Description: FleetWorkstationTile
+ *              Tile object for displaying within WorkstationSelector
+ * Project: Fleet/WorkstationSelector
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

@@ -1,4 +1,14 @@
-﻿using System;
+﻿/* 
+ * Description: WorkstationSelector application
+ *              Application initialisation logic for WorkstationSelector
+ *              Starts IPC service + assignes handlers
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;

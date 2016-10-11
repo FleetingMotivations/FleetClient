@@ -1,4 +1,13 @@
-﻿using System.Collections.Generic;
+﻿/* 
+ * Description: Workstation Selector Window
+ *              Main window for workstation slector
+ * Project: Fleet/WorkstationSelector
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

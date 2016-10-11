@@ -1,4 +1,13 @@
-﻿using System;
+﻿/* 
+ * Description: IControlMessageManager
+ *              Interface for the control message manager object
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

@@ -1,4 +1,14 @@
-﻿using FleetServer;
+﻿/* 
+ * Description: Heartbeat
+ *              Manager class for polling the service heartbeat.
+ *              Polls at regular intervals any changes to control, incoming files, or context changes.
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using FleetServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,13 @@
-﻿using System;
+﻿/* 
+ * Description: AppHaulerModel
+ *              Data classes for AppHauler management
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;

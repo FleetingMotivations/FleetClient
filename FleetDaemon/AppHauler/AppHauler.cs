@@ -1,4 +1,13 @@
-﻿using FleetDaemon.Storage;
+﻿/* 
+ * Description: AppHauler
+ *              Class that manages the lifecycle of plugin and service applications
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using FleetDaemon.Storage;
 using FleetDaemon.Storage.Interfaces;
 using System;
 using System.Collections.Generic;

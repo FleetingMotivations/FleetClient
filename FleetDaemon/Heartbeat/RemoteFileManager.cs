@@ -1,4 +1,14 @@
-﻿using FileAcceptIPC;
+﻿/* 
+ * Description: RemoteFileManager
+ *              Class to handle retrieving files from server.
+ *              Manages accepting + rejecting of files.
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using FileAcceptIPC;
 using FleetServer;
 using System;
 using System.IO;

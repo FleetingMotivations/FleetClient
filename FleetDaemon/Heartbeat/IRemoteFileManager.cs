@@ -1,4 +1,13 @@
-﻿using FleetServer;
+﻿/* 
+ * Description: IRemoteFileManager
+ *              Interface for RemoteFileMangaer object
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using FleetServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,13 @@
-﻿using FleetIPC;
+﻿/* 
+ * Description: IMessageDispatcher
+ *              Interface for message dispatcher objects
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using FleetIPC;
 using System;
 using System.Collections.Generic;
 using System.Linq;

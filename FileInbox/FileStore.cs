@@ -1,4 +1,14 @@
-﻿using System;
+﻿/* 
+ * Description: FileStore
+ *              class for managing the storage of files for the FileInbox application
+ *              Manages files in entire directory + handles moving files to the owned directory.
+ * Project: Fleet/FileInbox
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

@@ -1,4 +1,14 @@
-﻿using FleetDaemon.Hauler;
+﻿/* 
+ * Description: Fleet Daemon
+ *              Application logic for the fleet platform daemon service
+ *              Entry point for the application
+ * Project: Fleet/FleetDaemon
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using FleetDaemon.Hauler;
 using FleetDaemon.Storage.Interfaces;
 using FleetIPC;
 using FleetServer;
