@@ -1,4 +1,14 @@
-﻿using FleetIPC;
+﻿/* 
+ * Description: FleetShelf application.
+ *              This application is the entry point for the users and consistents of popout 'shelf' (similar to a horizontal dock)
+ *              which contains each of the applications of the Fleet system.
+ * Project: Fleet/FleetClient
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using FleetIPC;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

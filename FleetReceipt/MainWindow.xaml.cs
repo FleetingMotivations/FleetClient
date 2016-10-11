@@ -1,4 +1,14 @@
-﻿using System;
+﻿/* 
+ * Description: FleetReceipt application interface.
+ *              This application is the receipt returned after sending files to workstations.
+ *              Informs the user if the file was delivered or not and the reason behind.
+ * Project: Fleet/FleetClient
+ * Last modified: 11 October 2016
+ * Last Author: Jordan Collins
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,12 +32,18 @@ namespace FleetReceipt
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        /*
+         * MainWindow(): initialise the FleetReceipt
+        */
         public MainWindow()
         {
             InitializeComponent();
             PopulateListBox();
         }
 
+        /*
+         * PopulateListBox(): populate the receipt with delivery status for each workstation
+        */
         private void PopulateListBox()
         {
             //TODO: Logic to populate the lists based on accept/reject results

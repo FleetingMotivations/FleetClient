@@ -1,4 +1,14 @@
-﻿using FleetIPC;
+﻿/* 
+ * Description: FileShare application interface.
+ *              This application is used to provide help for users of the Fleet system. Including FAQs,
+ *              tutorials and information about Fleet as a system.
+ * Project: Fleet/FleetClient
+ * Last modified: 11 October 2016
+ * Last Author: Jordan Collins
+ * 
+*/
+
+using FleetIPC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,35 +40,46 @@ namespace FileShare
     {
         private const string SendMessage = "Sending Files to Workstation(s)";
 
+        /*
+         * MainWindow(): initialise FileShare
+        */
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        /*
+         * OnFileDragOver(object, DragEventArgs): Change the dragzone appearance when a file is dragged over it
+        */
         private void OnFileDragOver(object sender, DragEventArgs e)
         {
             this.AddFilePanel.Background = Brushes.Gray;
             this.AddFilePanel.Opacity = 0.5;
         }
 
+        /*
+         * OnFileDragLeave(object, DragEventArgs): Change the dragzone appearance when a file is held over it
+        */
         private void OnFileDragLeave(object sender, DragEventArgs e)
         {
             this.AddFilePanel.Background = Brushes.Gray;
             this.AddFilePanel.Opacity = 0.1;
         }
 
+        /*
+         * Window_Drop(object, DragEventArgs): Store the file which has been dragged and dropped into the dropzone.
+        */
         private void Window_Drop(object sender, DragEventArgs e)
         {
             //Style the StackPanel to provide user feedback:
             this.AddFilePanel.Background = Brushes.Gray;
             this.AddFilePanel.Opacity = 1;
 
-            //TODO: Maybe add an icon of the file, or something else rather than just simply changing the background to grey.
-            //      This adds more user feedback which is always nice
-
+            //collect the data from the dropped file:
             String[] droppedFiles = null;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
+                //add to dropped files:
                 droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as String[];
 
                 this.AttachedFiles.Items.Add(droppedFiles[0]);
@@ -70,6 +91,7 @@ namespace FileShare
 
             var daemonClient = IPCUtil.MakeDaemonClient();
 
+            //create messages from the files:
             try
             {
                 daemonClient.Open();
@@ -96,34 +118,47 @@ namespace FileShare
             }
         }
 
+        /*
+         * AddFileButton_Click(object, RoutedEventArgs): Add a file to the list of files to share, through the use
+         *                                               of a button and a windows explorer dialog
+        */
         private void AddFileButton_Click(object sender, RoutedEventArgs e)
         {
+            //open the windows exploere dialog:
             Microsoft.Win32.OpenFileDialog exp = new Microsoft.Win32.OpenFileDialog();
 
             Nullable<bool> result = exp.ShowDialog();
 
+            //add the file selected to the AttachedFiles list:
             if(result == true)
             {
                 String filename = exp.FileName;
                 this.AttachedFiles.Items.Add(filename);
             }
 
+            //enable the SelectWorkstation and RemoveFile buttons:
             this.SelectWorkstationsButton.IsEnabled = true;
             this.RemoveFileButton.IsEnabled = true;
         }
 
+        /*
+         * RemoveFileButton_Click(object, RoutedEventArgs): Remove the selected file from the attached files listbox
+        */
         private void RemoveFileButton_Click(object sender, RoutedEventArgs e)
         {
+            //check if files have been selected that wish to be deleted:
             if (this.AttachedFiles.SelectedItems.Count > 0)
             {
+                //remove each attached file selected
                 foreach (var item in this.AttachedFiles.SelectedItems)
                 {
-                    Console.WriteLine("DELETING " + item);
                     this.AttachedFiles.Items.Remove(item);
 
+                    //stop once all the files have been removed
                     if(this.AttachedFiles.SelectedItems.Count == 0) { break; }
                 }
 
+                //disable the SelectWorkstation and RemoveFile buttons:
                 if (this.AttachedFiles.Items.Count == 0)
                 {
                     this.RemoveFileButton.IsEnabled = false;
@@ -133,10 +168,14 @@ namespace FileShare
 
         }
 
+        /*
+         * SendButton_Click(object, RoutedEventArgs): Send the files to the selected workstations
+        */
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
             int delayTime = 5000;
             
+            //popup a flyout that informs the user that the files are being delivered
             var flyout = this.SendingFlyout;
             flyout.Visibility = Visibility.Visible;
             ((Storyboard)FindResource("SendSpinner")).Begin();

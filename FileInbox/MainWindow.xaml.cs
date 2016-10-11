@@ -1,4 +1,13 @@
-﻿using System;
+﻿/* 
+ * Description: FileInbox application interface.
+ *              This application is the inbox containing the received files.
+ * Project: Fleet/FleetClient
+ * Last modified: 11 October 2016
+ * Last Author: Hayden Cheers
+ * 
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -22,6 +31,9 @@ namespace FileInbox
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        /*
+         * MainWindow(): initialise FileInbox
+        */
         public MainWindow()
         {
             InitializeComponent();
