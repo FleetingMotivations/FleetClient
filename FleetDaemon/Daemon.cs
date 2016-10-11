@@ -14,6 +14,10 @@ namespace FleetDaemon
     public static class DaemonContext
     {
         public static FleetClientContext CurrentContext { get; set; } = FleetClientContext.Campus;
+
+        public static Boolean CanShare { get; set; } = true;
+
+        public static Int32 CurrentWorkgroupId { get; set; } = 0;
     }
 
     public class Daemon
