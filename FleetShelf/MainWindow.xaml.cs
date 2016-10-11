@@ -132,15 +132,7 @@ namespace FleetShelf
         */
         private void Help_Click(object sender, RoutedEventArgs e)
         {
-            //this.LaunchApplication("fleethelp");
-        }
-
-        /*
-         * Settings_Click(object, RoutedEventArgs): Open the Settings application
-        */
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            //this.LaunchApplication("settings");
+            this.LaunchApplication("fleethelp");
         }
 
         // 3. We have received a list of applications

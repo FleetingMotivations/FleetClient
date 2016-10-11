@@ -75,12 +75,13 @@ namespace FleetDaemon.Hauler
             var apphauler = this;
 
             // For Testing
-            apphauler.KnownApplications["fileshare"] = new FleetKnownApplication
+            this.KnownApplications["fileshare"] = new FleetKnownApplication
             {
                 Name = "File Share",
                 Path = @"..\..\..\FileShare\bin\Debug\FileShare.exe",
                 Identifier = "fileshare"
             };
+
             this.KnownApplications["fileinbox"] = new FleetKnownApplication
             {
                 Name = "File Inbox",
@@ -103,11 +104,20 @@ namespace FleetDaemon.Hauler
                 Identifier = "workstationselector",
                 Visible = false
             };
+
             this.KnownApplications["fleetshelf"] = new FleetKnownApplication
             {
                 Name = "Fleet Shelf",
                 Path = @"..\..\..\FleetShelf\bin\Debug\FleetShelf.exe",
                 Identifier = "fleetshelf",
+                Visible = false
+            };
+
+            this.KnownApplications["fleethelp"] = new FleetKnownApplication
+            {
+                Name = "Fleet Help",
+                Path = @"..\..\..\FleetHelp\bin\Debug\FleetHelp.exe",
+                Identifier = "fleethelp",
                 Visible = false
             };
         }
