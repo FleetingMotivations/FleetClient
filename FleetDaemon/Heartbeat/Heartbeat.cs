@@ -105,12 +105,7 @@ namespace FleetDaemon
                     Console.WriteLine("Heartbeat");
                     var flags = client.Heartbeat(this.Token);
                     
-                    if (flags.HasFlag(FleetHearbeatEnum.InWorkgroup))
-                    {
-                        // TODO(hd): Implement
-                        // This will probably set some flag somewhere that states the current workgroup context
-
-                    }
+                    Task.Run(() => HandleControlStatusChange(this.Token));
 
                     if (flags.HasFlag(FleetHearbeatEnum.ManageUpdate))
                     {
@@ -133,6 +128,36 @@ namespace FleetDaemon
             }
 
             client.Close();
+        }
+
+        private void HandleControlStatusChange(FleetClientToken token)
+        {
+            var client = new FleetServiceClient("BasicHttpBinding_IFleetService");
+            FleetControlStatus status;
+
+            try
+            {
+                client.Open();
+                status = client.QueryControlStatus(token);
+                client.Close();
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
+
+            if (status == null)
+            {
+                DaemonContext.CanShare = true;
+                DaemonContext.CurrentContext = FleetClientContext.Room;
+                DaemonContext.CurrentWorkgroupId = 0;
+                return;
+            }
+
+            DaemonContext.CanShare = status.CanShare;
+            DaemonContext.CurrentWorkgroupId = status.WorkgroupId;
+            DaemonContext.CurrentContext = FleetClientContext.Workgroup;
+
         }
     }
 }

@@ -87,8 +87,19 @@ namespace FleetDaemon.MessageDispatcher
 
                 try
                 {
+
+                    var id = DaemonContext.CurrentWorkgroupId;
+                    if (id == 0)
+                    {
+                        id = 1;
+                    }
+
+                    Console.WriteLine(id);
+                    Console.WriteLine(DaemonContext.CurrentContext);
+
                     serviceClient.Open();
-                    clients = serviceClient.QueryClients(Token, DaemonContext.CurrentContext, 1);
+                    clients = serviceClient.QueryClients(Token, DaemonContext.CurrentContext, id);
+                    Console.WriteLine("X" + clients);
                     serviceClient.Close();
                 }
                 catch (Exception e)
