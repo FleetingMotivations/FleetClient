@@ -39,6 +39,7 @@ namespace FileShare
     public partial class MainWindow : MetroWindow
     {
         private const string SendMessage = "Sending Files to Workstation(s)";
+        private String fileToSend = null;
 
         /*
          * MainWindow(): initialise FileShare
@@ -76,18 +77,18 @@ namespace FileShare
             this.AddFilePanel.Opacity = 1;
 
             //collect the data from the dropped file:
-            String[] droppedFiles = null;
+            String[] droppedFile = null;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 //add to dropped files:
-                droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as String[];
+                droppedFile = e.Data.GetData(DataFormats.FileDrop, true) as String[];
 
-                this.AttachedFiles.Items.Add(droppedFiles[0]);
+                this.AttachedFiles.Items.Add(droppedFile[0]);
                 this.RemoveFileButton.IsEnabled = true;
                 this.SelectWorkstationsButton.IsEnabled = true;
             }
 
-            if ((null == droppedFiles) || (!droppedFiles.Any())) { return; }
+            if ((null == droppedFile) || (!droppedFile.Any())) { return; }
 
             var daemonClient = IPCUtil.MakeDaemonClient();
 
@@ -96,7 +97,7 @@ namespace FileShare
             {
                 daemonClient.Open();
 
-                foreach (var file in droppedFiles)
+                foreach (var file in droppedFile)
                 {
                     var message = new IPCMessage();
                     message.ApplicaitonSenderID = "FileShare";
@@ -107,7 +108,7 @@ namespace FileShare
 
                     daemonClient.Request(message);
                 }
-                
+
                 daemonClient.Close();
 
             }
@@ -124,7 +125,7 @@ namespace FileShare
         */
         private void AddFileButton_Click(object sender, RoutedEventArgs e)
         {
-            //open the windows exploere dialog:
+            //open the windows explorer dialog:
             Microsoft.Win32.OpenFileDialog exp = new Microsoft.Win32.OpenFileDialog();
 
             Nullable<bool> result = exp.ShowDialog();
@@ -132,8 +133,8 @@ namespace FileShare
             //add the file selected to the AttachedFiles list:
             if(result == true)
             {
-                String filename = exp.FileName;
-                this.AttachedFiles.Items.Add(filename);
+                fileToSend = exp.FileName;
+                this.AttachedFiles.Items.Add(fileToSend);
             }
 
             //enable the SelectWorkstation and RemoveFile buttons:
@@ -171,22 +172,42 @@ namespace FileShare
         /*
          * SendButton_Click(object, RoutedEventArgs): Send the files to the selected workstations
         */
-        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        private void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            int delayTime = 5000;
-            
+            //int delayTime = 5000;
+
             //popup a flyout that informs the user that the files are being delivered
-            var flyout = this.SendingFlyout;
-            flyout.Visibility = Visibility.Visible;
-            ((Storyboard)FindResource("SendSpinner")).Begin();
+            //var flyout = this.SendingFlyout;
+            //flyout.Visibility = Visibility.Visible;
+            //((Storyboard)FindResource("SendSpinner")).Begin();
 
-            await Task.Delay(delayTime);
+            //await Task.Delay(delayTime);
 
-            flyout.Visibility = Visibility.Collapsed;
+            var daemonClient = IPCUtil.MakeDaemonClient();
 
-            //Send this.AttachedFiles.Items - requires Workstation Selections
+            try
+            {
+                daemonClient.Open();
 
+                var message = new IPCMessage();
+                message.ApplicaitonSenderID = "FileShare";
+                message.ApplicationRecipientID = "FileInbox";
+                message.Target = IPCMessage.MessageTarget.Remote;
+                message.Type = "sendFile";
+                message.Content["filePath"] = fileToSend;
 
+                daemonClient.Request(message);
+
+                daemonClient.Close();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                daemonClient.Abort();
+            }
+
+            //flyout.Visibility = Visibility.Collapsed;
         }
     }
 }

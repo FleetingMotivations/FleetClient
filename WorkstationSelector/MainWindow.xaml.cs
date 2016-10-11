@@ -158,7 +158,6 @@ namespace WorkstationSelector
 
         private void Send_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Integrate with system for Sending
             this.Close();
         }
 

@@ -24,7 +24,7 @@
             <Setter Property="Width" Value="147" />
             <Setter Property="Height" Value="125" />
             <Setter Property="TitleFontSize" Value="12" />
-            <Setter Property="Background" Value="{StaticResource FleetBlue}" /> <!-- Test this - this was the "bug" that Shamus found during the demo (from whitesmoke to available) -->
+            <Setter Property="Background" Value="{StaticResource FleetBlue}" />
             <Setter Property="Foreground" Value="Black" />
         </Style>
     </Window.Resources>
@@ -57,7 +57,7 @@
                    FontSize="30"
                    FontFamily="Segoe UI" Height="40" Margin="118,0,0,57" Width="464" />
 
-        <WrapPanel x:Name="WorkstationSelectorPanel" Grid.Row="1" Grid.Column="1" Margin="118,10,118,77">
+        <WrapPanel x:Name="WorkstationSelectorPanel" Grid.Row="1" Grid.Column="1" Margin="118,10" ScrollViewer.CanContentScroll="True">
             <!-- Workstations Dynamically Stored Here -->
         </WrapPanel>
 
@@ -66,13 +66,12 @@
                 Background="Transparent" FontSize="18" FontFamily="Segoe MDL2 Assets" Content="&#xE212;" Cursor="Hand" Height="30" 
                 VerticalAlignment="Top" Click="WorkstationScope_Click" x:Uid="Closed" ToolTip="Change Context" />
         <Button x:Name="AllButton" FontSize="18" FontFamily="Segoe MDL2 Assets" Content="&#xE8B3;" Grid.Column="1" 
-                Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Left" Height="31" Margin="588,257,0,0" 
-                Grid.Row="1" VerticalAlignment="Top" Width="33" BorderBrush="Transparent" ToolTip="Select all workstations"
+                Style="{DynamicResource MetroCircleButtonStyle}" Margin="634,379,29,72" 
+                Grid.Row="1" BorderBrush="Transparent" ToolTip="Select all workstations"
                 Click="AllWorkstations_Click" Tag="Select"/>
         <Button x:Name="Send" FontSize="18" FontFamily="Segoe MDL2 Assets" Content="&#xE725;" Grid.Column="1" 
-                Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Left" Height="31" Margin="588,298,0,0" 
-                Grid.Row="1" VerticalAlignment="Top" Width="33" BorderBrush="Transparent" ToolTip="Send to workstations"
+                Style="{DynamicResource MetroCircleButtonStyle}" Margin="634,420,29,31" 
+                Grid.Row="1" BorderBrush="Transparent" ToolTip="Send to workstations"
                 Click="Send_Click"/>
     </Grid>
-
 </Controls:MetroWindow>
