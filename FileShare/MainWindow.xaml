@@ -38,13 +38,13 @@
             </StackPanel.Triggers>
             <TextBlock Text="Drag files here to add to sending list" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="77,100,77,0" Foreground="#FFB0B0B0" Background="Transparent"/>
         </StackPanel>
-        <TextBlock Margin="370,92,10,182" Text="Attached Files" FontSize="13" FontWeight="Bold" TextAlignment="Center"/>
-        <ListBox x:Name="AttachedFiles" Margin="370,123,10,60" BorderBrush="Black" BorderThickness="1"/>
-        <Button x:Name="AddFileButton" ToolTip="Add file to send" Foreground="Black" FontWeight="Bold" Click="AddFileButton_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE109;" Height="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Margin="375,0,114,227"/>
-        <Button x:Name="RemoveFileButton" ToolTip="Remove file from list" Foreground="Black" IsEnabled="False" FontWeight="Bold" Click="RemoveFileButton_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE107;" Height="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="40" Margin="457,0,32,227"/>
-        <Button x:Name="SelectWorkstationsButton" ToolTip="Select Workstations to send files to" IsEnabled="False" Foreground="Black" FontWeight="Bold" Click="SendButton_Click" Content="Send" Height="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="76" Margin="404,0,49,21"/>
+        <TextBlock Margin="370,81,10,198" Text="Attached Files" FontSize="13" FontWeight="Bold" TextAlignment="Center"/>
+        <ListBox x:Name="AttachedFiles" Margin="370,107,10,60" BorderBrush="Black" BorderThickness="1"/>
+        <Button x:Name="AddFileButton" ToolTip="Add file to send" Foreground="Black" FontWeight="Bold" Click="AddFileButton_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE109;" FontSize="16" Height="39" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="60" Margin="377,0,92,229"/>
+        <Button x:Name="RemoveFileButton" ToolTip="Remove file from list" Foreground="Black" IsEnabled="False" FontWeight="Bold" Click="RemoveFileButton_Click" FontFamily="Segoe MDL2 Assets" FontSize="16" Content="&#xE107;" Height="39" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="60" Margin="454,0,15,229"/>
+        <Button x:Name="SelectWorkstationsButton" ToolTip="Select Workstations to send files to" IsEnabled="False" Foreground="Black" FontWeight="Bold" Click="SendButton_Click" Content="Select Workstations" Height="32" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="141" Margin="375,0,13,17"/>
 
-        
+
         <Grid Name="SendingFlyout" Background="#99000000" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="537.251">
             <Grid Name="SendingAnimation" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="243,73,219.251,151">
                 <TextBlock Name="Sending" FontFamily="Fonts/#FontAwesome" Foreground="{StaticResource FleetBlue}" FontSize="75" Text="&#xf110;" RenderTransformOrigin="0.5, 0.5">

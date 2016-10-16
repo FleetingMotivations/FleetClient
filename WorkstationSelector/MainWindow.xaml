@@ -40,7 +40,7 @@
     <!--Gridding -->
     <Grid x:Name="WorkstationSelectorGrid" Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="39"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -63,14 +63,14 @@
 
         <!-- Workstation Context Button (Flyout) -->
         <Button x:Name="WorkstationScope" Style="{DynamicResource MetroCircleButtonStyle}" BorderThickness="0" 
-                Background="Transparent" FontSize="18" FontFamily="Segoe MDL2 Assets" Content="&#xE212;" Cursor="Hand" Height="30" 
+                Background="Transparent" FontSize="32" FontFamily="Segoe MDL2 Assets" Content="&#xE212;" Cursor="Hand" Height="30" 
                 VerticalAlignment="Top" Click="WorkstationScope_Click" x:Uid="Closed" ToolTip="Change Context" />
-        <Button x:Name="AllButton" FontSize="18" FontFamily="Segoe MDL2 Assets" Content="&#xE8B3;" Grid.Column="1" 
-                Style="{DynamicResource MetroCircleButtonStyle}" Margin="634,379,29,72" 
+        <Button x:Name="AllButton" FontSize="32" FontFamily="Segoe MDL2 Assets" Content="&#xE8B3;" Grid.Column="1" 
+                Style="{DynamicResource MetroCircleButtonStyle}" Margin="618,316,10,97" 
                 Grid.Row="1" BorderBrush="Transparent" ToolTip="Select all workstations"
                 Click="AllWorkstations_Click" Tag="Select"/>
-        <Button x:Name="Send" FontSize="18" FontFamily="Segoe MDL2 Assets" Content="&#xE725;" Grid.Column="1" 
-                Style="{DynamicResource MetroCircleButtonStyle}" Margin="634,420,29,31" 
+        <Button x:Name="Send" FontSize="32" FontFamily="Segoe MDL2 Assets" Content="&#xE725;" Grid.Column="1" 
+                Style="{DynamicResource MetroCircleButtonStyle}" Margin="618,403,10,10" 
                 Grid.Row="1" BorderBrush="Transparent" ToolTip="Send to workstations"
                 Click="Send_Click"/>
     </Grid>
