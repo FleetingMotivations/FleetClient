@@ -109,7 +109,15 @@ namespace FleetShelf
         */
         private void ScreenCapture_Click(object sender, RoutedEventArgs e)
         {
-            //this.LaunchApplication("screencapture");
+            //Launch Windows SnippingTool based on the windows environment:
+            if(!Environment.Is64BitProcess)
+            {
+                System.Diagnostics.Process.Start("C:\\Windows\\sysnative\\SnippingTool.exe");
+            }
+            else
+            {
+                System.Diagnostics.Process.Start("C:\\Windows\\system32\\SnippingTool.exe");
+            }
         }
 
         /*
