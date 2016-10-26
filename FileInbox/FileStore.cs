@@ -207,8 +207,8 @@ namespace FileInbox
                 var record = new StoredFile();
                 record.IconURL = "";
                 record.Filepath = file;
-                record.Sender = "";
-                record.Received = "";
+                record.Sender = "Workstation 2";
+                record.Received = "10:00";
 
                 fileStorage.Add(record);
             }
