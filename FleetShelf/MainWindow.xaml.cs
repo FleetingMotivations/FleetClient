@@ -133,7 +133,7 @@ namespace FleetShelf
         */
         private void FacilitatorControls_Click(object sender, RoutedEventArgs e)
         {
-            //this.LaunchApplication("facilitatorcontrols");
+            System.Diagnostics.Process.Start("http://fleetweb.surge.sh");
         }
 
         /*

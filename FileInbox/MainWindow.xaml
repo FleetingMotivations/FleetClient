@@ -15,9 +15,9 @@
     </Window.Resources>
     
     <Grid>
-        <Button IsEnabled="True" x:Name="openButton" Content="Open..." Click="openButton_Click" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button IsEnabled="False" x:Name="copyButton" Content="Move..." Click="copyButton_Click"  HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
-        <ListView x:Name="filesTable" Margin="0,40,0,0" >
+        <Button IsEnabled="True" x:Name="openButton" Content="Open" Click="openButton_Click" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button IsEnabled="False" x:Name="copyButton" Content="Move" Click="copyButton_Click"  HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <ListView x:Name="filesTable" Margin="0,40,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Icon" Width="60" DisplayMemberBinding="{Binding IconURL}"/>

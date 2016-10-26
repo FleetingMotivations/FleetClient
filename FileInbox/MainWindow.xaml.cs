@@ -45,7 +45,7 @@ namespace FileInbox
             this.storage.OnChange += FilesDidChangeEvent;
             this.storage.OnDelete += FilesDidChangeEvent;
             this.storage.OnRename += FilesDidChangeEvent;
-            this.filesTable.ItemsSource = this.Storage.Files;            
+            this.filesTable.ItemsSource = this.Storage.Files;          
         }
 
         /// <summary>
