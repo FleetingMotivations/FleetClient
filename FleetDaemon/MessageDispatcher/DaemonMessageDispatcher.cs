@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using FleetIPC;
 using FleetDaemon.Hauler;
 using FleetServer;
+using System.Threading;
 
 namespace FleetDaemon.MessageDispatcher
 {
@@ -118,9 +119,14 @@ namespace FleetDaemon.MessageDispatcher
                 {
                     var components = content.Split(':');
 
+                    var title = "File Accepted";
+                    var text =  components[1] + " - " + components[2];
+
+                    ShowNotification(title, text);
                    // DISPLAY NOTIFICATION HERE
 
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
                 }
@@ -131,6 +137,10 @@ namespace FleetDaemon.MessageDispatcher
                 {
                     var components = content.Split(':');
 
+                    var title = "File Accepted";
+                    var text = components[1] + " - " + components[2];
+
+                    ShowNotification(title, text);
                     // DISPLAY NOTIFICATION HERE
 
                 }
@@ -139,6 +149,26 @@ namespace FleetDaemon.MessageDispatcher
                     Console.WriteLine(e.Message);
                 }
             }
+        }
+
+        private void ShowNotification(String title, String text)
+        {
+            Task.Run(() =>
+            {
+                var notification = new System.Windows.Forms.NotifyIcon()
+                {
+                    Visible = true,
+                    Icon = System.Drawing.SystemIcons.Information,
+                    BalloonTipTitle = title,
+                    BalloonTipText = text
+                };
+
+                notification.ShowBalloonTip(5);
+
+                Thread.Sleep(10000);
+
+                notification.Dispose();
+            });
         }
 
         /// <summary>
