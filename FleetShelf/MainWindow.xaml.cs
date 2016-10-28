@@ -186,10 +186,10 @@ namespace FleetShelf
             //Redirect users to a help document/window/webpage
             this.LaunchApplication("fleethelp");
 
-            //Balloon Sample
-            string title = "Fleet Files Delivered";
-            string text = "X Files Accepted\nY Files Rejected";
-            trayIcon.ShowBalloonTip(1000, title, text, System.Windows.Forms.ToolTipIcon.Info);
+            ////Balloon Sample
+            //string title = "Fleet Files Delivered";
+            //string text = "X Files Accepted\nY Files Rejected";
+            //trayIcon.ShowBalloonTip(1000, title, text, System.Windows.Forms.ToolTipIcon.Info);
         }
 
         /*

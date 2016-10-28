@@ -27,6 +27,12 @@
             <Setter Property="Background" Value="{StaticResource FleetBlue}" />
             <Setter Property="Foreground" Value="Black" />
         </Style>
+
+        <Storyboard x:Key="SendSpinner">
+            <DoubleAnimation Storyboard.TargetName="Sending" 
+                             Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)" 
+                             From="0" To="360" Duration="0:0:2" RepeatBehavior="Forever" />
+        </Storyboard>
     </Window.Resources>
 
     <!--Flyout -->
@@ -73,5 +79,19 @@
                 Style="{DynamicResource MetroCircleButtonStyle}" Margin="618,403,10,10" 
                 Grid.Row="1" BorderBrush="Transparent" ToolTip="Send to workstations"
                 Click="Send_Click"/>
+
+
+        <Grid Name="SendingFlyout" Background="{StaticResource FleetGray}" Opacity="0.95" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,-3" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <Grid Name="SendingAnimation" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="243,73,219.251,151">
+                <TextBlock Name="Sending" FontFamily="Fonts/#FontAwesome" Foreground="{StaticResource FleetBlue}" FontSize="75" Text="&#xf110;" RenderTransformOrigin="0.5, 0.5">
+                    <TextBlock.RenderTransform>
+                        <RotateTransform Angle="0" />
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Grid>
+            <TextBlock Name="SendingMessage" Margin="194,169,178.251,112" VerticalAlignment="Center" TextAlignment="Center" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{StaticResource FleetBlue}" Width="225">
+                Sending to workstation(s)
+            </TextBlock>
+        </Grid>
     </Grid>
 </Controls:MetroWindow>

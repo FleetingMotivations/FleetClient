@@ -84,10 +84,10 @@ namespace FileShare
                 //add to dropped files:
                 droppedFile = e.Data.GetData(DataFormats.FileDrop, true) as String[];
 
-                //update interface to match:
-                this.AttachedFiles.Items.Add(droppedFile[0]);
-                this.RemoveFileButton.IsEnabled = true;
-                this.SelectWorkstationsButton.IsEnabled = true;
+                ////update interface to match:
+                //this.AttachedFiles.Items.Add(droppedFile[0]);
+                //this.RemoveFileButton.IsEnabled = true;
+                //this.SelectWorkstationsButton.IsEnabled = true;
             }
 
             //ensure valid files exist in droppedFile:
@@ -128,102 +128,102 @@ namespace FileShare
             }
         }
 
-        /*
-         * AddFileButton_Click(object, RoutedEventArgs): Add a file to the list of files to share, through the use
-         *                                               of a button and a windows explorer dialog
-        */
-        private void AddFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            //open the windows explorer dialog:
-            Microsoft.Win32.OpenFileDialog exp = new Microsoft.Win32.OpenFileDialog();
+        ///*
+        // * AddFileButton_Click(object, RoutedEventArgs): Add a file to the list of files to share, through the use
+        // *                                               of a button and a windows explorer dialog
+        //*/
+        //private void AddFileButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    //open the windows explorer dialog:
+        //    Microsoft.Win32.OpenFileDialog exp = new Microsoft.Win32.OpenFileDialog();
 
-            Nullable<bool> result = exp.ShowDialog();
+        //    Nullable<bool> result = exp.ShowDialog();
 
-            //add the file selected to the AttachedFiles list:
-            if(result == true)
-            {
-                fileToSend = exp.FileName;
-                this.AttachedFiles.Items.Add(fileToSend);
-            }
+        //    //add the file selected to the AttachedFiles list:
+        //    if(result == true)
+        //    {
+        //        fileToSend = exp.FileName;
+        //        this.AttachedFiles.Items.Add(fileToSend);
+        //    }
 
-            //enable the SelectWorkstation and RemoveFile buttons:
-            this.SelectWorkstationsButton.IsEnabled = true;
-            this.RemoveFileButton.IsEnabled = true;
-        }
+        //    //enable the SelectWorkstation and RemoveFile buttons:
+        //    this.SelectWorkstationsButton.IsEnabled = true;
+        //    this.RemoveFileButton.IsEnabled = true;
+        //}
 
-        /*
-         * RemoveFileButton_Click(object, RoutedEventArgs): Remove the selected file from the attached files listbox
-        */
-        private void RemoveFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            //check if files have been selected that wish to be deleted:
-            if (this.AttachedFiles.SelectedItems.Count > 0)
-            {
-                //remove each attached file selected
-                foreach (var item in this.AttachedFiles.SelectedItems)
-                {
-                    this.AttachedFiles.Items.Remove(item);
+        ///*
+        // * RemoveFileButton_Click(object, RoutedEventArgs): Remove the selected file from the attached files listbox
+        //*/
+        //private void RemoveFileButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    //check if files have been selected that wish to be deleted:
+        //    if (this.AttachedFiles.SelectedItems.Count > 0)
+        //    {
+        //        //remove each attached file selected
+        //        foreach (var item in this.AttachedFiles.SelectedItems)
+        //        {
+        //            this.AttachedFiles.Items.Remove(item);
 
-                    //stop once all the files have been removed
-                    if(this.AttachedFiles.SelectedItems.Count == 0) { break; }
-                }
+        //            //stop once all the files have been removed
+        //            if(this.AttachedFiles.SelectedItems.Count == 0) { break; }
+        //        }
 
-                //disable the SelectWorkstation and RemoveFile buttons:
-                if (this.AttachedFiles.Items.Count == 0)
-                {
-                    this.RemoveFileButton.IsEnabled = false;
-                    this.SelectWorkstationsButton.IsEnabled = false;
-                }
-            }
+        //        //disable the SelectWorkstation and RemoveFile buttons:
+        //        if (this.AttachedFiles.Items.Count == 0)
+        //        {
+        //            this.RemoveFileButton.IsEnabled = false;
+        //            this.SelectWorkstationsButton.IsEnabled = false;
+        //        }
+        //    }
 
-        }
+        //}
 
-        /*
-         * SendButton_Click(object, RoutedEventArgs): Send the files to the selected workstations
-        */
-        private void SendButton_Click(object sender, RoutedEventArgs e)
-        {
-            //int delayTime = 5000;
+        ///*
+        // * SendButton_Click(object, RoutedEventArgs): Send the files to the selected workstations
+        //*/
+        //private void SendButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    //int delayTime = 5000;
 
-            //For future reference. This will be used to provide a loading screen for usability:
+        //    //For future reference. This will be used to provide a loading screen for usability:
 
-            //popup a flyout that informs the user that the files are being delivered
-            //var flyout = this.SendingFlyout;
-            //flyout.Visibility = Visibility.Visible;
-            //((Storyboard)FindResource("SendSpinner")).Begin();
+        //    //popup a flyout that informs the user that the files are being delivered
+        //    //var flyout = this.SendingFlyout;
+        //    //flyout.Visibility = Visibility.Visible;
+        //    //((Storyboard)FindResource("SendSpinner")).Begin();
 
-            //await Task.Delay(delayTime);
+        //    //await Task.Delay(delayTime);
 
-            //create an instance of Daemon:
-            var daemonClient = IPCUtil.MakeDaemonClient();
+        //    //create an instance of Daemon:
+        //    var daemonClient = IPCUtil.MakeDaemonClient();
 
-            try
-            {
-                daemonClient.Open();
+        //    try
+        //    {
+        //        daemonClient.Open();
                 
-                // Create message:
+        //        // Create message:
 
-                var message = new IPCMessage();
-                message.ApplicaitonSenderID = "FileShare";
-                message.ApplicationRecipientID = "FileInbox";
-                message.Target = IPCMessage.MessageTarget.Remote;
-                message.Type = "sendFile";
-                message.Content["filePath"] = fileToSend;
+        //        var message = new IPCMessage();
+        //        message.ApplicaitonSenderID = "FileShare";
+        //        message.ApplicationRecipientID = "FileInbox";
+        //        message.Target = IPCMessage.MessageTarget.Remote;
+        //        message.Type = "sendFile";
+        //        message.Content["filePath"] = fileToSend;
 
-                //send file to daemon
-                daemonClient.Request(message);
+        //        //send file to daemon
+        //        daemonClient.Request(message);
 
-                daemonClient.Close();
+        //        daemonClient.Close();
 
-            }
-            catch (Exception ex)
-            {
-                //print error and abort:
-                Console.WriteLine(ex.Message);
-                daemonClient.Abort();
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //print error and abort:
+        //        Console.WriteLine(ex.Message);
+        //        daemonClient.Abort();
+        //    }
 
-            //flyout.Visibility = Visibility.Collapsed;
-        }
+        //    //flyout.Visibility = Visibility.Collapsed;
+        //}
     }
 }

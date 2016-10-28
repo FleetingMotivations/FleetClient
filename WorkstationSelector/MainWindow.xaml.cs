@@ -12,6 +12,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using MahApps.Metro.Controls;
 using FleetServer;
+using System.Windows.Media.Animation;
+using System.Threading.Tasks;
 
 namespace WorkstationSelector
 {
@@ -197,9 +199,24 @@ namespace WorkstationSelector
 
         }
 
-        private void Send_Click(object sender, RoutedEventArgs e)
+        private async void Send_Click(object sender, RoutedEventArgs e)
         {
-            //Close the interface
+            int delayTime = 2000;
+
+            this.SendingFlyout.Visibility = Visibility.Visible;
+            ((Storyboard)FindResource("SendSpinner")).Begin();
+
+            await Task.Delay(delayTime);
+
+            ((Storyboard)FindResource("SendSpinner")).Stop();
+            this.Sending.Text = "\xf05d";
+            this.Sending.Foreground = (SolidColorBrush)Resources["FleetGreen"];
+
+            this.SendingMessage.FontSize = 32;
+            this.SendingMessage.Text = "File(s) Sent!";
+            await Task.Delay(1000);
+
+            //Close the interface:
             this.Close();
         }
 

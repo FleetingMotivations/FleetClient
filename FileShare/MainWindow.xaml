@@ -16,17 +16,10 @@
         <SolidColorBrush x:Key="FleetGray" Color="#737373"/>
         <SolidColorBrush x:Key="FleetYellow" Color="#FFBB00"/>
         <SolidColorBrush x:Key="FleetBlue" Color="#00A1F1"/>
-
-        <Storyboard x:Key="SendSpinner">
-            <DoubleAnimation Storyboard.TargetName="Sending" 
-                             Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)" 
-                             From="0" To="360" Duration="0:0:2" RepeatBehavior="Forever" />
-        </Storyboard>
     </Window.Resources>
 
     <Grid>
-        <TextBlock Margin="14,3,13,0" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Top" ><Run Text=" "/><Run Text="Drag-and-drop or select the button below to add files to send "/></TextBlock>
-        <StackPanel x:Name="AddFilePanel" Background="#FFC9C9C9" Visibility="Visible" Margin="10,32,172,10" DragOver="OnFileDragOver" DragLeave="OnFileDragLeave" Drop="Window_Drop">
+        <StackPanel x:Name="AddFilePanel" Background="#FFC9C9C9" Visibility="Visible" DragOver="OnFileDragOver" DragLeave="OnFileDragLeave" Drop="Window_Drop">
             <StackPanel.Triggers>
                 <EventTrigger RoutedEvent="StackPanel.Drop">
                     <BeginStoryboard>
@@ -36,26 +29,7 @@
                     </BeginStoryboard>
                 </EventTrigger>
             </StackPanel.Triggers>
-            <TextBlock Text="Drag files here to add to sending list" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="77,100,77,0" Foreground="#FFB0B0B0" Background="Transparent"/>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Margin="114,100,122,0" Foreground="WhiteSmoke" Background="Transparent" Height="31" Width="293"><Run FontWeight="Bold" Text="Drag files here to "/><Run FontWeight="Bold" Text="send to workstations"/></TextBlock>
         </StackPanel>
-        <TextBlock Margin="370,81,10,198" Text="Attached Files" FontSize="13" FontWeight="Bold" TextAlignment="Center"/>
-        <ListBox x:Name="AttachedFiles" Margin="370,107,10,60" BorderBrush="Black" BorderThickness="1"/>
-        <Button x:Name="AddFileButton" ToolTip="Add file to send" Foreground="Black" FontWeight="Bold" Click="AddFileButton_Click" FontFamily="Segoe MDL2 Assets" Content="&#xE109;" FontSize="16" Height="39" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="60" Margin="377,0,92,229"/>
-        <Button x:Name="RemoveFileButton" ToolTip="Remove file from list" Foreground="Black" IsEnabled="False" FontWeight="Bold" Click="RemoveFileButton_Click" FontFamily="Segoe MDL2 Assets" FontSize="16" Content="&#xE107;" Height="39" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="60" Margin="454,0,15,229"/>
-        <Button x:Name="SelectWorkstationsButton" ToolTip="Select Workstations to send files to" IsEnabled="False" Foreground="Black" FontWeight="Bold" Click="SendButton_Click" Content="Select Workstations" Height="32" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="141" Margin="375,0,13,17"/>
-
-
-        <Grid Name="SendingFlyout" Background="#99000000" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="537.251">
-            <Grid Name="SendingAnimation" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="243,73,219.251,151">
-                <TextBlock Name="Sending" FontFamily="Fonts/#FontAwesome" Foreground="{StaticResource FleetBlue}" FontSize="75" Text="&#xf110;" RenderTransformOrigin="0.5, 0.5">
-                    <TextBlock.RenderTransform>
-                        <RotateTransform Angle="0" />
-                    </TextBlock.RenderTransform>
-                </TextBlock>
-            </Grid>
-            <TextBlock Name="SendingMessage" Margin="194,169,178.251,112" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{StaticResource FleetBlue}" Width="165">
-                Sending to workstations
-            </TextBlock>
-        </Grid>
     </Grid>
 </Controls:MetroWindow>
