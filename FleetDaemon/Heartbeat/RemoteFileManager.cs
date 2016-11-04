@@ -87,6 +87,14 @@ namespace FleetDaemon
                         Task.Run(() => this.HandleRetreiveFile(token, id));
                     } else
                     {
+                        try
+                        {
+                            var c = new FleetServiceClient("BasicHttpBinding_IFleetService");
+                            var file = c.GetFile(token, id);
+                        } catch (Exception e)
+                        {
+
+                        }
                         Task.Run(() => this.NotifyRefusal(token, id));
                     }
                 }
